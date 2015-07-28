@@ -1,7 +1,7 @@
-(function() {
+(function () {
   'use strict';
 
   angular
-    .module(microServicesGui, ['ui.router', 'mm.foundation']);
+    .module('microServicesGui', ['ui.router', 'mm.foundation']);
 
 })();

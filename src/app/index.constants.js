@@ -3,7 +3,7 @@
   'use strict';
 
   angular
-    .module(microServicesGui)
+    .module('microServicesGui')
     .constant('malarkey', malarkey)
     .constant('toastr', toastr)
     .constant('moment', moment);

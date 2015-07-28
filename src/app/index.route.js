@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module(microServicesGui)
+    .module('microServicesGui')
     .config(routeConfig);
 
   /** @ngInject */
