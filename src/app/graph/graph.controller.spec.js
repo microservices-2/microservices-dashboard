@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  describe('controllers', function(){
+  describe('GraphController', function(){
 
     beforeEach(module('microServicesGui'));
 

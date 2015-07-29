@@ -3,10 +3,10 @@
 
   angular
     .module('microServicesGui')
-    .controller('MainController', MainController);
+    .controller('GraphController', GraphController);
 
   /** @ngInject */
-  function MainController() {
+  function GraphController() {
     var vm = this;
   }
 
