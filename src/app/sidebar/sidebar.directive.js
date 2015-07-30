@@ -6,10 +6,21 @@
     .directive('msgSideBar', SideBarDirective);
 
   /** @ngInject */
-  function SideBarDirective() {
+  function SideBarDirective($window) {
     return {
-      templateUrl: 'app/sidebar/sidebar.html'
+      templateUrl: 'app/sidebar/sidebar.html',
+      link: sideBarDirectiveLink
     };
+
+    function sideBarDirectiveLink(scope, element){
+      console.log(scope, element);
+
+      angular.element($window).bind('resize', function(){
+        $('')
+      });
+
+    }
+
   }
 
 })();
