@@ -12,15 +12,11 @@
       link: sideBarDirectiveLink
     };
 
-    function sideBarDirectiveLink(scope, element){
-      console.log(scope, element);
-
-      angular.element($window).bind('resize', function(){
-        $('')
+    function sideBarDirectiveLink(scope, element) {
+      angular.element($window).bind('resize', function () {
+        $('');
       });
-
     }
 
   }
-
 })();

@@ -46,6 +46,7 @@
     "main-bower-files": "~2.8.0",
     "merge-stream": "~0.1.7",
     "node-red": "^0.11.1",
+    "proxy-middleware": "^0.13.0",
     "require-dir": "~0.3.0",
     "uglify-save-license": "~0.4.1",
     "wiredep": "~2.2.2",
