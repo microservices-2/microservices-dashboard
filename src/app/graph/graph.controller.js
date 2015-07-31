@@ -11,7 +11,7 @@
 
     var test;
     GraphService.getGraph().then(function (result) {
-      test = result;
+      test = result.data;
     });
 
     var treeData = [
