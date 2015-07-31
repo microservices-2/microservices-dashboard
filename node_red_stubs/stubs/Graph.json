@@ -1,0 +1,87 @@
+{
+  "_links": {
+    "self": {"href": "https://admit-itt.belgacom.be:443/rest/loyalty-management/customer/18500/loyaltypointshistory"},
+    "cm:email": {"href": "https://admit-itt.belgacom.be:443/rest/loyalty-management/customer/18500/loyaltypointshistory"},
+    "curies": [
+      {
+        "href": "/loyalty-management/generated-docs/api-guide.html#resources-{rel}",
+        "name": "lp",
+        "templated": true
+      }
+    ]
+  },
+  "transactions": [
+    {
+      "dateTime" : 1434033000000,
+      "effectiveDateTime" : 1434033000000,
+      "id" : "123636346",
+      "description" : "1 Points for your Proximus Pack/fixed line bill",
+      "balance" : 1613,
+      "points" : -113,
+      "status" : "CONFIRMED"
+    },
+    {
+      "dateTime" : 1399363745000,
+      "effectiveDateTime" : 1399363745000,
+      "id" : "123636345",
+      "description" : "Welcome points",
+      "balance" : 1500,
+      "points" : 1500,
+      "status" : "CONFIRMED"
+    },
+    {
+      "dateTime" : 1367827745000,
+      "effectiveDateTime" : 1367827745000,
+      "id" : "123636352",
+      "description" : "18778 Points for your Proximus Pack/fixed line bill",
+      "balance" : 879587,
+      "points" : -7858,
+      "status" : "CONFIRMED"
+    },
+    {
+      "dateTime" : 1428307745000,
+      "effectiveDateTime" : 1428307745000,
+      "id" : "123636587",
+      "description" : "9452 Points for your Proximus Pack/fixed line bill",
+      "balance" : 96778,
+      "points" : -787,
+      "status" : "CONFIRMED"
+    },
+    {
+      "dateTime" : 1434033000000,
+      "effectiveDateTime" : 1434033000000,
+      "id" : "123636772",
+      "description" : "876 Points for your Proximus Pack/fixed line bill",
+      "balance" : 178578613,
+      "points" : -18813,
+      "status" : "CANCELLED"
+    },
+    {
+      "dateTime" : 1420186145000,
+      "effectiveDateTime" : 1420186145000,
+      "id" : "163634446",
+      "description" : "7678 Points for your Proximus Pack/fixed line bill",
+      "balance" : 161783,
+      "points" : -11883,
+      "status" : "CONFIRMED"
+    },
+    {
+      "dateTime" : 1272967850000,
+      "effectiveDateTime" : 1272967850000,
+      "id" : "123787746",
+      "description" : "5054 Points for your Proximus Pack/fixed line bill",
+      "balance" : 1113,
+      "points" : -555,
+      "status" : "CONFIRMED"
+    },
+    {
+      "dateTime" : 1417507745000,
+      "effectiveDateTime" : 1417507745000,
+      "id" : "123789346",
+      "description" : "50 Points for your Proximus Pack/fixed line bill",
+      "balance" : 4141613,
+      "points" : -15513,
+      "status" : "CONFIRMED"
+    }
+  ]
+}
