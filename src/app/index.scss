@@ -89,28 +89,53 @@ input, select{
     }
 
   }
+}
 
+/* Bottom syles */
+#bottombar {
+  margin-bottom: 0;
+  bottom: 0;
+  position: fixed;
+  width: 100%;
+  button {
+    margin:0;
+    border: steelblue 1px solid;
+  }
 }
 
 /* Graph styles */
 .node {
   cursor: pointer;
+
+  circle {
+    fill: lightblue;
+    stroke: steelblue;
+    stroke-width: 3px;
+  }
+
+  text {
+    font: 10px sans-serif;
+    pointer-events: none;
+    fill: #000;
+    &.shadow {
+      stroke: #fff;
+      stroke-width: 3px;
+      stroke-opacity: .8;
+    }
+  }
 }
 
-.node circle {
-  fill: #fff;
+.lane {
+  fill: none;
   stroke: steelblue;
-  stroke-width: 3px;
-}
-
-.node text {
-  font: 12px sans-serif;
+  stroke-width: 2px;
 }
 
 .link {
   fill: none;
   stroke: #ccc;
   stroke-width: 2px;
+  cursor: pointer;
 }
 
 /* Accordion styles */
