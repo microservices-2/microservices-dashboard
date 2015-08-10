@@ -1,0 +1,329 @@
+{
+  "title": "Micro Services Graph",
+  "appVersion": "0.0.1",
+  "description": "The visualisation of micro services gives an overview of the microservices and their dependencies.",
+  "graph": [],
+  "nodes": [
+    {
+      "id": "ordering-loyalty"
+    },
+    {
+      "id": "ngrpGetEligibleAwards",
+      "details": {
+        "name": "ngrpGetEligibleAwards",
+        "status": "UP",
+        "nodeVersion": "-",
+        "type": "SOAP",
+        "group": "NGRP",
+        "exposion": ["intern", "extern"],
+        "request-load": "100",
+        "memory-load": "10",
+        "ownership": []
+      },
+      "releases": [
+        "Major 5.0.1",
+        "Minor 5.0.0",
+        "Major 4.0.1",
+        "Minor 4.0.0",
+        "Major 3.0.1",
+        "Minor 3.0.0",
+        "Major 2.0.1",
+        "Minor 2.0.0",
+        "Major 1.0.1",
+        "Minor 1.0.0",
+        "Major 0.0.1",
+        "In Development",
+        "For seen",
+        "Conception"
+      ]
+    },
+    {
+      "id": "rheHandleOrderHistory",
+      "details": {
+        "name": "rheHandleOrderHistory",
+        "status": "UNKNOWN",
+        "nodeVersion": "-",
+        "type": "SOAP",
+        "group": "RHE"
+      },
+      "releases": [
+        "Minor 0.0.1",
+        "In Development"
+      ]
+    },
+    {
+      "id": "bpsCustomer"
+    },
+    {
+      "id": "ngrpGetPartnerMembershipDetails"
+    },
+    {
+      "id": "bciSearchCustomerContact"
+    },
+    {
+      "id": "rosyIDTVFreeCreditsManagement"
+    },
+    {
+      "id": "rheReceiveOrder"
+    },
+    {
+      "id": "discovery"
+    },
+    {
+      "id": "configServer"
+    },
+    {
+      "id": "pptDataSource_"
+    },
+    {
+      "id": "crmodsDataSource_"
+    },
+    {
+      "id": "address"
+    },
+    {
+      "id": "admin"
+    },
+    {
+      "id": "description"
+    },
+    {
+      "id": "customer-management"
+    },
+    {
+      "id": "tpyUserProfile"
+    },
+    {
+      "id": "mbpIDP"
+    },
+    {
+      "id": "bciManageCustomerContact"
+    },
+    {
+      "id": "imaIMAServices"
+    },
+    {
+      "id": "cslEmployee"
+    },
+    {
+      "id": "cslCustomer"
+    },
+    {
+      "id": "pdbDataSource_",
+      "name": "pdbDataSource_",
+      "status": "UP",
+      "database": "Oracle",
+      "type": "DB",
+      "group": "PDB"
+    },
+    {
+      "id": "buscDataSource_"
+    },
+    {
+      "id": "awards"
+    },
+    {
+      "id": "pptDeviceTechnicalDetails"
+    },
+    {
+      "id": "pptAwards"
+    },
+    {
+      "id": "sapcacheDataSource_"
+    },
+    {
+      "id": "ordering-onedrive"
+    },
+    {
+      "id": "loyalty-program"
+    },
+    {
+      "id": "ngrpGetLoyaltyDetails"
+    },
+    {
+      "id": "ngrpCheckEligibleLoyaltyProgram"
+    },
+    {
+      "id": "octCreateCorrespondence"
+    },
+    {
+      "id": "ngrpEnrollCustomer"
+    },
+    {
+      "id": "ngrpIsEligibleTransferPoints"
+    },
+    {
+      "id": "ngrpGetLoyaltyTransactionsPerMonth"
+    },
+    {
+      "id": "ngrpTransferPoints"
+    },
+    {
+      "id": "hystrix"
+    }
+  ],
+  "directed": true,
+  "links": [
+    {
+      "source": 0,
+      "target": 1
+    },
+    {
+      "source": 0,
+      "target": 2
+    },
+    {
+      "source": 0,
+      "target": 3
+    },
+    {
+      "source": 0,
+      "target": 4
+    },
+    {
+      "source": 0,
+      "target": 5
+    },
+    {
+      "source": 0,
+      "target": 6
+    },
+    {
+      "source": 0,
+      "target": 7
+    },
+    {
+      "source": 0,
+      "target": 8
+    },
+    {
+      "source": 0,
+      "target": 9
+    },
+    {
+      "source": 0,
+      "target": 10
+    },
+    {
+      "source": 0,
+      "target": 11
+    },
+    {
+      "source": 13,
+      "target": 14
+    },
+    {
+      "source": 15,
+      "target": 16
+    },
+    {
+      "source": 15,
+      "target": 17
+    },
+    {
+      "source": 15,
+      "target": 18
+    },
+    {
+      "source": 15,
+      "target": 19
+    },
+    {
+      "source": 15,
+      "target": 20
+    },
+    {
+      "source": 15,
+      "target": 21
+    },
+    {
+      "source": 15,
+      "target": 5
+    },
+    {
+      "source": 15,
+      "target": 8
+    },
+    {
+      "source": 15,
+      "target": 9
+    },
+    {
+      "source": 15,
+      "target": 22
+    },
+    {
+      "source": 15,
+      "target": 23
+    },
+    {
+      "source": 24,
+      "target": 1
+    },
+    {
+      "source": 24,
+      "target": 25
+    },
+    {
+      "source": 24,
+      "target": 26
+    },
+    {
+      "source": 24,
+      "target": 8
+    },
+    {
+      "source": 24,
+      "target": 9
+    },
+    {
+      "source": 24,
+      "target": 10
+    },
+    {
+      "source": 24,
+      "target": 27
+    },
+    {
+      "source": 29,
+      "target": 30
+    },
+    {
+      "source": 29,
+      "target": 31
+    },
+    {
+      "source": 29,
+      "target": 32
+    },
+    {
+      "source": 29,
+      "target": 33
+    },
+    {
+      "source": 29,
+      "target": 34
+    },
+    {
+      "source": 29,
+      "target": 35
+    },
+    {
+      "source": 29,
+      "target": 36
+    },
+    {
+      "source": 29,
+      "target": 8
+    },
+    {
+      "source": 29,
+      "target": 9
+    },
+    {
+      "source": 37,
+      "target": 14
+    }
+  ],
+  "multigraph": false
+}
