@@ -328,25 +328,23 @@
 
           elmNodes.classed('dimmed', false);
 
-          //TODO: fix JQuery
           // Highlight arrows
-          //var elmCurrentLink = $('path.link[data-source='
-          //  + o.source.index + ']');
-          //elmCurrentLink.attr('data-show', true);
-          //elmCurrentLink.attr('marker-end', 'url(#regular)');
+          var elmCurrentLink = $('path.link[data-source='
+            + o.source.index + ']');
+          elmCurrentLink.attr('data-show', true);
+          elmCurrentLink.attr('marker-end', 'url(#regular)');
 
           return 1;
 
         } else {
 
-          //TODO: fix JQuery
-          /*var elmAllLinks = $('path.link:not([data-show])');
+          var elmAllLinks = $('path.link:not([data-show])');
 
           if (opacity == 1) {
             elmAllLinks.attr('marker-end', 'url(#regular)');
           } else {
             elmAllLinks.attr('marker-end', '');
-          }*/
+          }
 
           return opacity;
         }
