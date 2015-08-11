@@ -14,23 +14,31 @@
       width = window.innerWidth - margin.right - margin.left,
       height = window.innerHeight - margin.top - margin.bottom;
 
+    height -= d3.select("#navigation-container")[0][0].offsetHeight;
+    height -= d3.select("#control-bar")[0][0].offsetHeight;
+    height -= d3.select("#footer-container")[0][0].offsetHeight;
+
     var linkedByIndex = {};
 
     var graphWidth, graphHeight;
 
-    var data;
+    var data, nodesData, linksData;
+
+    $scope.test = "Lol";
+
+    this.test = function() {
+      alert("Lol");
+    };
 
     GraphService.getGraph().then(function (result) {
       data = result.data;
+      nodesData = result.data.nodes;
+      linksData = result.data.links;
       render();
     });
 
     function render() {
-      height -= d3.select("#navigation-container")[0][0].offsetHeight;
-      height -= d3.select("#control-bar")[0][0].offsetHeight;
-      height -= d3.select("#footer-container")[0][0].offsetHeight;
-
-
+      d3.select("svg").remove();
       graph = d3.select("#graphcontainer").append("svg")
         .attr("width", width + margin.right + margin.left)
         .attr("height", height + margin.top + margin.bottom)
@@ -229,7 +237,10 @@
           return x1(d.lane);
         })
         .attr("y1", margin.top)
-        .attr("y2", height);
+        .attr("y2", height)
+        .style("visibility", function (d, i) {
+          return i == 0 ? "hidden" : "visible";
+        });
 
       // Build linked index
       data.
@@ -453,6 +464,21 @@
       }
     }
 
+    /*
+    Filter
+     */
+    this.filterNodes = function(nodeFilter) {
+      if (data != undefined) {
+        data.nodes = $filter('nodeFilter')(nodesData, nodeFilter);
+        data.links = $filter('linkFilter')(linksData, data.nodes);
+        resetGraph(data);
+      }
+    };
+
+    function resetGraph(d) {
+      data = d;
+      render();
+    }
 
     //var treeData = [
     //  {
