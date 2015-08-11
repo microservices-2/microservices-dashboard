@@ -4,18 +4,16 @@
     <input type="search" placeholder="Search node" id="searchnode" ng-model="nodeSearch.id" />
   </div>
 
-  <div class="columns large-3">
-    <select>
-      <option value="0">Custom action #1</option>
-      <option value="1">Custom action #1b</option>
-      <option value="2">Custom action #1c</option>
+  <div class="columns large-2">
+    <select ng-model="nodeSearch.status" ng-options="states for states in states" ng-init="nodeSearch.status = 'ALL'">
     </select>
   </div>
-  <div class="columns large-3">
-    <select>
-      <option value="0">Custom action #2</option>
-      <option value="1">Custom action #2b</option>
-      <option value="2">Custom action #2c</option>
+  <div class="columns large-2">
+    <select ng-model="nodeSearch.type" ng-options="types for types in types" ng-init="nodeSearch.type = 'ALL'">
+    </select>
+  </div>
+  <div class="columns large-2">
+    <select ng-model="nodeSearch.group" ng-options="groups for groups in groups" ng-init="nodeSearch.group = 'ALL'">
     </select>
   </div>
   <div class="columns large-3">

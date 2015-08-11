@@ -28,10 +28,28 @@
     },
     {
       "id": "ngrpGetEligibleAwards",
+      "details": {
+        "name": "ngrpGetEligibleAwards",
+        "status": "UP",
+        "nodeVersion": "-",
+        "type": "SOAP",
+        "group": "NGRP",
+        "exposion": ["intern", "extern"],
+        "request-load": "100",
+        "memory-load": "10",
+        "ownership": []
+      },
       "lane": 1
     },
     {
       "id": "rheHandleOrderHistory",
+      "details": {
+        "name": "rheHandleOrderHistory",
+        "status": "UNKNOWN",
+        "nodeVersion": "-",
+        "type": "SOAP",
+        "group": "RHE"
+      },
       "lane": 1
     },
     {
