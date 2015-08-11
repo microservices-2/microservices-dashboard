@@ -98,8 +98,12 @@ input, select{
   position: fixed;
   width: 100%;
   button {
-    margin:0;
-    border: steelblue 1px solid;
+    height: 50px;
+    width: 50px;
+    float: right;
+    margin: 10px;
+    font-size: 200%;
+    padding: 0;
   }
 }
 
@@ -153,6 +157,58 @@ input, select{
     text-align:justify;
   }
 
+}
+
+/* Form */
+.error-message {
+  color: red;
+}
+
+.links-container {
+  width: 400px;
+  height: 100px;
+  overflow: scroll;
+  border: 1px solid;
+}
+
+.links-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.links-container::-webkit-scrollbar-thumb {
+  background: grey;
+}
+.links-container::-webkit-scrollbar:horizontal:corner-present {
+  border-right-width: 0;
+}
+
+ul.links {
+  display: inline-block;
+  list-style-type: none;
+  border: 1px solid #808080;
+  border-bottom: none;
+}
+
+ul.links li {
+  display: block;
+  text-align: left;
+  background: white;
+  width: 400px;
+  min-height: 31px;
+  line-height:31px;
+  list-style-type: none;
+  border-bottom: 1px solid #808080;
+  padding: 0;
+  margin: 0;
+}
+
+::-webkit-scrollbar {
+  width: 14px;
+  height: 6px;
+}
+
+::-webkit-scrollbar:horizontal {
+  display: none;
 }
 
 /* Custom font styles */

@@ -4,114 +4,17 @@
     <input type="search" placeholder="Search node" id="searchnode" ng-model="nodeSearch.id" />
   </div>
 
-  <div class="columns large-2">
+  <div class="columns large-3">
     <select ng-model="nodeSearch.status" ng-options="states for states in states" ng-init="nodeSearch.status = 'ALL'">
     </select>
   </div>
-  <div class="columns large-2">
+  <div class="columns large-3">
     <select ng-model="nodeSearch.type" ng-options="types for types in types" ng-init="nodeSearch.type = 'ALL'">
     </select>
   </div>
-  <div class="columns large-2">
+  <div class="columns large-3">
     <select ng-model="nodeSearch.group" ng-options="groups for groups in groups" ng-init="nodeSearch.group = 'ALL'">
     </select>
-  </div>
-  <div class="columns large-3">
-    <div id="addNodeModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true"
-         role="dialog">
-      <h2 id="modalTitle">Add Node</h2>
-
-      <form>
-        <div class="row">
-          <div class="large-4 columns">
-            <label>Id
-              <input type="text" placeholder="Enter Id"/>
-            </label>
-          </div>
-          <div class="large-4 columns">
-            <label>Name
-              <input type="text" placeholder="Enter Name"/>
-            </label>
-          </div>
-          <div class="large-4 columns">
-            <label>Version
-              <input type="text" placeholder="Enter Version"/>
-            </label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="large-6 columns">
-            <label>Type
-              <select>
-                <option value="soap">SOAP</option>
-                <option value="rest">REST</option>
-                <option value="microservice">MICROSERVICE</option>
-                <option value="db">DB</option>
-              </select>
-            </label>
-          </div>
-          <div class="large-6 columns">
-            <label>Group
-              <select>
-                <option value="ngrp">NGRP</option>
-                <option value="rhe">RHE</option>
-                <option value="bps">BPS</option>
-                <option value="bci">BCI</option>
-                <option value="rosy">ROSY</option>
-                <option value="toolbox">TOOLBOX</option>
-                <option value="ppt">PPT</option>
-                <option value="crmods">CRMODS</option>
-                <option value="mbp">MBP</option>
-                <option value="ima">IMA</option>
-                <option value="csl">CSL</option>
-                <option value="pdb">pdb</option>
-                <option value="busc">BUSC</option>
-                <option value="sapcache">SAPCACHE</option>
-              </select>
-            </label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="large-12 columns">
-            <label>Status</label>
-            <input type="radio" name="nodeStatus" value="Up" id="nodeStatusUp"><label
-            for="nodeStatusUp">Up</label>
-            <input type="radio" name="nodeStatus" value="Down" id="nodeStatusDown"><label
-            for="nodeStatusDown">Down</label>
-            <input type="radio" name="nodeStatus" value="Down" id="nodeStatusUnknown"><label
-            for="nodeStatusUnknown">Unknown</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="large-12 columns">
-            <label>Description
-              <textarea placeholder="Enter Description"></textarea>
-            </label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="small-6 columns">
-            <label>Nodes available</label>
-            <ul id="fromList" class="links-container">
-              <li ng-repeat='node in nodes.nodes'>{{node.id}}</li>
-            </ul>
-          </div>
-          <div class="small-6 columns">
-            <label>Nodes to link</label>
-            <ul id="toList" class="links-container">
-              <li></li>
-            </ul>
-
-          </div>
-        </div>
-        <a class="button custom-close-reveal-modal">Cancel</a>
-        <input type="submit" role="button" aria-label="submit form" href="#"
-               class="nice blue radius button" value="Submit"/>
-      </form>
-
-      <a class="close-reveal-modal" aria-label="Close">&#215;</a>
-    </div>
-    <a href="#" class="button success" data-reveal-id="addNodeModal">Add Node</a>
   </div>
 
 </div>

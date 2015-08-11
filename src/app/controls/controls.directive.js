@@ -3,10 +3,10 @@
 
   angular
     .module('microServicesGui')
-    .directive('msgControls', ControlsDirective);
+    .directive('msgControls', ['GraphService', ControlsDirective]);
 
   /** @ngInject */
-  function ControlsDirective() {
+  function ControlsDirective(GraphService) {
     return {
       templateUrl: 'app/controls/controls.html',
       controller: 'GraphController',
@@ -15,9 +15,12 @@
           graphController.filterNodes(scope.nodeSearch);
         });
 
-        scope.states = ["ALL", "UP", "DOWN", "UNKNOWN"];
-        scope.types = ["ALL", "SOAP", "DB", "REST"];
-        scope.groups = ["ALL", "NGRP", "RHE", "BPS", "BCI", "ROSY", "RHE", "PPT", "CHRMODS", "MBP", "IMA", "CSL", "BUSC", "PDB", "PPT", "SAPACHE", "OCT"]
+        scope.states = GraphService.getStates();
+        scope.types = GraphService.getTypes();
+        scope.groups = GraphService.getGroups();
+        scope.states.unshift('ALL');
+        scope.types.unshift('ALL');
+        scope.groups.unshift('ALL');
       }
     };
   }

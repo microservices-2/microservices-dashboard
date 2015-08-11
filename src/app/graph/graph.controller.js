@@ -6,13 +6,13 @@
     .controller('GraphController', GraphController);
 
   /** @ngInject */
-  function GraphController($scope, $filter, GraphService) {
+  function GraphController($scope, $filter, $modal, GraphService, NodeService) {
     var vm = this;
     var graph, layout, zoom, nodes, links, nodeData;
 
     var margin = {top: 20, right: 0, bottom: 20, left: 0},
       width = window.innerWidth - margin.right - margin.left,
-      height = window.innerHeight - margin.top - margin.bottom;
+      height = window.innerHeight - margin.top;
 
     height -= d3.select("#navigation-container")[0][0].offsetHeight;
     height -= d3.select("#control-bar")[0][0].offsetHeight;
@@ -26,7 +26,7 @@
 
     $scope.test = "Lol";
 
-    this.test = function() {
+    this.test = function () {
       alert("Lol");
     };
 
@@ -47,6 +47,8 @@
 
       layout = d3.layout.force()
         .size([width, height]);
+
+      d3.select(window).on("resize", resize); //Adds or removes an event listener to each element in the current selection, for the specified type.
 
       renderGraph(data);
     }
@@ -96,11 +98,11 @@
             break;
         }
 
-        data.links.forEach(function(d) {
+        data.links.forEach(function (d) {
           if (d.source === node.index) {
             d.source = node;
           }
-          if (d.target ===  node.index) {
+          if (d.target === node.index) {
             d.target = node;
           }
         })
@@ -287,13 +289,13 @@
 
     function isConnected(a, b) {
       /*return linkedByIndex[a.index + "," + b.index]
-        || linkedByIndex[b.index + "," + a.index]
-        || a.index == b.index;*/
+       || linkedByIndex[b.index + "," + a.index]
+       || a.index == b.index;*/
       if (a.index === b.index) {
         return true;
       }
       var connected = false;
-      data.links.forEach(function(d) {
+      data.links.forEach(function (d) {
         if ((d.source === a && d.target === b) || (d.source === b && d.target === a)) {
           connected = true;
         }
@@ -392,17 +394,26 @@
     }
 
     function showTheDetails(node) {
-      var singleNode = $filter('filter')(nodes, function (d) {
-        return d.id === node.id
+      //var singleNode = $filter('filter')(nodes, function (d) {
+      //  return d.id === node.id
+      //});
+      //if (singleNode != undefined) {
+      //  $scope.currentNode = singleNode[0];
+      //  $scope.$apply();
+      //}
+      NodeService.setNode(node);
+      var modalInstance = $modal.open({
+        templateUrl: 'app/nodemodal/nodemodal.html',
+        controller: 'NodeModalController'
       });
-      if (singleNode != undefined) {
-        $scope.currentNode = singleNode[0];
-        $scope.$apply();
-      }
+
+      modalInstance.result.then(function (node) {
+        NodeService.pushNode(node);
+      })
     }
 
     /*
-    Mouse events
+     Mouse events
      */
 
     function onNodeMouseOver(nodes, links, d) {
@@ -465,9 +476,9 @@
     }
 
     /*
-    Filter
+     Filter
      */
-    this.filterNodes = function(nodeFilter) {
+    this.filterNodes = function (nodeFilter) {
       if (data != undefined) {
         data.nodes = $filter('nodeFilter')(nodesData, nodeFilter);
         data.links = $filter('linkFilter')(linksData, data.nodes);
