@@ -105,7 +105,7 @@
           if (d.target === node.index) {
             d.target = node;
           }
-        })
+        });
       }
 
       //Labels
@@ -150,14 +150,14 @@
         .attr("class", "link")
         .attr("x1", function (l) {
           var sourceNode = data.nodes.filter(function (d, i) {
-            return i == l.source.index
+            return i === l.source.index;
           })[0];
           d3.select(this).attr("y1", sourceNode.y);
           return sourceNode.x;
         })
         .attr("x2", function (l) {
           var targetNode = data.nodes.filter(function (d, i) {
-            return i == l.target.index
+            return i === l.target.index;
           })[0];
           d3.select(this).attr("y2", targetNode.y);
           return targetNode.x;
@@ -176,11 +176,11 @@
 
       // Circles
       nodes.attr("id", function (d) {
-        return formatClassName('node', d)
+        return formatClassName('node', d);
       });
       nodes.append("svg:circle")
         .attr("class", function (d) {
-          return formatClassName('circle', d)
+          return formatClassName('circle', d);
         })
         .attr("r", 12)
         .attr("cx", function (d) {
@@ -192,7 +192,7 @@
         .on("mouseover", _.bind(onNodeMouseOver, this, nodes, links))
         .on("mouseout", _.bind(onNodeMouseOut, this, nodes, links))
         .style("fill", function (o) {
-          return fillColor(o)
+          return fillColor(o);
         });
 
       // A copy of the text with a thick white stroke for legibility.
@@ -204,7 +204,7 @@
           return d.y + 25;
         })
         .attr("class", function (d) {
-          return 'shadow ' + formatClassName('text', d)
+          return 'shadow ' + formatClassName('text', d);
         }).text(function (d) {
           return d.id;
         })
@@ -212,7 +212,7 @@
 
       nodes.append("svg:text")
         .attr("class", function (d) {
-          return formatClassName('text', d)
+          return formatClassName('text', d);
         })
         .attr("x", function (d) {
           return x1(d.lane + 0.5);
@@ -241,7 +241,7 @@
         .attr("y1", margin.top)
         .attr("y2", height)
         .style("visibility", function (d, i) {
-          return i == 0 ? "hidden" : "visible";
+          return i === 0 ? "hidden" : "visible";
         });
 
       // Build linked index
@@ -288,85 +288,61 @@
     }
 
     function isConnected(a, b) {
-      /*return linkedByIndex[a.index + "," + b.index]
+      return linkedByIndex[a.index + "," + b.index]
        || linkedByIndex[b.index + "," + a.index]
-       || a.index == b.index;*/
-      if (a.index === b.index) {
-        return true;
+       || a.index === b.index;
+    }
+
+    function findConnectedNodes(node) {
+      node.explored = true;
+      var connectedNodes = [node];
+      var queue = [node];
+      while (queue.length > 0) {
+        var v = queue.shift();
+        var neighbours = [];
+        data.nodes.forEach(function (d) {
+          if (isConnected(v, d)) {
+            neighbours.push(d);
+          }
+        });
+        console.log(neighbours.length);
+        neighbours.forEach(function(d) {
+          if (!d.explored) {
+            d.explored = true;
+            queue.push(d);
+            connectedNodes.push(d);
+          }
+        });
       }
-      var connected = false;
-      data.links.forEach(function (d) {
-        if ((d.source === a && d.target === b) || (d.source === b && d.target === a)) {
-          connected = true;
-        }
+      connectedNodes.forEach(function(d) {
+        d.explored = false;
       });
-      return connected;
+      return connectedNodes;
+
     }
 
     function fadeRelatedNodes(d, opacity, nodes, links) {
 
-      //TODO: fix JQuery
-      // Clean
-      //$('path.link').removeAttr('data-show');
+      var connectedNodes = findConnectedNodes(d);
+      console.log(connectedNodes.length);
 
       nodes.style("stroke-opacity", function (o) {
-
-        var thisOpacity;
-        if (isConnected(d, o)) {
-          thisOpacity = 1;
+        if (connectedNodes.indexOf(o) > -1) {
+          this.setAttribute('fill-opacity', 1);
+          return 1;
         } else {
-          thisOpacity = opacity;
+          this.setAttribute('fill-opacity', opacity);
+          return opacity;
         }
-
-        this.setAttribute('fill-opacity', thisOpacity);
-        this.setAttribute('stroke-opacity', thisOpacity);
-
-        if (thisOpacity == 1) {
-          this.classList.remove('dimmed');
-        } else {
-          this.classList.add('dimmed');
-        }
-
-        return thisOpacity;
       });
 
       links.style("stroke-opacity", function (o) {
-        if (o.source === d || o.target === d) {
-
-          // Highlight target/sources of the link
-          var elmNodes = graph.selectAll('.'
-            + formatClassName('node', o.target));
-          elmNodes.attr('fill-opacity', 1);
-          elmNodes.attr('stroke-opacity', 1);
-
-          elmNodes.classed('dimmed', false);
-
-          // Highlight arrows
-          var elmCurrentLink = $('path.link[data-source='
-            + o.source.index + ']');
-          elmCurrentLink.attr('data-show', true);
-          elmCurrentLink.attr('marker-end', 'url(#regular)');
-
-          return 1;
-
-        } else {
-
-          var elmAllLinks = $('path.link:not([data-show])');
-
-          if (opacity == 1) {
-            elmAllLinks.attr('marker-end', 'url(#regular)');
-          } else {
-            elmAllLinks.attr('marker-end', '');
-          }
-
-          return opacity;
-        }
-
+        return connectedNodes.indexOf(o.source) > -1 || connectedNodes.indexOf(o.target) > -1 ? 1 : opacity;
       });
     }
 
     function fillColor(o) {
-      if (o.details != undefined) {
+      if (o.details !== undefined) {
         switch (o.details.type) {
           case "SOAP":
           {
@@ -394,13 +370,6 @@
     }
 
     function showTheDetails(node) {
-      //var singleNode = $filter('filter')(nodes, function (d) {
-      //  return d.id === node.id
-      //});
-      //if (singleNode != undefined) {
-      //  $scope.currentNode = singleNode[0];
-      //  $scope.$apply();
-      //}
       NodeService.setNode(node);
       var modalInstance = $modal.open({
         templateUrl: 'app/nodemodal/nodemodal.html',
@@ -409,7 +378,7 @@
 
       modalInstance.result.then(function (node) {
         NodeService.pushNode(node);
-      })
+      });
     }
 
     /*
@@ -426,7 +395,7 @@
         elm.style("fill", '#b94431');
 
         // Highlight related nodes
-        fadeRelatedNodes(d, .05, nodes, links);
+        fadeRelatedNodes(d, 0.05, nodes, links);
       }
     }
 
@@ -435,7 +404,7 @@
       // Highlight circle
       var elm = findElementByNode('circle', d);
       elm.style("fill", function (o) {
-        return fillColor(o)
+        return fillColor(o);
       });
 
       // Highlight related nodes
@@ -449,7 +418,7 @@
         elm.remove();
 
         var i = nodeData.links.indexOf(d);
-        if (i != -1) {
+        if (i !== -1) {
           nodeData.links.splice(i, 1);
         }
         $scope.resetGraph(nodeData);
@@ -479,7 +448,7 @@
      Filter
      */
     this.filterNodes = function (nodeFilter) {
-      if (data != undefined) {
+      if (data !== undefined) {
         data.nodes = $filter('nodeFilter')(nodesData, nodeFilter);
         data.links = $filter('linkFilter')(linksData, data.nodes);
         resetGraph(data);
@@ -490,6 +459,12 @@
       data = d;
       render();
     }
+
+
+    /**
+     * Template code
+     */
+
 
     //var treeData = [
     //  {

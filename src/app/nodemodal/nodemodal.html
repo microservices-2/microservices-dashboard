@@ -1,5 +1,6 @@
 <div>
   <h2 id="modalTitle" ng-hide="newNode.id">Add Node</h2>
+
   <h2 ng-show="newNode.id">{{newNode.id}}</h2>
 
   <form name="nodeForm" novalidate>
@@ -18,8 +19,10 @@
       </div>
       <div class="large-4 columns">
         <label ng-class="{error: nodeForm.version.$dirty && nodeForm.version.$error.required}">Version
-          <input type="text" placeholder="Enter Version" ng-model="newNode.details.nodeVersion" name="version" required=""/>
-          <span ng-show="nodeForm.version.$dirty && nodeForm.version.$error.required" class="error">Version is required.</span>
+          <input type="text" placeholder="Enter Version" ng-model="newNode.details.nodeVersion" name="version"
+                 required=""/>
+          <span ng-show="nodeForm.version.$dirty && nodeForm.version.$error.required"
+                class="error">Version is required.</span>
         </label>
       </div>
     </div>
@@ -32,13 +35,15 @@
       </div>
       <div class="large-4 columns">
         <label>Type
-          <select ng-model="newNode.details.type" ng-options="types for types in types" ng-init="newNode.details.type = newNode.details.type || 'DB'">
+          <select ng-model="newNode.details.type" ng-options="types for types in types"
+                  ng-init="newNode.details.type = newNode.details.type || 'DB'">
           </select>
         </label>
       </div>
       <div class="large-4 columns">
         <label>Group
-          <select ng-model="newNode.details.group" ng-options="groups for groups in groups" ng-init="newNode.details.group = newNode.details.group || 'BCI'">
+          <select ng-model="newNode.details.group" ng-options="groups for groups in groups"
+                  ng-init="newNode.details.group = newNode.details.group || 'BCI'">
           </select>
         </label>
       </div>
@@ -65,9 +70,15 @@
 
       </div>
     </div>
-    <a class="button custom-close-reveal-modal" ng-click="cancel()">Cancel</a>
-    <input type="submit" role="button" aria-label="submit form" href="#"
-           class="nice blue radius button" value="Submit" ng-click="ok()" ng-disabled="nodeForm.$invalid"/>
+    <div class="row">
+      <span class="small-3 columns">
+        <input type="submit" role="button" aria-label="submit form" href="#"
+               class="nice blue radius button" value="Submit" ng-click="ok()" ng-disabled="nodeForm.$invalid"/>
+      </span>
+        <span class="small-3 columns">
+          <a class="button custom-close-reveal-modal" ng-click="cancel()">Cancel</a>
+      </span>
+    </div>
   </form>
 
   <a class="close-reveal-modal" aria-label="Close" ng-click="cancel()">&#215;</a>

@@ -1,4 +1,6 @@
-'use strict';
+(function () {
+  'use strict';
+
 
 angular.module('microServicesGui')
   .filter('nodeFilter', function () {
@@ -12,22 +14,22 @@ angular.module('microServicesGui')
       }
 
       function validateId(node) {
-        return nodeSearch.id != undefined ? (node.id != undefined && node.id.toLowerCase().indexOf(nodeSearch.id) > -1) : true;
+        return nodeSearch.id !== undefined ? (node.id !== undefined && node.id.toLowerCase().indexOf(nodeSearch.id) > -1) : true;
       }
 
       function validateStatus(node) {
-        return (nodeSearch.status != undefined && nodeSearch.status != "ALL") ? (node.details != undefined && node.details.status != undefined && node.details.status.toUpperCase() === nodeSearch.status) : true;
+        return (nodeSearch.status !== undefined && nodeSearch.status !== "ALL") ? (node.details !== undefined && node.details.status !== undefined && node.details.status.toUpperCase() === nodeSearch.status) : true;
       }
 
       function validateType(node) {
-        return (nodeSearch.type != undefined && nodeSearch.type != "ALL") ? (node.details != undefined && node.details.type != undefined && node.details.type.toUpperCase() === nodeSearch.type) : true;
+        return (nodeSearch.type !== undefined && nodeSearch.type !== "ALL") ? (node.details !== undefined && node.details.type !== undefined && node.details.type.toUpperCase() === nodeSearch.type) : true;
       }
 
       function validateGroup(node) {
-        return (nodeSearch.group != undefined && nodeSearch.group != "ALL") ? (node.details != undefined && node.details.group != undefined && node.details.group.toUpperCase() === nodeSearch.group) : true;
+        return (nodeSearch.group !== undefined && nodeSearch.group !== "ALL") ? (node.details !== undefined && node.details.group !== undefined && node.details.group.toUpperCase() === nodeSearch.group) : true;
       }
       return filteredNodes;
-    }
+    };
   })
   .filter('linkFilter', function () {
     return function (links, nodes) {
@@ -49,5 +51,6 @@ angular.module('microServicesGui')
         }
       }
       return filteredLinks;
-    }
-  })
+    };
+  });
+})();
