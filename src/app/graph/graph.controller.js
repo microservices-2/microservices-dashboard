@@ -305,7 +305,6 @@
             neighbours.push(d);
           }
         });
-        console.log(neighbours.length);
         neighbours.forEach(function(d) {
           if (!d.explored) {
             d.explored = true;
@@ -322,10 +321,7 @@
     }
 
     function fadeRelatedNodes(d, opacity, nodes, links) {
-
       var connectedNodes = findConnectedNodes(d);
-      console.log(connectedNodes.length);
-
       nodes.style("stroke-opacity", function (o) {
         if (connectedNodes.indexOf(o) > -1) {
           this.setAttribute('fill-opacity', 1);
@@ -370,6 +366,7 @@
     }
 
     function showTheDetails(node) {
+      console.log(node);
       NodeService.setNode(node);
       var modalInstance = $modal.open({
         templateUrl: 'app/nodemodal/nodemodal.html',
