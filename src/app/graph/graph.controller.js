@@ -12,11 +12,12 @@
 
     var margin = {top: 20, right: 0, bottom: 20, left: 0},
       width = window.innerWidth - margin.right - margin.left,
-      height = window.innerHeight - margin.top;
+      //height = window.innerHeight - margin.top;
+      height = window.innerHeight;
 
     height -= d3.select("#navigation-container")[0][0].offsetHeight;
     height -= d3.select("#control-bar")[0][0].offsetHeight;
-    height -= d3.select("#footer-container")[0][0].offsetHeight;
+    //height -= d3.select("#footer-container")[0][0].offsetHeight;
 
     var linkedByIndex = {};
 
@@ -41,9 +42,10 @@
       d3.select("svg").remove();
       graph = d3.select("#graphcontainer").append("svg")
         .attr("width", width + margin.right + margin.left)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        //.attr("height", height + margin.top + margin.bottom)
+        .attr("height", height)
+        .append("g");
+        //.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       layout = d3.layout.force()
         .size([width, height]);
@@ -120,7 +122,7 @@
         .attr("x", function (d, i) {
           return x1(i + 0.5);
         })
-        .attr("y", margin.top)
+        .attr("y", 50)
         .attr("text-anchor", "middle")
         .style("font-size", "22");
 
@@ -238,7 +240,7 @@
         .attr("x2", function (d) {
           return x1(d.lane);
         })
-        .attr("y1", margin.top)
+        .attr("y1", 0)
         .attr("y2", height)
         .style("visibility", function (d, i) {
           return i === 0 ? "hidden" : "visible";
@@ -288,16 +290,28 @@
     }
 
     function isConnected(a, b) {
-      return linkedByIndex[a.index + "," + b.index]
-       || linkedByIndex[b.index + "," + a.index]
-       || a.index === b.index;
+      //return linkedByIndex[a.index + "," + b.index]
+      // || linkedByIndex[b.index + "," + a.index]
+      // || a.index === b.index;
+      if (a.index === b.index) {
+        return true;
+      }
+      var connected = false;
+      data.links.forEach(function(d) {
+        if ((d.source === a && d.target === b) || (d.source === b && d.target === a)) {
+          connected = true;
+        }
+      });
+      return connected;
     }
 
     function findConnectedNodes(node) {
-      node.explored = true;
+      var exploredNodes = new MSGSet();
+      exploredNodes.add(node);
       var connectedNodes = [node];
-      var queue = [node];
-      while (queue.length > 0) {
+      var queue = new MSGSet();
+      queue.add(node);
+      while (queue.length() > 0) {
         var v = queue.shift();
         var neighbours = [];
         data.nodes.forEach(function (d) {
@@ -306,18 +320,14 @@
           }
         });
         neighbours.forEach(function(d) {
-          if (!d.explored) {
-            d.explored = true;
-            queue.push(d);
+          if (!exploredNodes.has(d)) {
+            exploredNodes.add(d);
+            queue.add(d);
             connectedNodes.push(d);
           }
         });
       }
-      connectedNodes.forEach(function(d) {
-        d.explored = false;
-      });
       return connectedNodes;
-
     }
 
     function fadeRelatedNodes(d, opacity, nodes, links) {

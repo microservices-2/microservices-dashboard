@@ -27,7 +27,7 @@
           scope.nodeSearch.status = 'ALL';
           scope.nodeSearch.type = 'ALL';
           scope.nodeSearch.group = 'ALL';
-        }
+        };
       }
     };
   }

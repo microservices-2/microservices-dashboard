@@ -11,17 +11,19 @@
     if ($scope.newNode === undefined) {
       $scope.newNode = {};
     }
+    $scope.newNode.linkedNodes = [];
 
     $scope.nodesList = {
       placeholder: "node-placeholder",
       connectWith: ".links-container"
     };
 
+    var linkedNodesSet = new MSGSet();
+
     $scope.states = GraphService.getStates();
     $scope.types = GraphService.getTypes();
     $scope.groups = GraphService.getGroups();
     $scope.availableNodes = [];
-    $scope.linkedNodes = [];
     GraphService.getGraph().then(function (result) {
       $scope.nodes = result.data;
       searchLinkedNodes();
@@ -71,9 +73,8 @@
      * @param node
      */
     function nodeFound(node) {
-      if ($scope.linkedNodes.indexOf(node) === -1) {
-        $scope.linkedNodes.push(node);
-      }
+      linkedNodesSet.add(node);
+      $scope.newNode.linkedNodes = linkedNodesSet.values();
       if ($scope.availableNodes.indexOf(node) > -1) {
         $scope.availableNodes.splice($scope.availableNodes.indexOf(node), 1);
       }

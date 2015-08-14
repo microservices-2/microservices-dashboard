@@ -64,8 +64,8 @@
       </div>
       <div class="small-6 columns">
         <label>Nodes to link</label>
-        <ul id="toList" class="links-container" ui-sortable="nodesList" ng-model="linkedNodes">
-          <li class="node-placeholder" ng-repeat='node in linkedNodes'>{{node.id}}</li>
+        <ul id="toList" class="links-container" ui-sortable="nodesList" ng-model="newNode.linkedNodes">
+          <li class="node-placeholder" ng-repeat='node in newNode.linkedNodes'>{{node.id}}</li>
         </ul>
 
       </div>

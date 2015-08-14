@@ -18,6 +18,7 @@
 
     function pushNode(node) {
       //TODO: POST request to backend
+      console.log(node);
       alert("Node " + node.id + " saved!");
     }
 

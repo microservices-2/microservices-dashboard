@@ -8,8 +8,8 @@ angular.module('microServicesGui')
       var filteredNodes = [];
       for (var i = 0; i < nodes.length; i++) {
         if (validateId(nodes[i]) && validateStatus(nodes[i]) && validateType(nodes[i]) && validateGroup(nodes[i])) {
+          //nodes[i].index = filteredNodes.length;
           filteredNodes.push(nodes[i]);
-          continue;
         }
       }
 
@@ -33,24 +33,20 @@ angular.module('microServicesGui')
   })
   .filter('linkFilter', function () {
     return function (links, nodes) {
-      var filteredLinks = [];
+      var filteredLinks = new MSGSet();
       for (var i = 0; i < links.length; i++) {
-        var found = false;
         for (var j = 0; j < nodes.length; j++) {
           if (links[i].source.id === nodes[j].id) {
             for (var k = 0; k < nodes.length; k++) {
               if (links[i].target.id === nodes[k].id) {
-                found = true;
+                filteredLinks.add(links[i]);
                 break;
               }
             }
           }
         }
-        if (found) {
-          filteredLinks.push(links[i]);
-        }
       }
-      return filteredLinks;
+      return filteredLinks.values();
     };
   });
 })();
