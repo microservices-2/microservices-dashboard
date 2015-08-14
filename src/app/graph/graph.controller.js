@@ -366,7 +366,6 @@
     }
 
     function showTheDetails(node) {
-      console.log(node);
       NodeService.setNode(node);
       var modalInstance = $modal.open({
         templateUrl: 'app/nodemodal/nodemodal.html',
