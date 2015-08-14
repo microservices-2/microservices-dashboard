@@ -21,6 +21,13 @@
         scope.states.unshift('ALL');
         scope.types.unshift('ALL');
         scope.groups.unshift('ALL');
+
+        scope.clearFilter = function() {
+          scope.nodeSearch.id = "";
+          scope.nodeSearch.status = 'ALL';
+          scope.nodeSearch.type = 'ALL';
+          scope.nodeSearch.group = 'ALL';
+        }
       }
     };
   }
