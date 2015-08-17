@@ -74,6 +74,13 @@
     },
     {
       "id": "crmodsDataSource_",
+      "details": {
+        "name": "crmodsDataSource_",
+        "status": "UP",
+        "nodeVersion": "-",
+        "type": "DB",
+        "group": "CRMODS"
+      },
       "lane": 3
     }
   ],

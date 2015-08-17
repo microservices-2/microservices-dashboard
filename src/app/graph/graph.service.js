@@ -28,7 +28,7 @@
     }
 
     function getGroups() {
-      return ["BCI", "BPS", "BUSC", "CHRMODS", "CSL", "IMA", "MBP", "NGRP", "OCT", "PDB", "PPT", "RHE", "ROSY", "SAPACHE"];
+      return ["BCI", "BPS", "BUSC", "CRMODS", "CSL", "IMA", "MBP", "NGRP", "OCT", "PDB", "PPT", "RHE", "ROSY", "SAPACHE"];
     }
 
   }
