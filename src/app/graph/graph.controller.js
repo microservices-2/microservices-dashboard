@@ -12,7 +12,7 @@
 
     var margin = {top: 20, right: 0, bottom: 20, left: 0},
       width = window.innerWidth - margin.right - margin.left,
-      //height = window.innerHeight - margin.top;
+    //height = window.innerHeight - margin.top;
       height = window.innerHeight;
 
     height -= d3.select("#navigation-container")[0][0].offsetHeight;
@@ -45,7 +45,7 @@
         //.attr("height", height + margin.top + margin.bottom)
         .attr("height", height)
         .append("g");
-        //.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      //.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       layout = d3.layout.force()
         .size([width, height]);
@@ -190,7 +190,18 @@
         })
         .attr("visibility", "hidden")
         .attr("stroke-width", 10)
-        .attr("pointer-events", "all");
+        .attr("pointer-events", "all")
+        .on("mouseover", function (d) {
+          tooltip.text(d.source.id + " - " + d.target.id);
+          return tooltip.style("visibility", "visible");
+        })
+        .on("mousemove", function () {
+          return tooltip.attr("y", (event.pageY - 70) + "px").attr("x", (event.pageX + 15) + "px");
+        })
+        .on("mouseout", function () {
+          return tooltip.style("visibility", "hidden");
+        })
+      ;
 
       // Nodes
       nodes = graph.append('svg:g')
@@ -272,6 +283,11 @@
           return i === 0 ? "hidden" : "visible";
         });
 
+      // tooltip
+      var tooltip = graph
+          .append("svg:text")
+          .style("visibility", "hidden");
+
       // Build linked index
       data.
         links
@@ -323,7 +339,7 @@
         return true;
       }
       var connected = false;
-      data.links.forEach(function(d) {
+      data.links.forEach(function (d) {
         if ((d.source === a && d.target === b) || (d.source === b && d.target === a)) {
           connected = true;
         }
@@ -345,7 +361,7 @@
             neighbours.push(d);
           }
         });
-        neighbours.forEach(function(d) {
+        neighbours.forEach(function (d) {
           if (!exploredNodes.has(d)) {
             exploredNodes.add(d);
             queue.add(d);
