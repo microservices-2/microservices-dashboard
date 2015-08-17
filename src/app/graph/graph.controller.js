@@ -8,7 +8,7 @@
   /** @ngInject */
   function GraphController($scope, $filter, $modal, GraphService, NodeService) {
     var vm = this;
-    var graph, layout, zoom, nodes, links, nodeData;
+    var graph, layout, zoom, nodes, links, clickableLinks, nodeData;
 
     var margin = {top: 20, right: 0, bottom: 20, left: 0},
       width = window.innerWidth - margin.right - margin.left,
@@ -164,7 +164,33 @@
           d3.select(this).attr("y2", targetNode.y);
           return targetNode.x;
         })
-        .attr("stroke", "black");
+        .attr("stroke", "black")
+        .attr("pointer-events", "none");
+
+      clickableLinks = graph.append('svg:g')
+        .selectAll("line")
+        .data(data.links)
+        .enter()
+        .append("line")
+        .on("click", onLinkMouseDown)
+        .attr("class", "clickablelink")
+        .attr("x1", function (l) {
+          var sourceNode = data.nodes.filter(function (d, i) {
+            return i === l.source.index;
+          })[0];
+          d3.select(this).attr("y1", sourceNode.y);
+          return sourceNode.x;
+        })
+        .attr("x2", function (l) {
+          var targetNode = data.nodes.filter(function (d, i) {
+            return i === l.target.index;
+          })[0];
+          d3.select(this).attr("y2", targetNode.y);
+          return targetNode.x;
+        })
+        .attr("visibility", "hidden")
+        .attr("stroke-width", 10)
+        .attr("pointer-events", "all");
 
       // Nodes
       nodes = graph.append('svg:g')
@@ -418,6 +444,7 @@
     }
 
     function onLinkMouseDown(d) {
+      alert("onlinkMouseDown");
       if ($scope.editLinksMode) {
         var elm = findElementByLink('link', d);
         console.log(elm);
