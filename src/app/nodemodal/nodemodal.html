@@ -19,7 +19,7 @@
       </div>
       <div class="large-4 columns">
         <label ng-class="{error: nodeForm.version.$dirty && nodeForm.version.$error.required}">Version
-          <input type="text" placeholder="Enter Version" ng-model="newNode.details.nodeVersion" name="version"
+          <input type="text" placeholder="Enter Version" ng-model="newNode.details.version" name="version"
                  required=""/>
           <span ng-show="nodeForm.version.$dirty && nodeForm.version.$error.required"
                 class="error">Version is required.</span>
@@ -30,7 +30,7 @@
       <div class="large-4 columns">
         <label>Status
           <select ng-model="newNode.details.status" ng-options="states for states in states"
-                  ng-init="newNode.details.status = 'UP'"></select>
+                  ng-init="newNode.details.status = newNode.details.status || 'UP'"></select>
         </label>
       </div>
       <div class="large-4 columns">

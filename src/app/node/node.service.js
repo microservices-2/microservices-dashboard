@@ -18,8 +18,12 @@
 
     function pushNode(node) {
       //TODO: POST request to backend
-      console.log(node);
-      alert("Node " + node.id + " saved!");
+      $http.post('rest/graph', node)
+        .then(function(response) {
+          console.log(response);
+        }, function(error) {
+
+        });
     }
 
     function getNode() {

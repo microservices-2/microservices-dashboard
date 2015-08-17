@@ -10,6 +10,7 @@
     $scope.newNode = NodeService.getNode();
     if ($scope.newNode === undefined) {
       $scope.newNode = {};
+      $scope.newNode.details = {};
     }
     $scope.newNode.linkedNodes = [];
 

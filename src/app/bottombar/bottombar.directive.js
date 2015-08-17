@@ -10,7 +10,7 @@
     return {
       templateUrl: 'app/bottombar/bottombar.html',
       controller: function($scope, $modal, NodeService) {
-        $scope.open = function () {
+        $scope.open = function (lane) {
           NodeService.setNode(undefined);
           var modalInstance = $modal.open({
             templateUrl: 'app/nodemodal/nodemodal.html',
@@ -18,6 +18,7 @@
           });
 
           modalInstance.result.then(function (node) {
+            node.lane = lane;
             NodeService.pushNode(node);
           });
         };
