@@ -6,7 +6,7 @@
     .factory('NodeService', NodeService);
 
   /** @ngInject */
-  function NodeService($http) {
+  function NodeService($http, $rootScope) {
     var nodeToOpen;
 
     var factory = {
@@ -20,7 +20,7 @@
       //TODO: POST request to backend
       $http.post('rest/graph', node)
         .then(function(response) {
-          console.log(response);
+          $rootScope.$broadcast('nodesChanged', 'Refresh nodes')
         }, function(error) {
 
         });

@@ -31,11 +31,19 @@
       alert("Lol");
     };
 
-    GraphService.getGraph().then(function (result) {
-      data = result.data;
-      nodesData = result.data.nodes;
-      linksData = result.data.links;
-      render();
+    function getGraph () {
+      GraphService.getGraph().then(function (result) {
+        data = result.data;
+        nodesData = result.data.nodes;
+        linksData = result.data.links;
+        render();
+      });
+    }
+
+    getGraph();
+
+    $scope.$on('nodesChanged', function(event, value) {
+      getGraph();
     });
 
     function render() {
