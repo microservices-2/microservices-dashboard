@@ -25,12 +25,6 @@
 
     var data, nodesData, linksData;
 
-    $scope.test = "Lol";
-
-    this.test = function () {
-      alert("Lol");
-    };
-
     function getGraph () {
       GraphService.getGraph().then(function (result) {
         data = result.data;
