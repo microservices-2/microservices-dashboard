@@ -54,7 +54,7 @@ body,html{
   margin-right: auto;
   max-width: initial;
 }
-.columns{
+.nopadding{
   padding:0;
 }
 
@@ -183,10 +183,15 @@ input, select{
 }
 
 .links-container {
-  width: 400px;
+  width: 439px;
   height: 100px;
   overflow: scroll;
   border: 1px solid;
+  margin-left: 0px;
+}
+
+.right {
+  float: right;
 }
 
 .links-container::-webkit-scrollbar {
@@ -255,7 +260,6 @@ ul.links li {
   font-family: "msg";
   font-style: normal;
   font-weight: normal;
-  speak: none;
 
   display: inline-block;
   text-decoration: inherit;

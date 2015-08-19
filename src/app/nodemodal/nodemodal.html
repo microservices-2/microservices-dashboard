@@ -3,25 +3,25 @@
 
   <h2 ng-show="newNode.id">{{newNode.id}}</h2>
 
-  <form name="nodeForm" novalidate>
+  <form name="nodeForm" novalidate ng-submit="nodeForm.$valid && ok()">
     <div class="row">
       <div class="large-4 columns">
-        <label ng-class="{error: nodeForm.id.$dirty && nodeForm.id.$error.required}">Id
+        <label ng-class="{error: (nodeForm.id.$dirty || nodeForm.$submitted) && nodeForm.id.$error.required}">Id
           <input type="text" placeholder="Enter Id" ng-model="newNode.id" name="id" required/>
-          <span ng-show="nodeForm.id.$dirty && nodeForm.id.$error.required" class="error">ID is required.</span>
+          <span ng-show="(nodeForm.id.$dirty || nodeForm.$submitted) && nodeForm.id.$error.required" class="error">ID is required.</span>
         </label>
       </div>
       <div class="large-4 columns">
-        <label ng-class="{error: nodeForm.name.$dirty && nodeForm.name.$error.required}">Name
+        <label ng-class="{error: (nodeForm.name.$dirty  || nodeForm.$submitted) && nodeForm.name.$error.required}">Name
           <input type="text" placeholder="Enter Name" ng-model="newNode.details.name" name="name" required/>
-          <span ng-show="nodeForm.name.$dirty && nodeForm.name.$error.required" class="error">Name is required.</span>
+          <span ng-show="(nodeForm.name.$dirty || nodeForm.$submitted) && nodeForm.name.$error.required" class="error">Name is required.</span>
         </label>
       </div>
       <div class="large-4 columns">
-        <label ng-class="{error: nodeForm.version.$dirty && nodeForm.version.$error.required}">Version
-          <input type="text" placeholder="Enter Version" ng-model="newNode.details.version" name="version"
+        <label ng-class="{error: (nodeForm.version.$dirty || nodeForm.$submitted)&& nodeForm.version.$error.required}">Version
+          <input type="text" placeholder="Enter Version" ng-model="newNode.details.nodeVersion" name="version"
                  required=""/>
-          <span ng-show="nodeForm.version.$dirty && nodeForm.version.$error.required"
+          <span ng-show="(nodeForm.version.$dirty || nodeForm.$submitted) && nodeForm.version.$error.required"
                 class="error">Version is required.</span>
         </label>
       </div>
@@ -30,7 +30,7 @@
       <div class="large-4 columns">
         <label>Status
           <select ng-model="newNode.details.status" ng-options="states for states in states"
-                  ng-init="newNode.details.status = newNode.details.status || 'UP'"></select>
+                  ng-init="newNode.details.status = 'UP'"></select>
         </label>
       </div>
       <div class="large-4 columns">
@@ -64,16 +64,15 @@
       </div>
       <div class="small-6 columns">
         <label>Nodes to link</label>
-        <ul id="toList" class="links-container" ui-sortable="nodesList" ng-model="newNode.linkedNodes">
+        <ul id="toList" class="links-container right" ui-sortable="nodesList" ng-model="newNode.linkedNodes">
           <li class="node-placeholder" ng-repeat='node in newNode.linkedNodes'>{{node.id}}</li>
         </ul>
-
       </div>
     </div>
     <div class="row">
       <span class="small-3 columns">
-        <input type="submit" role="button" aria-label="submit form" href="#"
-               class="nice blue radius button" value="Submit" ng-click="ok()" ng-disabled="nodeForm.$invalid"/>
+        <input type="submit" role="button" aria-label="submit form"
+               class="nice blue radius button" value="Submit"/>
       </span>
         <span class="small-3 columns">
           <a class="button custom-close-reveal-modal" ng-click="cancel()">Cancel</a>
