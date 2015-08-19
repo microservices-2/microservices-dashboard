@@ -5,7 +5,7 @@
     .module('microServicesGui')
     .controller('NodeModalController', NodeModalController);
 
-  function NodeModalController($scope, $filter, GraphService, NodeService, $modalInstance) {
+  function NodeModalController($scope, $filter, GraphService, NodeService, $modalInstance, SetService) {
 
     $scope.newNode = NodeService.getNode();
     if ($scope.newNode === undefined) {
@@ -18,8 +18,6 @@
       placeholder: "node-placeholder",
       connectWith: ".links-container"
     };
-
-    var linkedNodesSet = new MSGSet();
 
     $scope.states = GraphService.getStates();
     $scope.types = GraphService.getTypes();
@@ -74,8 +72,8 @@
      * @param node
      */
     function nodeFound(node) {
-      linkedNodesSet.add(node);
-      $scope.newNode.linkedNodes = linkedNodesSet.values();
+      SetService.add(node);
+      $scope.newNode.linkedNodes = SetService.values();
       if ($scope.availableNodes.indexOf(node) > -1) {
         $scope.availableNodes.splice($scope.availableNodes.indexOf(node), 1);
       }
