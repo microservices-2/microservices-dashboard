@@ -12,12 +12,10 @@
 
     var margin = {top: 20, right: 0, bottom: 20, left: 0},
       width = window.innerWidth - margin.right - margin.left,
-    //height = window.innerHeight - margin.top;
       height = window.innerHeight;
 
     height -= d3.select("#navigation-container")[0][0].offsetHeight;
     height -= d3.select("#control-bar")[0][0].offsetHeight;
-    //height -= d3.select("#footer-container")[0][0].offsetHeight;
 
     var linkedByIndex = {};
 
@@ -44,7 +42,6 @@
       d3.select("svg").remove();
       graph = d3.select("#graphcontainer").append("svg")
         .attr("width", width + margin.right + margin.left)
-        //.attr("height", height + margin.top + margin.bottom)
         .attr("height", height)
         .append("g");
       //.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -298,16 +295,30 @@
         });
 
       // Resize
-      resize();
+      //resize();
 
     }
 
     function resize() {
-      graphWidth = window.innerWidth;
-      graphHeight = window.innerHeight;
-      graph.attr("width", graphWidth).attr("height", graphHeight);
+      //graphWidth = window.innerWidth;
+      //graphHeight = window.innerHeight;
+      //graph.attr("width", graphWidth).attr("height", graphHeight);
 
-      layout.size([graphWidth, graphHeight]).resume();
+
+      width = window.innerWidth - margin.right - margin.left;
+      height = window.innerHeight;
+
+      height -= d3.select("#navigation-container")[0][0].offsetHeight;
+      height -= d3.select("#control-bar")[0][0].offsetHeight;
+
+      graph.attr("width", width).attr("height", height);
+
+
+      d3.select("svg")
+        .attr("width", width + margin.right + margin.left)
+        .attr("height", height);
+
+      render()
     }
 
     // Helpers
