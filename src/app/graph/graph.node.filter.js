@@ -6,6 +6,7 @@ angular.module('microServicesGui')
   .filter('nodeFilter', function () {
     return function (nodes, nodeSearch) {
       var filteredNodes = [];
+      console.log('nodes.length='+nodes.length)
       for (var i = 0; i < nodes.length; i++) {
         if (validateId(nodes[i]) && validateStatus(nodes[i]) && validateType(nodes[i]) && validateGroup(nodes[i])) {
           //nodes[i].index = filteredNodes.length;
@@ -18,7 +19,8 @@ angular.module('microServicesGui')
       }
 
       function validateStatus(node) {
-        return (nodeSearch.status !== undefined && nodeSearch.status !== "ALL") ? (node.details !== undefined && node.details.status !== undefined && node.details.status.toUpperCase() === nodeSearch.status) : true;
+        console.log(nodeSearch)
+        return (nodeSearch.status !== undefined && nodeSearch.status != null && nodeSearch.status.key !== "ALL") ? (node.details !== undefined && node.details.status !== undefined && node.details.status.toUpperCase() === nodeSearch.status.key) : true;
       }
 
       function validateType(node) {

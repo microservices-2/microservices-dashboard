@@ -5,11 +5,13 @@
   </div>
 
   <div class="columns large-2">
-    <select ng-model="nodeSearch.status" ng-options="states for states in states" ng-init="nodeSearch.status = 'ALL'">
+    <select ng-model="nodeSearch.status" ng-options="state.value for state in states">
+      <option value="">ALL - {{countArray.length}}</option>
     </select>
   </div>
   <div class="columns large-2">
     <select ng-model="nodeSearch.type" ng-options="types for types in types" ng-init="nodeSearch.type = 'ALL'">
+      <option value="frank">FRank</option>
     </select>
   </div>
   <div class="columns large-2">

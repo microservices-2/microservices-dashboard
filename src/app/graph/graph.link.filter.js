@@ -3,22 +3,22 @@
 
 
 angular.module('microServicesGui')
-  .filter('linkFilter', function () {
+  .filter('linkFilter', ["SetService",  function (SetService) {
     return function (links, nodes) {
-      var filteredLinks = new MSGSet();
+      var filteredLinks = [];
       for (var i = 0; i < links.length; i++) {
         for (var j = 0; j < nodes.length; j++) {
           if (links[i].source.id === nodes[j].id) {
             for (var k = 0; k < nodes.length; k++) {
               if (links[i].target.id === nodes[k].id) {
-                filteredLinks.add(links[i]);
+                SetService.add(links[i], filteredLinks );
                 break;
               }
             }
           }
         }
       }
-      return filteredLinks.values();
+      return filteredLinks;
     };
-  });
+  }]);
 })();

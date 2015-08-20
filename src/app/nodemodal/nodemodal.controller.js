@@ -72,8 +72,7 @@
      * @param node
      */
     function nodeFound(node) {
-      SetService.add(node);
-      $scope.newNode.linkedNodes = SetService.values();
+      $scope.newNode.linkedNodes = SetService.add(node, $scope.newNode.linkedNodes);
       if ($scope.availableNodes.indexOf(node) > -1) {
         $scope.availableNodes.splice($scope.availableNodes.indexOf(node), 1);
       }

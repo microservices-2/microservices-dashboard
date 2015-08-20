@@ -7,37 +7,23 @@
 
   /** @ngInject */
   function SetService($http, $rootScope) {
-    var array = [];
 
     var factory = {
       add: add,
-      has: has,
-      values: values,
-      length: length,
-      shift: shift
+      has: has
     };
     return factory;
 
-    function add(element) {
-      if (this.array.indexOf(element) === - 1) {
-        this.array.push(element);
+    function add(element, array) {
+      if (array.indexOf(element) === - 1) {
+        array.push(element);
       }
+      return array;
     }
 
-    function has(element) {
-      return this.array.indexOf(element) > -1;
+    function has(element, array) {
+      return array.indexOf(element) > -1;
     }
 
-    function values() {
-      return this.array;
-    }
-
-    function length() {
-      return this.array.length;
-    }
-
-    function shift() {
-      return this.array.shift();
-    }
   }
 })();
