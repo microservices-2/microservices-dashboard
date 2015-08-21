@@ -23,6 +23,8 @@
 
     var data, nodesData, linksData;
 
+    var titleFontSize, textFontSize;
+
     $scope.countArray = [];
 
     function getGraph () {
@@ -57,7 +59,7 @@
         .size([width, height]);
 
       d3.select(window).on("resize", resize); //Adds or removes an event listener to each element in the current selection, for the specified type.
-
+      determineFontSize();
       renderGraph(data);
     }
 
@@ -130,7 +132,7 @@
         })
         .attr("y", 50)
         .attr("text-anchor", "middle")
-        .style("font-size", "22");
+        .style("font-size", titleFontSize);
 
       // Markers
       graph.append("svg:defs")
@@ -253,7 +255,8 @@
         }).text(function (d) {
           return d.id;
         })
-        .attr("text-anchor", "middle");
+        .attr("text-anchor", "middle")
+        .style("font-size", textFontSize);
 
       nodes.append("svg:text")
         .attr("class", function (d) {
@@ -268,7 +271,8 @@
         .text(function (d) {
           return d.id;
         })
-        .attr("text-anchor", "middle");
+        .attr("text-anchor", "middle")
+        .style("font-size", textFontSize);
 
       //Lanes
       graph.append("svg:g")
@@ -326,6 +330,23 @@
         .attr("height", height);
 
       render()
+    }
+
+    function determineFontSize () {
+      switch (true) {
+        case (0 <= width &&  width < 480):
+          titleFontSize = 12;
+          textFontSize = 6;
+          break;
+        case (480 <= width &&  width < 640):
+          titleFontSize = 18;
+          textFontSize = 8;
+          break;
+        case (640 < width):
+          titleFontSize = 22;
+          textFontSize = 10;
+          break;
+      }
     }
 
     // Helpers
