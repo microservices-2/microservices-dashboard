@@ -31,7 +31,7 @@
       "details": {
         "name": "ngrpGetEligibleAwards",
         "status": "UP",
-        "nodeVersion": "-",
+        "version": "-",
         "type": "SOAP",
         "group": "NGRP",
         "exposion": [
@@ -49,7 +49,7 @@
       "details": {
         "name": "rheHandleOrderHistory",
         "status": "UNKNOWN",
-        "nodeVersion": "-",
+        "version": "-",
         "type": "SOAP",
         "group": "RHE"
       },
@@ -87,7 +87,7 @@
       "details": {
         "name": "crmodsDataSource_",
         "status": "UP",
-        "nodeVersion": "-",
+        "version": "-",
         "type": "DB",
         "group": "CRMODS"
       },
