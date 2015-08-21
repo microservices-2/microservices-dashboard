@@ -115,6 +115,7 @@ input, select{
   bottom: 0;
   position: fixed;
   width: 100%;
+  pointer-events: none;
   button {
     height: 50px;
     width: 50px;
@@ -122,6 +123,7 @@ input, select{
     margin: 10px;
     font-size: 200%;
     padding: 0;
+    pointer-events: auto;
   }
 }
 

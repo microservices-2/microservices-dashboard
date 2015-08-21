@@ -204,7 +204,10 @@
           return tooltip.style("visibility", "visible");
         })
         .on("mousemove", function () {
-          return tooltip.attr("y", (event.pageY - 70) + "px").attr("x", (event.pageX + 15) + "px");
+          var coordinates = d3.mouse(this);
+          var x = coordinates[0];
+          var y = coordinates[1];
+          return tooltip.attr("x", (x + 15) + "px").attr("y", (y + 20) + "px");
         })
         .on("mouseout", function () {
           return tooltip.style("visibility", "hidden");
@@ -296,7 +299,8 @@
       // tooltip
       var tooltip = graph
           .append("svg:text")
-          .style("visibility", "hidden");
+          .style("visibility", "hidden")
+          .style("fill", "#5AADBB");
 
       // Build linked index
       data.
@@ -475,17 +479,13 @@
      */
 
     function onNodeMouseOver(nodes, links, d) {
+      // Highlight circle
+      var elm = findElementByNode('circle', d);
+      elm.style("fill", '#b94431');
 
-      if ($scope.editLinksMode) {
+      // Highlight related nodes
+      fadeRelatedNodes(d, 0.05, nodes, links);
 
-      } else {
-        // Highlight circle
-        var elm = findElementByNode('circle', d);
-        elm.style("fill", '#b94431');
-
-        // Highlight related nodes
-        fadeRelatedNodes(d, 0.05, nodes, links);
-      }
     }
 
     function onNodeMouseOut(nodes, links, d) {
