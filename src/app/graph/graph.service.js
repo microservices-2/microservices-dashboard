@@ -20,8 +20,7 @@
     }
 
     function getStates() {
-      var keyValueArray = [{key: "UP", value: "UP"}, {key: "DOWN", value: "DOWN"}, {key: "UNKNOWN", value: "UNKNOWN"}];
-      return keyValueArray;
+      return [{key: "UP", value: "UP"}, {key: "DOWN", value: "DOWN"}, {key: "UNKNOWN", value: "UNKNOWN"}];
     }
 
     function getTypes() {
