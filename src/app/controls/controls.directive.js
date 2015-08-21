@@ -12,7 +12,6 @@
       controller: 'GraphController',
       link: function (scope, elem, attrs, graphController) {
         scope.$watchGroup(['nodeSearch.id', 'nodeSearch.status', 'nodeSearch.type', 'nodeSearch.group'], function () {
-          console.log(scope.nodeSearch.status);
           graphController.filterNodes(scope.nodeSearch);
         })
 
@@ -21,8 +20,8 @@
         scope.groups = GraphService.getGroups();
 
         //scope.states.unshift('ALL');
-        scope.types.unshift('ALL');
-        scope.groups.unshift('ALL');
+        //scope.types.unshift('ALL');
+        //scope.groups.unshift('ALL');
 
         scope.$watch('countArray.length', function () {
           scope.states = GraphService.getStates();
@@ -33,6 +32,32 @@
                 }
                 if (d.details != undefined) {
                   return d.details.status === state.value;
+                }
+                return false;
+
+              }).length
+          })
+          scope.types = GraphService.getTypes();
+          scope.types.forEach(function (type, i) {
+            scope.types[i].value = type.value + " - " + scope.countArray.filter(function (d) {
+                if (type.value === 'ALL') {
+                  return true;
+                }
+                if (d.details != undefined) {
+                  return d.details.type === type.value;
+                }
+                return false;
+
+              }).length
+          })
+          scope.groups = GraphService.getGroups();
+          scope.groups.forEach(function (group, i) {
+            scope.groups[i].value = group.value + " - " + scope.countArray.filter(function (d) {
+                if (group.value === 'ALL') {
+                  return true;
+                }
+                if (d.details != undefined) {
+                  return d.details.group === group.value;
                 }
                 return false;
 

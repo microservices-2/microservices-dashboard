@@ -20,16 +20,28 @@
     }
 
     function getStates() {
-      var keyValueArray = [{key:"UP", value:"UP"}, {key:"DOWN",value:"DOWN"}, {key:"UNKNOWN", value:"UNKNOWN"}];
+      var keyValueArray = [{key: "UP", value: "UP"}, {key: "DOWN", value: "DOWN"}, {key: "UNKNOWN", value: "UNKNOWN"}];
       return keyValueArray;
     }
 
     function getTypes() {
-      return ["DB", "MICROSERVICE", "REST", "SOAP"];
+      return [{key: "DB", value: "DB"}, {key: "MICROSERVICE", value: "MICROSERVICE"}, {
+        key: "REST",
+        value: "REST"
+      }, {key: "SOAP", value: "SOAP"}];
     }
 
     function getGroups() {
-      return ["BCI", "BPS", "BUSC", "CRMODS", "CSL", "IMA", "MBP", "NGRP", "OCT", "PDB", "PPT", "RHE", "ROSY", "SAPACHE"];
+      return [{key: "BCI", value: "BCI"}, {key: "BPS", value: "BPS"}, {key: "BUSC", value: "BUSC"}, {
+        key: "CRMODS",
+        value: "CRMODS"
+      }, {key: "CSL", value: "CSL"}, {key: "IMA", value: "IMA"}, {key: "MBP", value: "MBP"}, {
+        key: "NGRP",
+        value: "NGRP"
+      }, {key: "OCT", value: "OCT"}, {key: "PDB", value: "PDB"}, {key: "PPT", value: "PPT"}, {
+        key: "RHE",
+        value: "RHE"
+      }, {key: "ROSY", value: "ROSY"}, {key: "SAPACHE", value: "SAPACHE"}];
     }
 
   }

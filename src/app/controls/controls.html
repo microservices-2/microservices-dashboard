@@ -10,12 +10,13 @@
     </select>
   </div>
   <div class="columns large-2">
-    <select ng-model="nodeSearch.type" ng-options="types for types in types" ng-init="nodeSearch.type = 'ALL'">
-      <option value="frank">FRank</option>
+    <select ng-model="nodeSearch.type" ng-options="type.value for type in types">
+      <option value="">ALL - {{countArray.length}}</option>
     </select>
   </div>
   <div class="columns large-2">
-    <select ng-model="nodeSearch.group" ng-options="groups for groups in groups" ng-init="nodeSearch.group = 'ALL'">
+    <select ng-model="nodeSearch.group" ng-options="group.value for group in groups">
+      <option value="">ALL - {{countArray.length}}</option>
     </select>
   </div>
   <div class="columns large-2">

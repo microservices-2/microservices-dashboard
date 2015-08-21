@@ -516,15 +516,10 @@
     /*
      Filter
      */
-    //$scope.$watchGroup(['nodeSearch.id', 'nodeSearch.status', 'nodeSearch.type', 'nodeSearch.group'], function () {
-    //  filterNodes($scope.nodeSearch);
-    //})
-
     this.filterNodes = function  (nodeFilter) {
       if (data !== undefined) {
         data.nodes = $filter('nodeFilter')(nodesData, nodeFilter);
         data.links = $filter('linkFilter')(linksData, data.nodes);
-        //$scope.countArray = data.nodes;
         resetGraph(data);
       }
     };
