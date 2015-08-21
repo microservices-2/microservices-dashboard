@@ -16,17 +16,17 @@
       $scope.newNode = {};
       $scope.newNode.details = {};
     } else {
-      if ($scope.newNode.details != undefined) {
+      if ($scope.newNode.details !== undefined) {
         $scope.states.forEach(function (d) {
           if (d.key === $scope.newNode.details.status) {
             $scope.newNode.details.status = d;
           }
-        })
+        });
         $scope.types.forEach(function (d) {
           if (d.key === $scope.newNode.details.type) {
             $scope.newNode.details.type = d;
           }
-        })
+        });
         $scope.groups.forEach(function (d) {
           if (d.key === $scope.newNode.details.group) {
             $scope.newNode.details.group = d;

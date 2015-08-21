@@ -333,7 +333,7 @@
         .attr("width", width + margin.right + margin.left)
         .attr("height", height);
 
-      render()
+      render();
     }
 
     function determineFontSize () {
