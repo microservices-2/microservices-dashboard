@@ -1,1 +1,137 @@
-{"title":"Micro Services Graph","appVersion":"0.0.1","description":"The visualisation of micro services gives an overview of the microservices and their dependencies.","graph":[],"lanes":[{"lane":0,"type":"UI"},{"lane":1,"type":"End Point"},{"lane":2,"type":"Micro Services"},{"lane":3,"type":"Backend"}],"nodes":[{"id":"ordering-loyalty","lane":0},{"id":"ngrpGetEligibleAwards","details":{"name":"ngrpGetEligibleAwards","status":"UP","nodeVersion":"-","type":"SOAP","group":"NGRP","exposion":["intern","extern"],"request-load":"100","memory-load":"10","ownership":[]},"lane":1},{"id":"rheHandleOrderHistory","details":{"name":"rheHandleOrderHistory","status":"UNKNOWN","nodeVersion":"-","type":"SOAP","group":"RHE"},"lane":1},{"id":"bpsCustomer","lane":2},{"id":"ngrpGetPartnerMembershipDetails","lane":3},{"id":"discovery","lane":0},{"id":"configServer","lane":1,"details":{"name":"x","version":"x","status":"UP","type":"DB","group":"BCI"}},{"id":"pptDataSource_","lane":2},{"id":"crmodsDataSource_","details":{"name":"crmodsDataSource_","status":"UP","nodeVersion":"-","type":"DB","group":"CRMODS"},"lane":3}],"directed":true,"links":[{"source":0,"target":1},{"source":0,"target":2},{"source":1,"target":2},{"source":1,"target":3},{"source":2,"target":3},{"source":3,"target":4},{"source":6,"target":7},{"source":7,"target":8},{"source":8,"target":7}],"multigraph":false}
+{
+  "title": "Micro Services Graph",
+  "appVersion": "0.0.1",
+  "description": "The visualisation of micro services gives an overview of the microservices and their dependencies.",
+  "graph": [],
+  "lanes": [
+    {
+      "lane": 0,
+      "type": "UI"
+    },
+    {
+      "lane": 1,
+      "type": "End Point"
+    },
+    {
+      "lane": 2,
+      "type": "Micro Services"
+    },
+    {
+      "lane": 3,
+      "type": "Backend"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "ordering-loyalty",
+      "lane": 0
+    },
+    {
+      "id": "ngrpGetEligibleAwards",
+      "details": {
+        "name": "ngrpGetEligibleAwards",
+        "status": "UP",
+        "nodeVersion": "-",
+        "type": "SOAP",
+        "group": "NGRP",
+        "exposion": [
+          "intern",
+          "extern"
+        ],
+        "request-load": "100",
+        "memory-load": "10",
+        "ownership": []
+      },
+      "lane": 1
+    },
+    {
+      "id": "rheHandleOrderHistory",
+      "details": {
+        "name": "rheHandleOrderHistory",
+        "status": "UNKNOWN",
+        "nodeVersion": "-",
+        "type": "SOAP",
+        "group": "RHE"
+      },
+      "lane": 1
+    },
+    {
+      "id": "bpsCustomer",
+      "lane": 2
+    },
+    {
+      "id": "ngrpGetPartnerMembershipDetails",
+      "lane": 3
+    },
+    {
+      "id": "discovery",
+      "lane": 0
+    },
+    {
+      "id": "configServer",
+      "lane": 1,
+      "details": {
+        "name": "x",
+        "version": "x",
+        "status": "UP",
+        "type": "DB",
+        "group": "BCI"
+      }
+    },
+    {
+      "id": "pptDataSource_",
+      "lane": 2
+    },
+    {
+      "id": "crmodsDataSource_",
+      "details": {
+        "name": "crmodsDataSource_",
+        "status": "UP",
+        "nodeVersion": "-",
+        "type": "DB",
+        "group": "CRMODS"
+      },
+      "lane": 3
+    }
+  ],
+  "directed": true,
+  "links": [
+    {
+      "source": 0,
+      "target": 1
+    },
+    {
+      "source": 0,
+      "target": 2
+    },
+    {
+      "source": 1,
+      "target": 2
+    },
+    {
+      "source": 1,
+      "target": 3
+    },
+    {
+      "source": 2,
+      "target": 3
+    },
+    {
+      "source": 3,
+      "target": 4
+    },
+    {
+      "source": 6,
+      "target": 7
+    },
+    {
+      "source": 7,
+      "target": 8
+    },
+    {
+      "source": 8,
+      "target": 7
+    }
+  ],
+  "multigraph": false
+}
