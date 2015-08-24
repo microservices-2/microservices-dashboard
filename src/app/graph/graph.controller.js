@@ -538,9 +538,6 @@
      Filter
      */
     this.filterNodes = function  (nodeFilter) {
-      console.log("data");
-      console.log(data);
-      console.log(nodeFilter);
       if (data !== undefined) {
         data.nodes = $filter('nodeFilter')(nodesData, nodeFilter);
         data.links = $filter('linkFilter')(linksData, data.nodes);

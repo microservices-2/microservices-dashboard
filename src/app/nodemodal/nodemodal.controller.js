@@ -33,7 +33,6 @@
           }
         })
       }
-      console.log($scope.newNode);
     }
 
     $scope.newNode.linkedNodes = [];
