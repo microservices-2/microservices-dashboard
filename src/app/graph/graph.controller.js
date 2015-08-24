@@ -501,7 +501,7 @@
     }
 
     function onLinkMouseDown(d) {
-      alert("onlinkMouseDown");
+//      alert("onlinkMouseDown");
       if ($scope.editLinksMode) {
         var elm = findElementByLink('link', d);
         console.log(elm);
