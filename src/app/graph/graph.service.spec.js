@@ -29,7 +29,7 @@
       graph = [{
         "name": "Top Level",
         "parent": "null"
-      }]
+      }];
     }
 
     function givenBackendReturnsGraph() {

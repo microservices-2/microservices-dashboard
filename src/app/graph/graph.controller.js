@@ -501,37 +501,13 @@
     }
 
     function onLinkMouseDown(d) {
-//      alert("onlinkMouseDown");
-      if ($scope.editLinksMode) {
-        var elm = findElementByLink('link', d);
-        console.log(elm);
-        elm.remove();
 
-        var i = nodeData.links.indexOf(d);
-        if (i !== -1) {
-          nodeData.links.splice(i, 1);
-        }
-        $scope.resetGraph(nodeData);
-      }
     }
 
     function onNodeMouseDown(d) {
-      if ($scope.editLinksMode) {
-        var elm = findElementByNode('circle', d);
-        elm.style("stroke", "red");
-        if (selectedNodes.length === 0) {
-          selectedNodes.push(d);
-        } else {
-          if (d !== selectedNodes[0]) {
-            selectedNodes.push(d);
-            connectNodes();
-          }
-        }
-      } else {
-        d.fixed = true;
-        d3.select(this).classed("sticky", true);
-        showTheDetails(d);
-      }
+      d.fixed = true;
+      d3.select(this).classed("sticky", true);
+      showTheDetails(d);
     }
 
     /*

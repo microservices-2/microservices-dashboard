@@ -31,7 +31,7 @@
           if (d.key === $scope.newNode.details.group) {
             $scope.newNode.details.group = d;
           }
-        })
+        });
       }
     }
 
