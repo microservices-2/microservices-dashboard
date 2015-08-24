@@ -27,4 +27,8 @@ describe('The control bar', function () {
     expect(statesList.first().getText()).toContain('ALL');
   });
 
+  it('should have an edit field to filter on text', function() {
+    expect(page.searchNode.getAttribute('placeholder')).toBe('Search node');
+  });
+
 });
