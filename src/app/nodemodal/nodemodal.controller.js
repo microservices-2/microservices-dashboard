@@ -49,12 +49,22 @@
     });
 
     $scope.ok = function () {
+      saveNode();
       $modalInstance.close($scope.newNode);
     };
 
     $scope.cancel = function () {
+      saveNode();
       $modalInstance.dismiss('cancel');
     };
+
+    function saveNode(){
+      if ($scope.newNode !== undefined && $scope.newNode.details !== undefined){
+        $scope.newNode.details.status = $scope.newNode.details.status.key;
+        $scope.newNode.details.type = $scope.newNode.details.type.key;
+        $scope.newNode.details.group = $scope.newNode.details.group.key;
+      }
+    }
 
     function searchLinkedNodes() {
       //Add the nodes to the links
@@ -73,13 +83,14 @@
 
       //Search for the nodes connected by the link
       $scope.nodes.links.forEach(function (link) {
+        var filteredNodes;
         if (link.source.id === $scope.newNode.id) {
-          var filteredNodes = $filter("nodeModalFilter")($scope.nodes.nodes, link.target);
+          filteredNodes = $filter("nodeModalFilter")($scope.nodes.nodes, link.target);
           if (filteredNodes.length > 0) {
             nodeFound(filteredNodes[0]);
           }
         } else if (link.target.id === $scope.newNode.id) {
-          var filteredNodes = $filter("nodeModalFilter")($scope.nodes.nodes, link.source);
+          filteredNodes = $filter("nodeModalFilter")($scope.nodes.nodes, link.source);
           if (filteredNodes.length > 0) {
             nodeFound(filteredNodes[0]);
           }

@@ -6,17 +6,17 @@
 
   <div class="columns large-2">
     <select ng-model="nodeSearch.status" ng-options="state.value for state in states">
-      <option value="">ALL - {{countArray.length}}</option>
+      <option value="">ALL - {{graphData.nodes.length}}</option>
     </select>
   </div>
   <div class="columns large-2">
     <select ng-model="nodeSearch.type" ng-options="type.value for type in types">
-      <option value="">ALL - {{countArray.length}}</option>
+      <option value="">ALL - {{graphData.nodes.length}}</option>
     </select>
   </div>
   <div class="columns large-2">
     <select ng-model="nodeSearch.group" ng-options="group.value for group in groups">
-      <option value="">ALL - {{countArray.length}}</option>
+      <option value="">ALL - {{graphData.nodes.length}}</option>
     </select>
   </div>
   <div class="columns large-2">

@@ -17,9 +17,6 @@
     return factory;
 
     function pushNode(node) {
-      node.details.status = node.details.status.key;
-      node.details.type = node.details.type.key;
-      node.details.group = node.details.group.key;
       //TODO: POST request to backend
       $http.post('rest/graph', node)
         .then(function(response) {
