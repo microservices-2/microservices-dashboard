@@ -22,8 +22,20 @@ angular.module('msgGraph')
            var element;
 
           var titleFontSize, textFontSize;
+  
+          function getGraphHeight(data) {
+            var numberOfNodesOnBiggestLane = _.max(_.values(_.groupBy(data.nodes, function(n) {
+              return n.lane;
+            })), function(nodes) {
+              return nodes.length;
+            }).length;
+            return numberOfNodesOnBiggestLane*75;
+          }
 
           function render(element) {
+
+            height = getGraphHeight(data);
+
             d3.select("svg").remove();
             graph = d3.select(element).append("svg")
               .attr("width", width + margin.right + margin.left)
