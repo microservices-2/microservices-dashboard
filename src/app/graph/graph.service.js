@@ -16,7 +16,7 @@
     return factory;
 
     function getGraph() {
-      return $http.get('/rest/graph');
+      return $http.get('/dependencies/graph');
     }
 
     function getStates() {
