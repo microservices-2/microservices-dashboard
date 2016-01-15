@@ -18,7 +18,7 @@
 
     function pushNode(node) {
       //TODO: POST request to backend
-      $http.post('dependencies/graph', node)
+      $http.post('dependencies/node', node)
         .then(function(response) {
           $rootScope.$broadcast('nodesChanged', 'Refresh nodes');
         }, function(error) {
