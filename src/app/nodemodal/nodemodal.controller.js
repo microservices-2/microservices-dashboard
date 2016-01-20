@@ -33,7 +33,9 @@
           }
         });
       }
-    }
+   }
+
+    $scope.newNode.details.virtual = true;
 
     $scope.newNode.linkedNodes = [];
 
