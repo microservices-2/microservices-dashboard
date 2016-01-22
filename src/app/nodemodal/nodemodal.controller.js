@@ -35,8 +35,6 @@
       }
    }
 
-    $scope.newNode.details.virtual = true;
-
     $scope.newNode.linkedNodes = [];
 
     $scope.nodesList = {
