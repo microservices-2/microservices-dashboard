@@ -17,11 +17,12 @@ angular.module('msgGraph')
 
           var graphWidth, graphHeight;
 
-          var data, nodesData, linksData, graph, layout, lanes, links, clickableLinks, nodes;
+          var data, nodesData, linksData, graph, layout, lanes, links, clickableLinks, nodes, arrowheads;
 
            var element;
 
           var titleFontSize, textFontSize;
+          var nodeR =12;
   
           function getGraphHeight(data) {
             var numberOfNodesOnBiggestLane = _.max(_.values(_.groupBy(data.nodes, function(n) {
@@ -123,23 +124,20 @@ angular.module('msgGraph')
               .attr("text-anchor", "middle")
               .style("font-size", titleFontSize);
 
-            // Markers
-            graph.append("svg:defs")
-              .selectAll("marker")
-              .data(['regular'])                //Joins the specified array of data with the current selection.The specified values is an array of data values
-              .enter()                            //Returns the enter selection: placeholder nodes for each data element for which no corresponding existing DOM element was found in the current selection.
+                 // Markers
+            arrowheads = graph.append("svg:defs")
               .append("svg:marker")
-              .attr("id", String)
+              .attr("id", "arrow")
               .attr("viewBox", "0 -5 10 10")
-              .attr("refX", 15)
-              .attr("refY", -1.5)
+              .attr("refX", nodeR + 9)
+              .attr("refY", 0.0)
               .attr("markerWidth", 6)
               .attr("markerHeight", 6)
+              .attr("class", "link")
               .attr("orient", "auto")
               .append("svg:path")
               .attr("d", "M0,-5L10,0L0,5");
-
-
+               
             links = graph.append('svg:g')
               .selectAll("line")
               .data(data.links)
@@ -162,13 +160,14 @@ angular.module('msgGraph')
                 return targetNode.x;
               })
               .attr("stroke", "black")
-              .attr("pointer-events", "none");
-
+              .attr("pointer-events", "none")
+              .attr("marker-end", "url(#arrow)");
+               
             clickableLinks = graph.append('svg:g')
               .selectAll("line")
               .data(data.links)
               .enter()
-              .append("line")
+              .append("svg:line")
               .on("click", onLinkMouseDown)
               .attr("class", "clickablelink")
               .attr("x1", function (l) {
@@ -221,7 +220,7 @@ angular.module('msgGraph')
               .attr("class", function (d) {
                 return formatClassName('circle', d);
               })
-              .attr("r", 12)
+              .attr("r", nodeR)
               .attr("cx", function (d) {
                 return d.x;
               })
@@ -245,7 +244,10 @@ angular.module('msgGraph')
               .attr("class", function (d) {
                 return 'shadow ' + formatClassName('text', d);
               }).text(function (d) {
-                return d.id;
+                var name = d.id;
+                if(d.details.virtual===true)
+                 name =  d.id + ' (virtual)'
+               return name;
               })
               .attr("text-anchor", "middle")
               .style("font-size", textFontSize);
@@ -261,10 +263,15 @@ angular.module('msgGraph')
                 return d.y + 25;
               })
               .text(function (d) {
-                return d.id;
+               var name = d.id;
+                if(d.details.virtual===true)
+                 name =  d.id + ' (virtual)'
+               return name;
               })
               .attr("text-anchor", "middle")
               .style("font-size", textFontSize);
+
+         
 
             //Lanes
             graph.append("svg:g")
@@ -297,7 +304,7 @@ angular.module('msgGraph')
               .forEach(function (d) {
                 linkedByIndex[d.source.index + "," + d.target.index] = 1;
               });
-          }
+         }
 
           function resize() {
             width = window.innerWidth - margin.right - margin.left;
