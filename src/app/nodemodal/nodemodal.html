@@ -12,17 +12,19 @@
         </label>
       </div>
       <div class="large-4 columns">
-        <label ng-class="{error: (nodeForm.name.$dirty  || nodeForm.$submitted) && nodeForm.name.$error.required}">Name
-          <input type="text" placeholder="Enter Name" ng-model="newNode.details.name" name="name" required/>
-          <span ng-show="(nodeForm.name.$dirty || nodeForm.$submitted) && nodeForm.name.$error.required" class="error">Name is required.</span>
+        <label>Name
+          <input type="text" placeholder="Enter Name" ng-model="newNode.details.name" name="name"
+                 ng-init="newNode.details.name = newNode.details.name" 
+          />
+        
         </label>
       </div>
       <div class="large-4 columns">
-        <label ng-class="{error: (nodeForm.version.$dirty || nodeForm.$submitted)&& nodeForm.version.$error.required}">Version
+        <label>Version
           <input type="text" placeholder="Enter Version" ng-model="newNode.details.version" name="version"
-                 required=""/>
-          <span ng-show="(nodeForm.version.$dirty || nodeForm.$submitted) && nodeForm.version.$error.required"
-                class="error">Version is required.</span>
+                   ng-init="newNode.details.version = newNode.details.version" 
+          />
+       
         </label>
       </div>
     </div>
