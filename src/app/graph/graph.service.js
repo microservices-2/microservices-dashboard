@@ -27,7 +27,9 @@
       return [{key: "DB", value: "DB"}, {key: "MICROSERVICE", value: "MICROSERVICE"}, {
         key: "REST",
         value: "REST"
-      }, {key: "SOAP", value: "SOAP"}];
+      }, {key: "SOAP", value: "SOAP"},
+       {key: "JMS", value: "JMS"}
+      ];
     }
 
     function getGroups() {

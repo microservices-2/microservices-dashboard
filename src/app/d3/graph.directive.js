@@ -437,6 +437,11 @@ angular.module('msgGraph')
                 {
                   return "green";
                 }
+                 case "JMS":
+                {
+                  return "#F08080";
+                }
+
                 default:
                 {
                   return "#fff";
