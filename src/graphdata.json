@@ -1,0 +1,378 @@
+{
+  "directed": true,
+  "nodes": [
+    {
+      "details": {
+        "description": "Spring Cloud Eureka Discovery Client",
+        "type": "MICROSERVICE",
+        "status": "UP"
+      },
+      "id": "cdb-replicator",
+      "lane": 2
+    },
+    {
+      "details": {
+        "discoveryClient": {
+          "description": "Spring Cloud Eureka Discovery Client ",
+          "status": "UP",
+          "services": [
+            "fat-jar-test",
+            "customer-group",
+            "cdb-customer-provider",
+            "admin",
+            "user-preferences",
+            "customer-addresses",
+            "loyalty-program",
+            "product-stock",
+            "zuul",
+            "billing-payments",
+            "crypto",
+            "order-processor",
+            "customer-management",
+            "user",
+            "user-avatar",
+            "agenda",
+            "tariff-charges",
+            "billing-transactions",
+            "customer-administrators",
+            "user-billing-structure",
+            "billing-accounts",
+            "shop-management",
+            "cdb-replicator",
+            "turbine",
+            "hystrix",
+            "awards",
+            "billing-replicator",
+            "web-feedback",
+            "user-application-trusts",
+            "customer-application-access",
+            "billing-complaints",
+            "historical-usage-prepaid",
+            "offers",
+            "customer-access-numbers",
+            "carrier-wholesale-solutions",
+            "real-time-usage-prepaid",
+            "ordering-loyalty",
+            "ordering-onedrive",
+            "ereload",
+            "customer-proximus",
+            "messenger"
+          ]
+        },
+        "eureka": {
+          "description": "Remote status from Eureka server",
+          "status": "UP",
+          "applications": {
+            "TARIFF-CHARGES": 2,
+            "ORDERING-ONEDRIVE": 1,
+            "PRICES": 0,
+            "OFFERS": 1,
+            "CARRIER-WHOLESALE-SOLUTIONS": 1,
+            "PRICE-SYNC": 0,
+            "RENUNCIATION": 0,
+            "MESSENGER": 1,
+            "HYSTRIX": 1,
+            "CUSTOMER-MANAGEMENT": 1,
+            "AGENDA": 1,
+            "USER-APPLICATION-TRUSTS": 1,
+            "ERELOAD": 1,
+            "WEBSHOP-BUSINESSRULES-ENGINE": 0,
+            "PREPAID-IDENTIFICATION": 0,
+            "BILLING-ACCOUNTS": 1,
+            "CUSTOMER-APPLICATION-ACCESS": 1,
+            "PRODUCTS": 0,
+            "LOYALTY-PROGRAM": 2,
+            "CUSTOMER-PROXIMUS": 1,
+            "CUSTOMER-ADMINISTRATORS": 1,
+            "CUSTOMER-PREMISES-EQUIPMENT": 0,
+            "ADMIN": 1,
+            "CRYPTO": 1,
+            "AWARDS": 1,
+            "USER-AVATAR": 1,
+            "SHOP-MANAGEMENT": 1,
+            "QUOTE-MANAGEMENT": 0,
+            "BILLING-REPLICATOR": 1,
+            "BILLING-COMPLAINTS": 1,
+            "CDB-CUSTOMER-PROVIDER": 1,
+            "ZUUL": 1,
+            "WEBSHOP-BUSINESS-CONFIGURATION": 0,
+            "NETWORK-CHARACTERISTICS": 0,
+            "CDB-REPLICATOR": 1,
+            "BILLING-TRANSACTIONS": 1,
+            "CUSTOMER-ACCESS-NUMBERS": 1,
+            "USER-BILLING-STRUCTURE": 1,
+            "ARCHETYPE-TEST": 0,
+            "CUSTOMER-CREDIT-WORTHINESS": 0,
+            "WEB-FEEDBACK": 1,
+            "PRODUCTS-SYNC": 0,
+            "INSTALLBASE": 0,
+            "HISTORICAL-USAGE-PREPAID": 1,
+            "ADDRESS": 0,
+            "PRODUCT-STOCK": 1,
+            "CUSTOMER-ADDRESSES": 1,
+            "CUSTOMER-GROUP": 1,
+            "ORDERING-LOYALTY": 1,
+            "USER": 1,
+            "ORDER-PROCESSOR": 1,
+            "PAYMENT-GATEWAY": 0,
+            "TURBINE": 1,
+            "REAL-TIME-USAGE-PREPAID": 1,
+            "USER-PREFERENCES": 1,
+            "SHOPPING-BASKET": 0,
+            "EUREKA": 0,
+            "BILLING-PAYMENTS": 1,
+            "FAT-JAR-TEST": 3
+          }
+        },
+        "description": "Spring Cloud Eureka Discovery Client",
+        "status": "UP"
+      },
+      "id": "discoveryComposite",
+      "lane": 3
+    },
+    {
+      "details": {
+        "primaryDataSourceFromJNDI": {
+          "status": "UP",
+          "database": "Microsoft SQL Server",
+          "hello": 1
+        },
+        "status": "UP",
+        "secondaryDataSource": {
+          "status": "UP",
+          "database": "HSQL Database Engine",
+          "hello": 1
+        }
+      },
+      "id": "db",
+      "lane": 3
+    },
+    {
+      "details": {
+        "type": "MICROSERVICE",
+        "status": "UP"
+      },
+      "id": "billing-transactions",
+      "lane": 2
+    },
+    {
+      "details": {
+        "type": "SOAP",
+        "version": "2.0",
+        "status": "UP",
+        "group": "CSL"
+      },
+      "id": "cslTransaction",
+      "lane": 3
+    },
+    {
+      "details": {
+        "type": "SOAP",
+        "status": "UNKNOWN",
+        "group": "CSL"
+      },
+      "id": "cslEmployee",
+      "lane": 3
+    },
+    {
+      "details": {
+        "type": "SOAP",
+        "version": "1.1",
+        "status": "UP",
+        "group": "RMCA"
+      },
+      "id": "rmcaAccountsReceivableManagement",
+      "lane": 3
+    },
+    {
+      "details": {
+        "database": "HSQL Database Engine",
+        "hello": 1,
+        "type": "DB",
+        "status": "UP",
+        "group": "BILL"
+      },
+      "id": "billDataSource_",
+      "lane": 3
+    },
+    {
+      "details": {
+        "type": "MICROSERVICE",
+        "status": "UP"
+      },
+      "id": "billing-complaints",
+      "lane": 2
+    },
+    {
+      "details": {
+        "type": "SOAP",
+        "version": "",
+        "status": "UP",
+        "group": "ISM"
+      },
+      "id": "ismISMConsultationComp",
+      "lane": 3
+    },
+    {
+      "details": {
+        "description": "Spring Cloud Eureka Discovery Client",
+        "type": "MICROSERVICE",
+        "status": "UP"
+      },
+      "id": "billing-replicator",
+      "lane": 2
+    },
+    {
+      "details": {
+        "type": "MICROSERVICE",
+        "status": "UP"
+      },
+      "id": "user-billing-structure",
+      "lane": 2
+    },
+    {
+      "details": {
+        "description": "Spring Cloud Eureka Discovery Client",
+        "type": "MICROSERVICE",
+        "status": "UP"
+      },
+      "id": "billing-payments",
+      "lane": 2
+    },
+    {
+      "details": {
+        "type": "MICROSERVICE",
+        "status": "UP"
+      },
+      "id": "customer-administrators",
+      "lane": 2
+    },
+    {
+      "details": {
+        "type": "SOAP",
+        "version": "MBP-IDPServices-4.3",
+        "status": "UP",
+        "group": "MBP"
+      },
+      "id": "mbpIDPServices",
+      "lane": 3
+    },
+    {
+      "details": {
+        "type": "MICROSERVICE",
+        "status": "UP"
+      },
+      "id": "billing-accounts",
+      "lane": 2
+    },
+    {
+      "details": {
+        "type": "SOAP",
+        "version": "Account 8.0 (since 2012 CRC03)",
+        "status": "UP",
+        "group": "CSL"
+      },
+      "id": "cslAccount",
+      "lane": 3
+    }
+  ],
+  "lanes": [
+    {
+      "type": "UI",
+      "lane": 0
+    },
+    {
+      "type": "Endpoint",
+      "lane": 1
+    },
+    {
+      "type": "MICROSERVICE",
+      "lane": 2
+    },
+    {
+      "type": "Backend",
+      "lane": 3
+    }
+  ],
+  "links": [
+    {
+      "source": 0,
+      "target": 1
+    },
+    {
+      "source": 0,
+      "target": 2
+    },
+    {
+      "source": 3,
+      "target": 4
+    },
+    {
+      "source": 3,
+      "target": 5
+    },
+    {
+      "source": 3,
+      "target": 6
+    },
+    {
+      "source": 3,
+      "target": 1
+    },
+    {
+      "source": 3,
+      "target": 7
+    },
+    {
+      "source": 8,
+      "target": 9
+    },
+    {
+      "source": 8,
+      "target": 1
+    },
+    {
+      "source": 10,
+      "target": 1
+    },
+    {
+      "source": 10,
+      "target": 7
+    },
+    {
+      "source": 12,
+      "target": 1
+    },
+    {
+      "source": 13,
+      "target": 14
+    },
+    {
+      "source": 13,
+      "target": 1
+    },
+    {
+      "source": 15,
+      "target": 6
+    },
+    {
+      "source": 15,
+      "target": 5
+    },
+    {
+      "source": 15,
+      "target": 16
+    },
+    {
+      "source": 15,
+      "target": 1
+    },
+    {
+      "source": 15,
+      "target": 2
+    }
+  ],
+  "multigraph": false,
+  "graph": [
+  ]
+}

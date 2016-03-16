@@ -30,7 +30,8 @@ angular.module('msgGraph')
             })), function(nodes) {
               return nodes.length;
             }).length;
-            return numberOfNodesOnBiggestLane*75;
+
+            return numberOfNodesOnBiggestLane?numberOfNodesOnBiggestLane*75:0;
           }
 
           function render(element) {
