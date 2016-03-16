@@ -67,19 +67,78 @@
     }
 
     function searchLinkedNodes() {
+        console.log($scope.newNode.lane);
+        switch($scope.newNode.lane){
+            case 0 : //ui
+                $scope.nodes.nodes.forEach(function (node, i) {
+                    node.index = i;
+                    if(node.lane === 1) {
+                        $scope.availableNodes.push(node);
+                        $scope.nodes.links.forEach(function (d) {
+                            if (d.source === node.index) {
+                                d.source = node;
+                            }
+                            if (d.target === node.index) {
+                                d.target = node;
+                            }
+                        });
+                    }
+                });
+            break;
+            case 1 : // endpoint
+                $scope.nodes.nodes.forEach(function (node, i) {
+                    node.index = i;
+                    if(node.lane === 2) {
+                        $scope.availableNodes.push(node);
+                        $scope.nodes.links.forEach(function (d) {
+                            if (d.source === node.index) {
+                                d.source = node;
+                            }
+                            if (d.target === node.index) {
+                                d.target = node;
+                            }
+                        });
+                    }
+                });
+            break;
+            case 2 : // microservice
+                $scope.nodes.nodes.forEach(function (node, i) {
+                    node.index = i;
+                    if(node.lane !== 0) {
+                        $scope.availableNodes.push(node);
+                        $scope.nodes.links.forEach(function (d) {
+                            if (d.source === node.index) {
+                                d.source = node;
+                            }
+                            if (d.target === node.index) {
+                                d.target = node;
+                            }
+                        });
+                    }
+                });
+                break;
+            case 3 : // backend
+                $scope.nodes.nodes.forEach(function (node, i) {
+                    node.index = i;
+                    if(node.lane === 2) {
+                        $scope.availableNodes.push(node);
+                        $scope.nodes.links.forEach(function (d) {
+                            if (d.source === node.index) {
+                                d.source = node;
+                            }
+                            if (d.target === node.index) {
+                                d.target = node;
+                            }
+                        });
+                    }
+                });
+                break;
+            default :
+        }
+
+        console.log($scope.nodes);
       //Add the nodes to the links
-      $scope.nodes.nodes.forEach(function (node, i) {
-        node.index = i;
-        $scope.availableNodes.push(node);
-        $scope.nodes.links.forEach(function (d) {
-          if (d.source === node.index) {
-            d.source = node;
-          }
-          if (d.target === node.index) {
-            d.target = node;
-          }
-        });
-      });
+
 
       //Search for the nodes connected by the link
       $scope.nodes.links.forEach(function (link) {

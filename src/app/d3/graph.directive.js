@@ -65,7 +65,6 @@ angular.module('msgGraph')
           }
 
           function renderGraph(data) {
-
             var laneLength = data.lanes.length;
             var verticalNodeSpace = 70;
 
@@ -535,10 +534,8 @@ angular.module('msgGraph')
       scope.$watch('graphData', function(newVal, oldVal){
         if (newVal != undefined){
             data = newVal;
-
-            // update the graph
             render(element);
-        };
+        }
       }, true);
      }
    }
