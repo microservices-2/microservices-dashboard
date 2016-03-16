@@ -7,8 +7,9 @@ angular.module('msgGraph')
 
       // define a margin
           var margin = {top: 20, right: 0, bottom: 20, left: 0},
-                width = window.innerWidth - margin.right - margin.left,
-                height = window.innerHeight;
+                width = window.innerWidth - margin.right - margin.left - 16,
+                height = window.innerHeight,
+                minheight = window.innerHeight - d3.select("#data-msg-controls")[0][0].offsetHeight;
 
       //    height -= d3.select("#navigation-container")[0][0].offsetHeight;
       //    height -= d3.select("#control-bar")[0][0].offsetHeight;
@@ -29,7 +30,17 @@ angular.module('msgGraph')
               return n.lane;
             })), function(nodes) {
               return nodes.length;
-            }).length;
+            }).length+1;
+
+            if(numberOfNodesOnBiggestLane) {
+                if( numberOfNodesOnBiggestLane*75 > minheight){
+                    return numberOfNodesOnBiggestLane * 75
+                } else {
+                    return minheight
+                }
+            } else {
+                return 0
+            }
 
             return numberOfNodesOnBiggestLane?numberOfNodesOnBiggestLane*75:0;
           }
