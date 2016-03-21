@@ -1,90 +1,99 @@
 <div>
-  <h2 id="modalTitle" ng-hide="newNode.id">Add Node</h2>
+    <h2 id="modalTitle" ng-hide="newNode.id">Add Node</h2>
 
-  <h2 ng-show="newNode.id">{{newNode.id}}</h2>
+    <h2 ng-show="newNode.id">{{newNode.id}}</h2>
 
-  <form name="nodeForm" novalidate ng-submit="nodeForm.$valid && ok()">
-    <div class="row">
-      <div class="large-4 columns">
-        <label ng-class="{error: (nodeForm.id.$dirty || nodeForm.$submitted) && nodeForm.id.$error.required}">Id
-          <input type="text" placeholder="Enter Id" ng-model="newNode.id" name="id" required/>
-          <span ng-show="(nodeForm.id.$dirty || nodeForm.$submitted) && nodeForm.id.$error.required" class="error">ID is required.</span>
-        </label>
-      </div>
-      <div class="large-4 columns">
-        <label>Name
-          <input type="text" placeholder="Enter Name" ng-model="newNode.details.name" name="name"
-                 ng-init="newNode.details.name = newNode.details.name" 
-          />
-        
-        </label>
-      </div>
-      <div class="large-4 columns">
-        <label>Version
-          <input type="text" placeholder="Enter Version" ng-model="newNode.details.version" name="version"
-                   ng-init="newNode.details.version = newNode.details.version" 
-          />
-       
-        </label>
-      </div>
-    </div>
-    <div class="row">
-      <div class="large-4 columns">
-        <label>Status
-          <select ng-model="newNode.details.status" ng-options="state.key for state in states"
-                  ng-init="newNode.details.status = newNode.details.status || states[0]"
-                  ng-disabled="!isNewNode">
-          </select>
-        </label>
-      </div>
-      <div class="large-4 columns">
-        <label>Type
-          <select ng-model="newNode.details.type" ng-options="type.key for type in types"
-                  ng-init="newNode.details.type = newNode.details.type || types[0]">
-          </select>
-        </label>
-      </div>
-      <div class="large-4 columns">
-        <label>Group
-          <select ng-model="newNode.details.group" ng-options="group.key for group in groups"
-                  ng-init="newNode.details.group = newNode.details.group || groups[0]">
-          </select>
-        </label>
-      </div>
-    </div>
-    <div class="row">
-      <div class="large-12 columns">
-        <label>Description
-          <textarea ng-model="newNode.details.description" placeholder="Enter Description"></textarea>
-        </label>
-      </div>
-    </div>
-    <div class="row">
-      <div class="small-6 columns">
-        <label>Nodes available</label>
-        <ul id="fromList" class="links-container" ui-sortable="nodesList" ng-model="availableNodes">
-          <li class="node-placeholder" ng-repeat='node in availableNodes'>{{node.id}}</li>
-        </ul>
-      </div>
-      <div class="small-6 columns">
-        <label>Nodes to link</label>
-        <ul id="toList" class="links-container right" ui-sortable="nodesList" ng-model="newNode.linkedNodes">
-          <li class="node-placeholder" ng-repeat='node in newNode.linkedNodes'>{{node.id}}</li>
-        </ul>
-      </div>
-    </div>
-    <div class="row">
-      <span class="small-3 columns">
-        <input type="submit" role="button" aria-label="submit form"
-               class="nice blue radius button" value="Submit"/>
-      </span>
-        <span class="small-3 columns">
-          <a class="button custom-close-reveal-modal" ng-click="cancel()">Cancel</a>
-      </span>
-    </div>
-  </form>
+    <form name="nodeForm" novalidate ng-submit="nodeForm.$valid && ok()">
+        <div class="row">
+            <div class="large-4 columns">
+                <label ng-class="{error: (nodeForm.id.$dirty || nodeForm.$submitted) && nodeForm.id.$error.required}">Id
+                    <input type="text" placeholder="Enter Id" ng-model="newNode.id" name="id" required/>
+                    <span ng-show="(nodeForm.id.$dirty || nodeForm.$submitted) && nodeForm.id.$error.required"
+                          class="error">ID is required.</span>
+                </label>
+            </div>
+            <div class="large-4 columns">
+                <label>Name
+                    <input type="text" placeholder="Enter Name" ng-model="newNode.details.name" name="name"
+                           ng-init="newNode.details.name = newNode.details.name"
+                    />
 
-  <a class="close-reveal-modal" aria-label="Close" ng-click="cancel()">&#215;</a>
+                </label>
+            </div>
+            <div class="large-4 columns">
+                <label>Version
+                    <input type="text" placeholder="Enter Version" ng-model="newNode.details.version" name="version"
+                           ng-init="newNode.details.version = newNode.details.version"
+                    />
+
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-4 columns">
+                <label>Status
+                    <select ng-model="newNode.details.status" ng-options="state.key for state in states"
+                            ng-init="newNode.details.status = newNode.details.status || states[0]"
+                            ng-disabled="!isNewNode">
+                    </select>
+                </label>
+            </div>
+            <div class="large-4 columns">
+                <label>Type
+                    <select ng-model="newNode.details.type" ng-options="type.key for type in types"
+                            ng-init="newNode.details.type = newNode.details.type || types[0]">
+                    </select>
+                </label>
+            </div>
+            <div class="large-4 columns">
+                <label>Group
+                    <select ng-model="newNode.details.group" ng-options="group.key for group in groups"
+                            ng-init="newNode.details.group = newNode.details.group || groups[0]">
+                    </select>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Description
+                    <textarea ng-model="newNode.details.description" placeholder="Enter Description"></textarea>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-6 columns">
+                <label>Nodes available</label>
+                <ul id="fromList" class="links-container" ui-sortable="nodesList" ng-model="availableNodes">
+                    <li class="node-placeholder" ng-repeat='node in availableNodes'>{{node.id}}</li>
+                </ul>
+            </div>
+            <div class="small-6 columns">
+                <label>Nodes to link</label>
+                <ul id="toList" class="links-container right" ui-sortable="nodesList" ng-model="newNode.linkedNodes">
+                    <li class="node-placeholder" ng-repeat='node in newNode.linkedNodes'>{{node.id}}</li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+          <span class="small-3 columns">
+            <input type="submit" role="button" aria-label="submit form"
+                   class="blue radius button" value="Submit"/>
+          </span>
+                <span class="small-3 columns" ng-if="!isNewNode">
+            <input role="button" aria-label="delete node"
+                   class="button radius alert" value="Delete"
+                   ng-click="delete()"/>
+          </span>
+            <span class="small-3 columns">
+                <input role="button" aria-label="cancel action"
+                       class="button radius secondary" value="Cancel"
+                       ng-click="cancel()"/>
+                <!--<a class="button radius custom-close-reveal-modal" ng-click="cancel()">Cancel</a>-->
+          </span>
+        </div>
+    </form>
+
+    <a class="close-reveal-modal" aria-label="Close" ng-click="cancel()">&#215;</a>
 </div>
 <script type="text/javascript">//<![CDATA[
 //$(function () {

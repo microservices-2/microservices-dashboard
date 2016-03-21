@@ -57,9 +57,17 @@
         };
 
         $scope.cancel = function () {
-            saveNode();
+            $modalInstance.dismiss('delete');
+        };
+
+        $scope.delete = function () {
+            deleteNode();
             $modalInstance.dismiss('cancel');
         };
+
+        function deleteNode(){
+            console.log('Needs to be implemented');
+        }
 
         function saveNode() {
             if ($scope.newNode !== undefined && $scope.newNode.details !== undefined) {
