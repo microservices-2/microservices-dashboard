@@ -67,12 +67,15 @@
     }
 
     function searchLinkedNodes() {
-        console.log($scope.newNode.lane);
+        var LANE_UI = 0,
+            LANE_EP = 1,
+            LANE_MS = 2,
+            LANE_BE = 3;
         switch($scope.newNode.lane){
-            case 0 : //ui
+            case LANE_UI :
                 $scope.nodes.nodes.forEach(function (node, i) {
                     node.index = i;
-                    if(node.lane === 1) {
+                    if(node.lane === LANE_EP) {
                         $scope.availableNodes.push(node);
                         $scope.nodes.links.forEach(function (d) {
                             if (d.source === node.index) {
@@ -85,10 +88,10 @@
                     }
                 });
             break;
-            case 1 : // endpoint
+            case LANE_EP :
                 $scope.nodes.nodes.forEach(function (node, i) {
                     node.index = i;
-                    if(node.lane === 2) {
+                    if(node.lane === LANE_MS) {
                         $scope.availableNodes.push(node);
                         $scope.nodes.links.forEach(function (d) {
                             if (d.source === node.index) {
@@ -101,10 +104,10 @@
                     }
                 });
             break;
-            case 2 : // microservice
+            case LANE_MS :
                 $scope.nodes.nodes.forEach(function (node, i) {
                     node.index = i;
-                    if(node.lane !== 0) {
+                    if(node.lane !== LANE_UI) {
                         $scope.availableNodes.push(node);
                         $scope.nodes.links.forEach(function (d) {
                             if (d.source === node.index) {
@@ -117,10 +120,10 @@
                     }
                 });
                 break;
-            case 3 : // backend
+            case LANE_BE :
                 $scope.nodes.nodes.forEach(function (node, i) {
                     node.index = i;
-                    if(node.lane === 2) {
+                    if(node.lane === LANE_MS) {
                         $scope.availableNodes.push(node);
                         $scope.nodes.links.forEach(function (d) {
                             if (d.source === node.index) {
