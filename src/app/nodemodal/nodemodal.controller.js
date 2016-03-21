@@ -11,15 +11,13 @@
         $scope.types = GraphService.getTypes();
         $scope.groups = GraphService.getGroups();
 
-
-
         $scope.newNode = NodeService.getNode();
-        $scope.isNewNode = $scope.newNode === undefined;
+        $scope.isNewNode = angular.isUndefined($scope.newNode);
         if ($scope.isNewNode) {
             $scope.newNode = {};
             $scope.newNode.details = {};
         } else {
-            if ($scope.newNode.details !== undefined) {
+            if (angular.isUndefined($scope.newNode.details)) {
                 $scope.states.forEach(function (d) {
                     if (d.key === $scope.newNode.details.status) {
                         $scope.newNode.details.status = d;

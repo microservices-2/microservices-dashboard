@@ -16,8 +16,8 @@
     return factory;
 
     function getGraph() {
-      //return $http.get('http://localhost:8383/graph');
-      return $http.get('graphdata.json');
+      return $http.get('http://localhost:8383/graph');
+      //return $http.get('graphdata.json');
     }
 
     function getStates() {
