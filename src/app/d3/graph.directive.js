@@ -408,61 +408,7 @@ function MsgD3Graph(d3, SetService, NodeService, $modal, GraphService, Nodecolor
         return connected;
     }
 
-    function findConnectedNodes(node) {
-        var exploredNodes = [];
-        exploredNodes.push(node);
-        var connectedNodes = [node];
-        var queue = [];
-        queue.push(node);
-        while (queue.length > 0) {
-            var v = queue.shift();
-            var neighbours = [];
-            data.nodes.forEach(function (d) {
-                if (isConnected(v, d)) {
-                    neighbours.push(d);
-                }
-            });
-            neighbours.forEach(function (d) {
-                if (!SetService.has(d, exploredNodes)) {
-                    exploredNodes.push(d);
-                    queue.push(d);
-                    connectedNodes.push(d);
-                }
-            });
-        }
-        return connectedNodes;
-    }
-
-    function fadeRelatedNodes(d, opacity, nodes, links) {
-        var connectedNodes = findConnectedNodes(d);
-        nodes.style("stroke-opacity", function (o) {
-            if (connectedNodes.indexOf(o) > -1) {
-                this.setAttribute('fill-opacity', 1);
-                return 1;
-            } else {
-                this.setAttribute('fill-opacity', opacity);
-                return opacity;
-            }
-        });
-
-        links.style("stroke-opacity", function (o) {
-            return connectedNodes.indexOf(o.source) > -1 || connectedNodes.indexOf(o.target) > -1 ? 1 : opacity;
-        });
-    }
-
-    function getConnectedNodes(n, l) {
-        var connectedNodes = [];
-        n.forEach(function (node) {
-            l.forEach(function (link) {
-                if (link.id === node.id) {
-                    connectedNodes.push(node);
-                }
-            })
-        });
-        return connectedNodes;
-    }
-
-    function findConnectedNodes2(currentNode) {
+    function findConnectedNodes(currentNode) {
         var connectedNodes = [currentNode];
         data.links.forEach(function (link) {
             if (link.source.id === currentNode.id) {
@@ -475,7 +421,7 @@ function MsgD3Graph(d3, SetService, NodeService, $modal, GraphService, Nodecolor
     }
 
     function fadeUnrelatedNodes(d, opacity, nodes, links) {
-        var connectedNodes = findConnectedNodes2(d);
+        var connectedNodes = findConnectedNodes(d);
         nodes.style("stroke-opacity", function (o) {
             if (connectedNodes.indexOf(o) > -1) {
                 this.setAttribute('fill-opacity', 1);
@@ -486,8 +432,13 @@ function MsgD3Graph(d3, SetService, NodeService, $modal, GraphService, Nodecolor
             }
         });
 
-        links.style("stroke-opacity", function (o) {
-            return connectedNodes.indexOf(o.source) > -1 || connectedNodes.indexOf(o.target) > -1 ? 1 : opacity;
+        links.style("opacity", function (o) {
+            console.log(o);
+            if (connectedNodes.indexOf(o.source) > -1 ){
+                return 1;
+            } else {
+                return opacity;
+            }
         });
     }
 
