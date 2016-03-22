@@ -59,12 +59,14 @@
         };
 
         $scope.delete = function () {
-            deleteNode();
+            deleteNode($scope.newNode.id);
             $modalInstance.dismiss('cancel');
         };
 
-        function deleteNode(){
-            console.log('Needs to be implemented');
+        function deleteNode(id){
+            alert('this code is still untested, but should work if uncommented');
+            console.log('tried to delete node: ' + id);
+            //NodeService.deleteNode(id);
         }
 
         function saveNode() {

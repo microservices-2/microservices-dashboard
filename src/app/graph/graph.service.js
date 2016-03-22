@@ -6,7 +6,7 @@
     .factory('GraphService', GraphService);
 
   /** @ngInject */
-  function GraphService($http) {
+  function GraphService($http, BASE_URL) {
     var factory = {
       getGraph: getGraph,
       getStates: getStates,
@@ -16,7 +16,7 @@
     return factory;
 
     function getGraph() {
-      return $http.get('http://localhost:8383/graph');
+      return $http.get(BASE_URL+'graph');
       //return $http.get('graphdata.json');
     }
 

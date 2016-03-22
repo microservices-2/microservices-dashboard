@@ -3,8 +3,6 @@
 
   angular
     .module('microServicesGui')
-    .constant({
-
-    });
+    .constant('BASE_URL','http://localhost:8383/');
 
 })();

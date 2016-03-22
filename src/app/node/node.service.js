@@ -6,7 +6,7 @@
     .factory('NodeService', NodeService);
 
   /** @ngInject */
-  function NodeService($http, $rootScope) {
+  function NodeService($http, $rootScope, BASE_URL) {
     var nodeToOpen;
 
     var factory = {
@@ -24,6 +24,10 @@
         }, function(error) {
 
         });
+    }
+
+    function deleteNode(nodeId) {
+      $http.delete(BASE_URL + 'node/'+nodeId);
     }
 
     function getNode() {
