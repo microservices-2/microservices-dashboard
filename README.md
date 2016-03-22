@@ -19,6 +19,10 @@ After which gulp should be installed:
 ```
 npm install gulp
 ```
+Possibly also running bower can be required:
+```
+bower install
+```
 And finally using gulp to serve the resources:
 ```
 gulp serve
