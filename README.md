@@ -11,7 +11,22 @@ The information for these links come from Spring Boot Actuator health endpoints,
 
 ## Building from source
 
-Simple gulp build
+First a basic build should be done:
+```
+npm install
+```
+After which gulp should be installed:
+```
+npm install gulp
+```
+Possibly also running bower can be required:
+```
+bower install
+```
+And finally using gulp to serve the resources:
+```
+gulp serve
+```
 
 ## TODO
 
