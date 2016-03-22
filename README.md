@@ -15,11 +15,7 @@ First a basic build should be done:
 ```
 npm install
 ```
-After which gulp should be installed:
-```
-npm install gulp
-```
-Possibly also running bower can be required:
+Then bower dependencies should be installed:
 ```
 bower install
 ```
