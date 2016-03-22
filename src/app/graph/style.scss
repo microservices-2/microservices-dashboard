@@ -1,0 +1,22 @@
+#legenda {
+  position: absolute;
+  background-color: steelblue;
+  padding:4px;
+
+  >button {
+    width: 20px;
+    height: 20px;
+    margin:0;
+    padding:0;
+    float: right;
+  }
+
+  > ul {
+    overflow:hidden;
+    list-style: none;
+    margin:0;
+    > li {
+      padding:4px;
+    }
+  }
+}

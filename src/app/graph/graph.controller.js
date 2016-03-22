@@ -4,11 +4,25 @@ angular
     .module('microServicesGui')
     .controller('GraphController', GraphController);
 
-GraphController.$inject = ['$scope', '$filter', '$modal', '$rootScope', 'GraphService', 'NodeService', 'SetService'];
+GraphController.$inject = ['$scope', '$filter', '$modal', '$rootScope', 'GraphService', 'NodeService', 'SetService', 'NodecolorService'];
 
-function GraphController($scope, $filter, $modal, $rootScope, GraphService, NodeService, SetService) {
+function GraphController($scope, $filter, $modal, $rootScope, GraphService, NodeService, SetService, NodecolorService) {
 
     var nodesData, linksData, resultData;
+    $scope.legendTypes = GraphService.getTypes();
+    $scope.showLegend = {'height':'0'};
+
+    $scope.getColor = function (node){
+        return {'background-color':''+NodecolorService.getColorFor(node)};
+    };
+
+    $scope.toggleLegend = function() {
+        if($scope.showLegend.height === '0'){
+            $scope.showLegend = {'height':'auto'}
+        }else{
+            $scope.showLegend = {'height':'0'}
+        }
+    };
 
 //  $scope.graphData={nodes:[]};
 

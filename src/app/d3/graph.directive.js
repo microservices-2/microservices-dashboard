@@ -135,28 +135,28 @@ function MsgD3Graph(d3, SetService, NodeService, $modal, GraphService, Nodecolor
             .attr("x", function (d, i) {
                 return x1(i + 0.5);
             })
-            .attr("y", 50)
+            .attr("y", 70)
             .attr("text-anchor", "middle")
             .style("font-size", titleFontSize);
 
-        //legend
-        graph.append("svg:g")
-            .selectAll("type")
-            .data(GraphService.getTypes())
-            .enter()
-            .append("svg:text")
-            .text(function (d) {
-                return d.key;
-            })
-            .attr("x", 0)
-            .attr("y", function (d, i) {
-                return 20*i;
-            })
-            .attr("text-anchor", "left")
-            .style("font-size", textFontSize)
-            .style("fill", function (d) {
-                return NodecolorService.getColorFor(d.key)
-            });
+        ////legend
+        //graph.append("svg:g")
+        //    .selectAll("type")
+        //    .data(GraphService.getTypes())
+        //    .enter()
+        //    .append("svg:text")
+        //    .text(function (d) {
+        //        return d.key;
+        //    })
+        //    .attr("x", 0)
+        //    .attr("y", function (d, i) {
+        //        return 20*i;
+        //    })
+        //    .attr("text-anchor", "left")
+        //    .style("font-size", textFontSize)
+        //    .style("fill", function (d) {
+        //        return NodecolorService.getColorFor(d.key)
+        //    });
 
         // Markers
         arrowheads = graph.append("svg:defs")
@@ -299,7 +299,7 @@ function MsgD3Graph(d3, SetService, NodeService, $modal, GraphService, Nodecolor
             .text(function (d) {
                 var name = d.id;
                 if (d.details.virtual === true)
-                    name = d.id + ' (virtual)'
+                    name = d.id + ' (virtual)';
                 return name;
             })
             .attr("text-anchor", "middle")
@@ -521,7 +521,7 @@ function MsgD3Graph(d3, SetService, NodeService, $modal, GraphService, Nodecolor
 
         // Highlight circle
         var elm = findElementByNode('circle', d);
-        elm.style("fill", '#b94431');
+        elm.style("stroke", '#58ACFA');
 
         // Highlight related nodes
         //fadeRelatedNodes(d, 0.05, nodes, links);
@@ -532,9 +532,7 @@ function MsgD3Graph(d3, SetService, NodeService, $modal, GraphService, Nodecolor
 
         // Highlight circle
         var elm = findElementByNode('circle', d);
-        elm.style("fill", function (o) {
-            return fillColor(o);
-        });
+        elm.style("stroke", "steelblue");
 
         // Highlight related nodes
         //fadeRelatedNodes(d, 1, nodes, links);
