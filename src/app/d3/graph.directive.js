@@ -409,6 +409,7 @@ function MsgD3Graph(d3, SetService, NodeService, $modal, GraphService, Nodecolor
     }
 
     function findConnectedNodes(currentNode) {
+        console.log(currentNode);
         var connectedNodes = [currentNode];
         data.links.forEach(function (link) {
             if (link.source.id === currentNode.id) {
@@ -417,13 +418,14 @@ function MsgD3Graph(d3, SetService, NodeService, $modal, GraphService, Nodecolor
                 connectedNodes.push(link.source);
             }
         });
+        console.log(connectedNodes);
         return connectedNodes;
     }
 
     function fadeUnrelatedNodes(d, opacity, nodes, links) {
         var connectedNodes = findConnectedNodes(d);
-        nodes.style("stroke-opacity", function (o) {
-            if (connectedNodes.indexOf(o) > -1) {
+        nodes.style("stroke-opacity", function (node) {
+            if (connectedNodes.indexOf(node) > -1) {
                 this.setAttribute('fill-opacity', 1);
                 return 1;
             } else {
@@ -432,8 +434,8 @@ function MsgD3Graph(d3, SetService, NodeService, $modal, GraphService, Nodecolor
             }
         });
 
-        links.style("opacity", function (o) {
-            if (connectedNodes.indexOf(o.source) > -1 ){
+        links.style("opacity", function (link) {
+            if (connectedNodes.indexOf(link.source) > -1 && connectedNodes.indexOf(link.target) > -1 ){
                 return 1;
             } else {
                 return opacity;

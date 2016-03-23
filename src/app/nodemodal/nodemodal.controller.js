@@ -70,7 +70,6 @@
         function setAvaliableNodes(availableLanes) {
             nodes.forEach(function (node, i) {
                 node.index = i;
-                console.log(availableLanes.indexOf(node.lane) > -1);
                 if (availableLanes.indexOf(node.lane) > -1) {
                     $scope.availableNodes.push(node);
                     links.forEach(function (d) {

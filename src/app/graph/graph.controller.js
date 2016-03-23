@@ -4,16 +4,41 @@ angular
     .module('microServicesGui')
     .controller('GraphController', GraphController);
 
-GraphController.$inject = ['$scope', '$filter', '$modal', '$rootScope', 'GraphService', 'NodeService', 'SetService', 'NodecolorService'];
+GraphController.$inject = ['$scope', '$filter', '$rootScope', '$q', 'GraphService', 'NodecolorService'];
 
-function GraphController($scope, $filter, $modal, $rootScope, GraphService, NodeService, SetService, NodecolorService) {
+function GraphController($scope, $filter, $rootScope, $q, GraphService, NodecolorService) {
 
     var nodesData, linksData, resultData;
-    GraphService.getTypes().then(function (data) {
-        console.log(data);
-        $scope.legendTypes = data;
-    });
+
     $scope.showLegend = {'height':'0'};
+
+    function init() {
+        $q.all([
+            GraphService.getTypes(),
+            GraphService.getGraph()
+        ]).then(function (values) {
+            $scope.legendTypes = values[0];
+            resultData = values[1].data;
+            resultData.nodes.forEach(function (node, index) {
+                node.index = index;
+                resultData.links.forEach(function (d) {
+                    if (d.source === node.index) {
+                        d.source = node;
+                    }
+                    if (d.target === node.index) {
+                        d.target = node;
+                    }
+                })
+            });
+
+            nodesData = resultData.nodes;
+            linksData = resultData.links;
+
+            $scope.graphData = resultData;
+        });
+    }
+    init();
+
 
     $scope.getColor = function (node){
         return {'background-color':''+NodecolorService.getColorFor(node)};
@@ -27,35 +52,8 @@ function GraphController($scope, $filter, $modal, $rootScope, GraphService, Node
         }
     };
 
-//  $scope.graphData={nodes:[]};
-
-    function getGraph() {
-        GraphService.getGraph().then(function (result) {
-
-            result.data.nodes.forEach(function (node, index) {
-                node.index = index;
-                result.data.links.forEach(function (d) {
-                    if (d.source === node.index) {
-                        d.source = node;
-                    }
-                    if (d.target === node.index) {
-                        d.target = node;
-                    }
-                })
-            });
-
-            resultData = result.data;
-            nodesData = result.data.nodes;
-            linksData = result.data.links;
-
-            $scope.graphData = resultData;
-        });
-    }
-
-    getGraph();
-
     $scope.$on('nodesChanged', function (event, value) {
-        getGraph();
+        init();
     });
 
     /*
