@@ -104,7 +104,14 @@
                     break;
                 default :
             }
-
+            $scope.availableNodes.sort(function(a,b){
+                if (a.id < b.id)
+                    return -1;
+                else if (a.id > b.id)
+                    return 1;
+                else
+                    return 0;
+            });
             //Add the nodes to the links
         }
 
@@ -116,6 +123,14 @@
                     }
                 });
             }
+            $scope.linkedNodes.sort(function(a,b){
+                if (a.id < b.id)
+                    return -1;
+                else if (a.id > b.id)
+                    return 1;
+                else
+                    return 0;
+            });
         }
 
         function addLinkedNode(node) {
