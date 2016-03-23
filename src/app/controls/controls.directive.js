@@ -1,143 +1,159 @@
 (function () {
-  'use strict';
+    'use strict';
 
-  angular
-    .module('microServicesGui')
-    .directive('msgControls', ['GraphService', ControlsDirective]);
+    angular
+        .module('microServicesGui')
+        .directive('msgControls', ControlsDirective);
 
-  /** @ngInject */
-  function ControlsDirective(GraphService) {
-    return {
-      templateUrl: 'app/controls/controls.html',
-      controller: 'GraphController',
-      link: function (scope, elem, attrs, graphController) {
-        scope.$watchGroup(['nodeSearch.id', 'nodeSearch.status', 'nodeSearch.type', 'nodeSearch.group'], function () {
-          graphController.filterNodes(scope.nodeSearch);
-        })
-        ;
+    ControlsDirective.$inject = ['GraphService','$q'];
 
-        scope.states = GraphService.getStates();
-        scope.types = GraphService.getTypes();
-        scope.groups = GraphService.getGroups();
+    /** @ngInject */
+    function ControlsDirective(GraphService, $q) {
+        return {
+            templateUrl: 'app/controls/controls.html',
+            controller: 'GraphController',
+            link: function (scope, elem, attrs, graphController) {
 
-        scope.$watch('graphData', function () {
+                scope.states = [];
+                scope.types = [];
+                scope.groups = [];
 
-          if (scope.graphData != undefined){
+                $q.all([
+                    GraphService.getStates(),
+                    GraphService.getTypes(),
+                    GraphService.getGroups()
+                ]).then(function(values){
+                    scope.states = values[0];
+                    scope.types = values[1];
+                    scope.groups = values[2];
+                });
 
-            scope.states = GraphService.getStates();
+                scope.$watchGroup(['nodeSearch.id', 'nodeSearch.status', 'nodeSearch.type', 'nodeSearch.group'], function () {
+                    graphController.filterNodes(scope.nodeSearch);
+                });
 
-            var i = scope.states.length;
-            while (i--) {
-              var state = scope.states[i];
-              if (countState(state) === 0) {
-                scope.states.splice(i, 1);
-              }
-            }
+                //scope.states = GraphService.getStates();
+                //scope.types = GraphService.getTypes();
+                //scope.groups = GraphService.getGroups();
 
-            scope.states.forEach(function (state, i) {
-              scope.states[i].value = state.value + " - " + scope.graphData.nodes.filter(function (d) {
-                  if (state.value === 'ALL') {
-                    return true;
-                  }
-                  if (d.details !== undefined) {
-                    return d.details.status === state.value;
-                  }
-                  return false;
+                scope.$watch('graphData', function () {
 
-                }).length;
-            });
+                  if (scope.graphData != undefined){
 
-            scope.types = GraphService.getTypes();
+                    //scope.states = GraphService.getStates();
 
-            i = scope.types.length;
-            while (i--) {
-              var type = scope.types[i];
-              if (countType(type) === 0) {
-                scope.types.splice(i, 1);
-              }
-            }
-
-            scope.types.forEach(function (type, i) {
-              scope.types[i].value = type.value + " - " + scope.graphData.nodes.filter(function (d) {
-                    if (type.value === 'ALL') {
-                      return true;
+                    var i = scope.states.length;
+                    while (i--) {
+                      var state = scope.states[i];
+                      //if (countState(state) === 0) {
+                      //  scope.states.splice(i, 1);
+                      //}
                     }
-                    if (d.details !== undefined) {
-                      return d.details.type === type.value;
+
+                    scope.states.forEach(function (state, i) {
+                      scope.states[i].value = state.value + " - " + scope.graphData.nodes.filter(function (d) {
+                          if (state.value === 'ALL') {
+                            return true;
+                          }
+                          if (d.details !== undefined) {
+                            return d.details.status === state.value;
+                          }
+                          return false;
+
+                        }).length;
+                    });
+
+                    //scope.types = GraphService.getTypes();
+
+                    i = scope.types.length;
+                    while (i--) {
+                      var type = scope.types[i];
+                      //if (countType(type) === 0) {
+                      //  scope.types.splice(i, 1);
+                      //}
                     }
-                    return false;
-                  }
-                ).length;
-            });
 
-            scope.groups = GraphService.getGroups();
+                    scope.types.forEach(function (type, i) {
+                      scope.types[i].value = type.value + " - " + scope.graphData.nodes.filter(function (d) {
+                            if (type.value === 'ALL') {
+                              return true;
+                            }
+                            if (d.details !== undefined) {
+                              return d.details.type === type.value;
+                            }
+                            return false;
+                          }
+                        ).length;
+                    });
 
-            i = scope.groups.length;
-            while (i--) {
-              var group = scope.groups[i];
-              if (countGroup(group) === 0) {
-                scope.groups.splice(i, 1);
-              }
+                    //scope.groups = GraphService.getGroups();
+
+                    i = scope.groups.length;
+                    while (i--) {
+                      var group = scope.groups[i];
+                      //if (countGroup(group) === 0) {
+                      //  scope.groups.splice(i, 1);
+                      //}
+                    }
+
+                    scope.groups.forEach(function (group, i) {
+                      scope.groups[i].value = group.value + " - " + scope.graphData.nodes.filter(function (d) {
+                          if (group.value === 'ALL') {
+                            return true;
+                          }
+                          if (d.details !== undefined) {
+                            return d.details.group === group.value;
+                          }
+                          return false;
+
+                        }).length;
+                    });
+                }});
+
+                scope.clearFilter = function () {
+
+                  scope.nodeSearch.id = "";
+
+                  scope.nodeSearch.status = null;
+                  scope.nodeSearch.type = null;
+                  scope.nodeSearch.group = null;
+                };
+
+                //function countState(state) {
+                //  return scope.graphData.nodes.filter(function (d) {
+                //    if (d.details !== undefined) {
+                //      if (state.key === d.details.status) {
+                //        return true;
+                //      }
+                //    }
+                //    return false;
+                //  }).length;
+                //}
+                //
+                //function countType(type) {
+                //  return scope.graphData.nodes.filter(function (d) {
+                //    if (d.details !== undefined) {
+                //      if (type.key === d.details.type) {
+                //        return true;
+                //      }
+                //    }
+                //    return false;
+                //  }).length;
+                //}
+                //
+                //function countGroup(group) {
+                //  return scope.graphData.nodes.filter(function (d) {
+                //    if (d.details !== undefined) {
+                //      if (group.key === d.details.group) {
+                //        return true;
+                //      }
+                //    }
+                //    return false;
+                //  }).length;
+                //}
             }
-
-            scope.groups.forEach(function (group, i) {
-              scope.groups[i].value = group.value + " - " + scope.graphData.nodes.filter(function (d) {
-                  if (group.value === 'ALL') {
-                    return true;
-                  }
-                  if (d.details !== undefined) {
-                    return d.details.group === group.value;
-                  }
-                  return false;
-
-                }).length;
-            });
-        }});
-
-        scope.clearFilter = function () {
-
-          scope.nodeSearch.id = "";
-
-          scope.nodeSearch.status = null;
-          scope.nodeSearch.type = null;
-          scope.nodeSearch.group = null;
         };
-
-        function countState(state) {
-          return scope.graphData.nodes.filter(function (d) {
-            if (d.details !== undefined) {
-              if (state.key === d.details.status) {
-                return true;
-              }
-            }
-            return false;
-          }).length;
-        }
-
-        function countType(type) {
-          return scope.graphData.nodes.filter(function (d) {
-            if (d.details !== undefined) {
-              if (type.key === d.details.type) {
-                return true;
-              }
-            }
-            return false;
-          }).length;
-        }
-
-        function countGroup(group) {
-          return scope.graphData.nodes.filter(function (d) {
-            if (d.details !== undefined) {
-              if (group.key === d.details.group) {
-                return true;
-              }
-            }
-            return false;
-          }).length;
-        }
-      }
-    };
-  }
+    }
 
 
 })();

@@ -5,48 +5,42 @@
         .module('microServicesGui')
         .controller('NodeModalController', NodeModalController);
 
-    function NodeModalController($scope, $filter, GraphService, NodeService, $modalInstance, SetService) {
+    function NodeModalController($scope, $filter, GraphService, NodeService, $modalInstance, SetService, $q) {
 
-        $scope.states = GraphService.getStates();
-        $scope.types = GraphService.getTypes();
-        $scope.groups = GraphService.getGroups();
-
-        $scope.newNode = NodeService.getNode();
-        $scope.isNewNode = angular.isUndefined($scope.newNode);
-        if ($scope.isNewNode) {
-            $scope.newNode = {};
-            $scope.newNode.details = {};
-        } else {
-            if (angular.isUndefined($scope.newNode.details)) {
-                $scope.states.forEach(function (d) {
-                    if (d.key === $scope.newNode.details.status) {
-                        $scope.newNode.details.status = d;
-                    }
-                });
-                $scope.types.forEach(function (d) {
-                    if (d.key === $scope.newNode.details.type) {
-                        $scope.newNode.details.type = d;
-                    }
-                });
-                $scope.groups.forEach(function (d) {
-                    if (d.key === $scope.newNode.details.group) {
-                        $scope.newNode.details.group = d;
-                    }
-                });
-            }
-        }
-
-        $scope.newNode.linkedNodes = [];
-
+        $scope.states = [];
+        $scope.types = [];
+        $scope.groups = [];
         $scope.nodesList = {
             placeholder: "node-placeholder",
             connectWith: ".links-container"
         };
-
         $scope.availableNodes = [];
-        GraphService.getGraph().then(function (result) {
-            $scope.nodes = result.data;
-            searchLinkedNodes();
+        $scope.linkedNodes = [];
+        $scope.newNode = NodeService.getNode();
+        $scope.isNewNode = angular.isUndefined($scope.newNode);
+        if ($scope.isNewNode) {
+            $scope.newNode = {
+                details: {}
+            };
+        }
+
+        var nodes = [],
+            links = [];
+
+        $q.all([
+            GraphService.getStates(),
+            GraphService.getTypes(),
+            GraphService.getGroups(),
+            GraphService.getGraph()
+        ]).then(function (values) {
+            $scope.states = values[0];
+            $scope.types = values[1];
+            $scope.groups = values[2];
+            nodes = values[3].data.nodes;
+            links = values[3].data.links;
+        }).finally(function () {
+            searchLinkableNodes();
+            searchLinkedNodes()
         });
 
         $scope.ok = function () {
@@ -63,124 +57,74 @@
             $modalInstance.dismiss('cancel');
         };
 
-        function deleteNode(id){
+        function deleteNode(id) {
             alert('this code is still untested, but should work if uncommented');
             console.log('tried to delete node: ' + id);
             //NodeService.deleteNode(id);
         }
 
         function saveNode() {
-            if ($scope.newNode !== undefined && $scope.newNode.details !== undefined) {
-                $scope.newNode.details.status = $scope.newNode.details.status.key;
-                $scope.newNode.details.type = $scope.newNode.details.type.key;
-                $scope.newNode.details.group = $scope.newNode.details.group.key;
-            }
+            $scope.newNode.linkedNodes = $scope.linkedNodes;
         }
 
-        function searchLinkedNodes() {
+        function setAvaliableNodes(availableLanes) {
+            nodes.forEach(function (node, i) {
+                node.index = i;
+                console.log(availableLanes.indexOf(node.lane) > -1);
+                if (availableLanes.indexOf(node.lane) > -1) {
+                    $scope.availableNodes.push(node);
+                    links.forEach(function (d) {
+                        if (d.source === node.index) {
+                            d.source = node;
+                        }
+                        if (d.target === node.index) {
+                            d.target = node;
+                        }
+                    });
+                }
+            });
+        }
+
+        function searchLinkableNodes() {
             var LANE_UI = 0,
                 LANE_EP = 1,
                 LANE_MS = 2,
                 LANE_BE = 3;
             switch ($scope.newNode.lane) {
                 case LANE_UI :
-                    $scope.nodes.nodes.forEach(function (node, i) {
-                        node.index = i;
-                        if (node.lane === LANE_EP) {
-                            $scope.availableNodes.push(node);
-                            $scope.nodes.links.forEach(function (d) {
-                                if (d.source === node.index) {
-                                    d.source = node;
-                                }
-                                if (d.target === node.index) {
-                                    d.target = node;
-                                }
-                            });
-                        }
-                    });
+                    setAvaliableNodes([LANE_EP]);
                     break;
                 case LANE_EP :
-                    $scope.nodes.nodes.forEach(function (node, i) {
-                        node.index = i;
-                        if (node.lane === LANE_MS) {
-                            $scope.availableNodes.push(node);
-                            $scope.nodes.links.forEach(function (d) {
-                                if (d.source === node.index) {
-                                    d.source = node;
-                                }
-                                if (d.target === node.index) {
-                                    d.target = node;
-                                }
-                            });
-                        }
-                    });
+                    setAvaliableNodes([LANE_MS]);
                     break;
                 case LANE_MS :
-                    $scope.nodes.nodes.forEach(function (node, i) {
-                        node.index = i;
-                        if (node.lane !== LANE_UI) {
-                            $scope.availableNodes.push(node);
-                            $scope.nodes.links.forEach(function (d) {
-                                if (d.source === node.index) {
-                                    d.source = node;
-                                }
-                                if (d.target === node.index) {
-                                    d.target = node;
-                                }
-                            });
-                        }
-                    });
+                    setAvaliableNodes([LANE_EP, LANE_MS, LANE_BE]);
                     break;
                 case LANE_BE :
-                    $scope.nodes.nodes.forEach(function (node, i) {
-                        node.index = i;
-                        if (node.lane === LANE_MS) {
-                            $scope.availableNodes.push(node);
-                            $scope.nodes.links.forEach(function (d) {
-                                if (d.source === node.index) {
-                                    d.source = node;
-                                }
-                                if (d.target === node.index) {
-                                    d.target = node;
-                                }
-                            });
-                        }
-                    });
+                    setAvaliableNodes([LANE_MS]);
                     break;
                 default :
             }
 
             //Add the nodes to the links
-
-
-            //Search for the nodes connected by the link
-            $scope.nodes.links.forEach(function (link) {
-                var filteredNodes;
-                if (link.source.id === $scope.newNode.id) {
-                    filteredNodes = $filter("nodeModalFilter")($scope.nodes.nodes, link.target);
-                    if (filteredNodes.length > 0) {
-                        nodeFound(filteredNodes[0]);
-                    }
-                } else if (link.target.id === $scope.newNode.id) {
-                    filteredNodes = $filter("nodeModalFilter")($scope.nodes.nodes, link.source);
-                    if (filteredNodes.length > 0) {
-                        nodeFound(filteredNodes[0]);
-                    }
-                }
-            });
         }
 
-        /**
-         * When a node is found, add it to the linkedNodes array and remove it from the availableNodes array
-         * @param node
-         */
-        function nodeFound(node) {
-            $scope.newNode.linkedNodes = SetService.add(node, $scope.newNode.linkedNodes);
+        function searchLinkedNodes() {
+            if (!$scope.isNewNode) {
+                links.forEach(function (link) {
+                    if (link.source.id === $scope.newNode.id) {
+                        addLinkedNode($filter("nodeModalFilter")(nodes, link.target)[0]);
+                    }
+                });
+            }
+        }
+
+        function addLinkedNode(node) {
+            $scope.linkedNodes.push(node);
             if ($scope.availableNodes.indexOf(node) > -1) {
                 $scope.availableNodes.splice($scope.availableNodes.indexOf(node), 1);
             }
         }
-
     }
 
 })();

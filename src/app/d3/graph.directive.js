@@ -433,7 +433,6 @@ function MsgD3Graph(d3, SetService, NodeService, $modal, GraphService, Nodecolor
         });
 
         links.style("opacity", function (o) {
-            console.log(o);
             if (connectedNodes.indexOf(o.source) > -1 ){
                 return 1;
             } else {

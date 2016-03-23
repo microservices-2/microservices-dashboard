@@ -32,23 +32,25 @@
         <div class="row">
             <div class="large-4 columns">
                 <label>Status
-                    <select ng-model="newNode.details.status" ng-options="state.key for state in states"
-                            ng-init="newNode.details.status = newNode.details.status || states[0]"
+                    <select ng-model="newNode.details.status"
+                            ng-options="state.key as state.value for state in states"
                             ng-disabled="!isNewNode">
                     </select>
                 </label>
             </div>
             <div class="large-4 columns">
                 <label>Type
-                    <select ng-model="newNode.details.type" ng-options="type.key for type in types"
-                            ng-init="newNode.details.type = newNode.details.type || types[0]">
+                    <select ng-model="newNode.details.type"
+                            ng-options="type.key as type.value for type in types"
+                            >
                     </select>
                 </label>
             </div>
             <div class="large-4 columns">
                 <label>Group
-                    <select ng-model="newNode.details.group" ng-options="group.key for group in groups"
-                            ng-init="newNode.details.group = newNode.details.group || groups[0]">
+                    <select ng-model="newNode.details.group"
+                            ng-options="group.key as group.value for group in groups"
+                            >
                     </select>
                 </label>
             </div>
@@ -69,8 +71,8 @@
             </div>
             <div class="small-6 columns">
                 <label>Nodes to link</label>
-                <ul id="toList" class="links-container right" ui-sortable="nodesList" ng-model="newNode.linkedNodes">
-                    <li class="node-placeholder" ng-repeat='node in newNode.linkedNodes'>{{node.id}}</li>
+                <ul id="toList" class="links-container right" ui-sortable="nodesList" ng-model="linkedNodes">
+                    <li class="node-placeholder" ng-repeat='node in linkedNodes'>{{node.id}}</li>
                 </ul>
             </div>
         </div>
