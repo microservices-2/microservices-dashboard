@@ -9,7 +9,10 @@ GraphController.$inject = ['$scope', '$filter', '$modal', '$rootScope', 'GraphSe
 function GraphController($scope, $filter, $modal, $rootScope, GraphService, NodeService, SetService, NodecolorService) {
 
     var nodesData, linksData, resultData;
-    $scope.legendTypes = GraphService.getTypes();
+    GraphService.getTypes().then(function (data) {
+        console.log(data);
+        $scope.legendTypes = data;
+    });
     $scope.showLegend = {'height':'0'};
 
     $scope.getColor = function (node){
