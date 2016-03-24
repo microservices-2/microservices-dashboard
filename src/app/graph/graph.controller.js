@@ -11,10 +11,21 @@ function GraphController($scope, $filter, $rootScope, $q, GraphService, Nodecolo
     var nodesData, linksData, resultData;
 
     $scope.showLegend = {'height':'0'};
+    $scope.uiFilter = {};
+    $scope.epFilter = {};
     $scope.msFilter = {};
+    $scope.beFilter = {};
 
+    $scope.$watch('uiFilter',function(value,prev){
+        if(prev){init()}
+    },true);
+    $scope.$watch('epFilter',function(value,prev){
+        if(prev){init()}
+    },true);
     $scope.$watch('msFilter',function(value,prev){
-        console.log(value);
+        if(prev){init()}
+    },true);
+    $scope.$watch('beFilter',function(value,prev){
         if(prev){init()}
     },true);
 
@@ -48,7 +59,10 @@ function GraphController($scope, $filter, $rootScope, $q, GraphService, Nodecolo
 
     function applyFilters(data){
         //if(data.nodes && $scope.msFilter.lane) {
+            data.nodes =  $filter('nodeFilter')(data.nodes, $scope.uiFilter);
+            data.nodes =  $filter('nodeFilter')(data.nodes, $scope.epFilter);
             data.nodes =  $filter('nodeFilter')(data.nodes, $scope.msFilter);
+            data.nodes =  $filter('nodeFilter')(data.nodes, $scope.beFilter);
             data.links = $filter('linkFilter')(data.links, data.nodes);
             return data;
         //}
