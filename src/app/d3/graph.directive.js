@@ -11,7 +11,7 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
     var margin = {top: 20, right: 0, bottom: 20, left: 0},
         width = window.innerWidth - margin.right - margin.left - 16,
         height = window.innerHeight,
-        minheight = window.innerHeight - d3.select("#data-msg-controls")[0][0].offsetHeight;
+        minheight = window.innerHeight;
 
     //    height -= d3.select("#navigation-container")[0][0].offsetHeight;
     //    height -= d3.select("#control-bar")[0][0].offsetHeight;
@@ -25,7 +25,7 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
     var element;
 
     var titleFontSize, textFontSize;
-    var nodeR = 12;
+    var nodeR = 16;
 
     function getGraphHeight(data) {
         var numberOfNodesOnBiggestLane = _.max(_.values(_.groupBy(data.nodes, function (n) {
