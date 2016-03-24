@@ -11,14 +11,20 @@ function GraphController($scope, $filter, $rootScope, $q, GraphService, Nodecolo
     var nodesData, linksData, resultData;
 
     $scope.showLegend = {'height':'0'};
+    $scope.msFilter = {};
+
+    $scope.$watch('msFilter',function(value,prev){
+        console.log(value);
+        if(prev){init()}
+    },true);
 
     function init() {
         $q.all([
-            GraphService.getTypes(),
+            //GraphService.getTypes(),
             GraphService.getGraph()
         ]).then(function (values) {
-            $scope.legendTypes = values[0];
-            resultData = values[1].data;
+            //$scope.legendTypes = values[0];
+            resultData = values[0].data;
             resultData.nodes.forEach(function (node, index) {
                 node.index = index;
                 resultData.links.forEach(function (d) {
@@ -34,11 +40,20 @@ function GraphController($scope, $filter, $rootScope, $q, GraphService, Nodecolo
             nodesData = resultData.nodes;
             linksData = resultData.links;
 
-            $scope.graphData = resultData;
+            $scope.graphData = applyFilters(resultData);
+            //$scope.$emit('nodesFiltered',applyFilters(resultData));
         });
     }
     init();
 
+    function applyFilters(data){
+        //if(data.nodes && $scope.msFilter.lane) {
+            data.nodes =  $filter('nodeFilter')(data.nodes, $scope.msFilter);
+            data.links = $filter('linkFilter')(data.links, data.nodes);
+            return data;
+        //}
+        //return data;
+    }
 
     $scope.getColor = function (node){
         return {'background-color':''+NodecolorService.getColorFor(node)};
@@ -52,19 +67,19 @@ function GraphController($scope, $filter, $rootScope, $q, GraphService, Nodecolo
         }
     };
 
-    $scope.$on('nodesChanged', function (event, value) {
-        init();
-    });
+    //$scope.$on('nodesChanged', function (event, value) {
+    //    init();
+    //});
 
     /*
      Filter
      */
     this.filterNodes = function (nodeFilter) {
-        if ($scope.graphData !== undefined) {
-            $scope.graphData.nodes = $filter('nodeFilter')(nodesData, nodeFilter);
-            $scope.graphData.links = $filter('linkFilter')(linksData, $scope.graphData.nodes);
-
-            $rootScope.$broadcast('nodesFiltered', $scope.graphData);
-        }
+        //if ($scope.graphData !== undefined) {
+        //    $scope.graphData.nodes = $filter('nodeFilter')(nodesData, nodeFilter);
+        //    $scope.graphData.links = $filter('linkFilter')(linksData, $scope.graphData.nodes);
+        //
+        //    $rootScope.$broadcast('nodesFiltered', $scope.graphData);
+        //}
     };
 }

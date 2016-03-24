@@ -1,12 +1,16 @@
 <!--<div id="graphcontainer">-->
-<div id="legenda">
-    <span>legend</span>
-    <button class="button secondary round" ng-click="toggleLegend()"><i class="fi-eye step"></i></button>
-    <ul ng-style="showLegend">
-        <li ng-repeat="type in legendTypes" ng-style="getColor(type.key)">
-            {{type.key}}
-        </li>
-    </ul>
-</div>
+<div lanefilter lane="0" filter="msFilter"></div>
+<div lanefilter lane="1" filter="msFilter"></div>
+<div lanefilter lane="2" filter="msFilter"></div>
+<div lanefilter lane="3" filter="msFilter"></div>
+<!--<div id="legenda">-->
+    <!--<span>legend</span>-->
+    <!--<button class="button secondary round" ng-click="toggleLegend()"><i class="fi-eye step"></i></button>-->
+    <!--<ul ng-style="showLegend">-->
+        <!--<li ng-repeat="type in legendTypes" ng-style="getColor(type.key)">-->
+            <!--{{type.key}}-->
+        <!--</li>-->
+    <!--</ul>-->
+<!--</div>-->
 <msg-d3-graph class="" graph-data="graphData"></msg-d3-graph>
 <!--</div>-->

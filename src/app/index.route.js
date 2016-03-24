@@ -12,8 +12,7 @@
       .state('home', {
         url: '/',
         templateUrl: 'app/graph/graph.html',
-        controller: 'GraphController',
-        controllerAs: 'graph'
+        controller: 'GraphController'
       });
 
     $urlRouterProvider.otherwise('/');

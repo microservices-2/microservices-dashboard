@@ -506,21 +506,20 @@ function MsgD3Graph(d3, SetService, NodeService, $modal, GraphService, Nodecolor
         restrict: 'E',
         scope: {
             graphData: '='
-//      ,
-//      graphDataNodes: scope.graphData.nodes
         },
         controller: 'GraphController',
-        link: function (scope, elem, attrs, graphController) {
+        link: function (scope, elem, attrs) {
 
             element = elem[0];
 
-            scope.$on('nodesFiltered', function (event, value) {
-                data = value;
-                render(element);
-            });
+            //scope.$on('nodesFiltered', function (event, value) {
+            //    console.log(value);
+            //    data = value;
+            //    render(element);
+            //});
 
             scope.$watch('graphData', function (newVal, oldVal) {
-                if (newVal != undefined) {
+                if (newVal) {
                     data = newVal;
                     render(element);
                 }
