@@ -4,9 +4,9 @@ angular
     .module('microServicesGui')
     .controller('GraphController', GraphController);
 
-GraphController.$inject = ['$scope', '$filter', '$q', 'GraphService', 'NodecolorService'];
+GraphController.$inject = ['$scope', '$rootScope', '$filter', '$q', 'GraphService', 'NodecolorService'];
 
-function GraphController($scope, $filter, $q, GraphService, NodecolorService) {
+function GraphController($scope, $rootScope, $filter, $q, GraphService, NodecolorService) {
 
     var nodesData, linksData, resultData;
 
@@ -38,6 +38,7 @@ function GraphController($scope, $filter, $q, GraphService, NodecolorService) {
     }, true);
 
     function init() {
+        $rootScope.dataLoading = true;
         $q.all([
             GraphService.getTypes(),
             GraphService.getGraph()
@@ -60,6 +61,7 @@ function GraphController($scope, $filter, $q, GraphService, NodecolorService) {
             linksData = resultData.links;
 
             $scope.graphData = applyFilters(resultData);
+            $rootScope.dataLoading = false;
             //$scope.$emit('nodesFiltered',applyFilters(resultData));
         });
     }

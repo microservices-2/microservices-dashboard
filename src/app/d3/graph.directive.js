@@ -263,9 +263,12 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
             })
             .on("mouseover", _.bind(onNodeMouseOver, this, nodes, links))
             .on("mouseout", _.bind(onNodeMouseOut, this, nodes, links))
-            .style("fill", function (o) {
+            .style("stroke", function (o) {
                 return fillColor(o);
-            });
+            })
+            .style("stroke-width", 5)
+            .style("fill", '#ffffff');
+
 
         // A copy of the text with a thick white stroke for legibility.
         nodes.append("svg:text")
@@ -280,7 +283,7 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
             }).text(function (d) {
                 var name = d.id;
                 if (d.details.virtual === true)
-                    name = d.id + ' (virtual)'
+                    name = d.id + ' (virtual)';
                 return name;
             })
             .attr("text-anchor", "middle")
@@ -473,7 +476,7 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
 
         // Highlight circle
         var elm = findElementByNode('circle', d);
-        elm.style("stroke", '#58ACFA');
+        elm.style("fill", fillColor(d));
 
         // Highlight related nodes
         //fadeRelatedNodes(d, 0.05, nodes, links);
@@ -484,7 +487,8 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
 
         // Highlight circle
         var elm = findElementByNode('circle', d);
-        elm.style("stroke", "steelblue");
+        elm.style("fill", '#ffffff');
+        //elm.style("stroke", "steelblue");
 
         // Highlight related nodes
         //fadeRelatedNodes(d, 1, nodes, links);
