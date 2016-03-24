@@ -5,7 +5,8 @@
         .module('microServicesGui')
         .factory('GraphService', GraphService);
 
-    /** @ngInject */
+    GraphService.$inject = ['$http', '$q', 'BASE_URL'];
+
     function GraphService($http, $q, BASE_URL) {
         var factory = {
             getGraph: getGraph,
@@ -22,32 +23,27 @@
 
         function getStates() {
             return $q(function (resolve, reject) {
-                //getGraph().then(function (resp) {
-                    resolve([{key: "UP", value: "UP"}, {key: "DOWN", value: "DOWN"}, {
-                        key: "UNKNOWN",
-                        value: "UNKNOWN"
-                    }]);
-                //});
+                resolve([{key: "UP", value: "UP"}, {key: "DOWN", value: "DOWN"}, {
+                    key: "UNKNOWN",
+                    value: "UNKNOWN"
+                }]);
             });
         }
 
         function getTypes() {
             return $q(function (resolve, reject) {
-                //getGraph().then(function (resp) {
-                    resolve([{key: "DB", value: "DB"}, {key: "MICROSERVICE", value: "MICROSERVICE"}, {
-                        key: "REST",
-                        value: "REST"
-                    }, {key: "SOAP", value: "SOAP"},
-                        {key: "JMS", value: "JMS"}
-                    ]);
-                //});
+                resolve([{key: "DB", value: "DB"}, {key: "MICROSERVICE", value: "MICROSERVICE"}, {
+                    key: "REST",
+                    value: "REST"
+                }, {key: "SOAP", value: "SOAP"},
+                    {key: "JMS", value: "JMS"}
+                ]);
             });
         }
 
         function getGroups() {
             return $q(function (resolve, reject) {
-                //getGraph().then(function (resp) {
-                    resolve([{key: "BCI", value: "BCI"}, {key: "BPS", value: "BPS"}, {key: "BUSC", value: "BUSC"}, {
+                resolve([{key: "BCI", value: "BCI"}, {key: "BPS", value: "BPS"}, {key: "BUSC", value: "BUSC"}, {
                         key: "CRMODS",
                         value: "CRMODS"
                     }, {key: "CSL", value: "CSL"}, {key: "IMA", value: "IMA"}, {key: "MBP", value: "MBP"}, {
@@ -57,8 +53,7 @@
                         key: "RHE",
                         value: "RHE"
                     }, {key: "ROSY", value: "ROSY"}, {key: "SAPACHE", value: "SAPACHE"}]
-                    );
-                //});
+                );
             });
         }
     }

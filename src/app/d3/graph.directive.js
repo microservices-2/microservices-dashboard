@@ -4,8 +4,8 @@
 angular.module('msgGraph')
     .directive('msgD3Graph', MsgD3Graph);
 
-MsgD3Graph.$inject = ['d3', 'SetService', 'NodeService', '$modal', 'GraphService', 'NodecolorService'];
-function MsgD3Graph(d3, SetService, NodeService, $modal, GraphService, NodecolorService) {
+MsgD3Graph.$inject = ['d3', 'NodeService', '$modal', 'NodecolorService'];
+function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
 
     // define a margin
     var margin = {top: 20, right: 0, bottom: 20, left: 0},
@@ -435,7 +435,7 @@ function MsgD3Graph(d3, SetService, NodeService, $modal, GraphService, Nodecolor
         });
 
         links.style("opacity", function (link) {
-            if (connectedNodes.indexOf(link.source) > -1 && connectedNodes.indexOf(link.target) > -1 ){
+            if (connectedNodes.indexOf(link.source) > -1 && connectedNodes.indexOf(link.target) > -1) {
                 return 1;
             } else {
                 return opacity;

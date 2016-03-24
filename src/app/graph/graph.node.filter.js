@@ -41,7 +41,7 @@
                     return (nodeSearch.details.group !== undefined && nodeSearch.group !== null && nodeSearch.group.key !== "ALL") ? (node.details !== undefined && node.details.group !== undefined && node.details.group.toUpperCase() === nodeSearch.group.key) : true;
                 }
 
-                function isUndefinedOrNull(obj){
+                function isUndefinedOrNull(obj) {
                     return (typeof obj === 'undefined' || obj === null);
                 }
             };

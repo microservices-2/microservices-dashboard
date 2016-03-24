@@ -23,17 +23,17 @@
     function LegendCtrl(NodecolorService) {
         var legend = this;
 
-        legend.showLegend = {'height':'0'};
+        legend.showLegend = {'height': '0'};
 
-        legend.getColor = function (node){
-            return {'background-color':''+NodecolorService.getColorFor(node)};
+        legend.getColor = function (node) {
+            return {'background-color': '' + NodecolorService.getColorFor(node)};
         };
 
-        legend.toggle = function() {
-            if(legend.showLegend.height === '0'){
-                legend.showLegend = {'height':'auto'}
-            }else{
-                legend.showLegend = {'height':'0'}
+        legend.toggle = function () {
+            if (legend.showLegend.height === '0') {
+                legend.showLegend = {'height': 'auto'}
+            } else {
+                legend.showLegend = {'height': '0'}
             }
         };
     }

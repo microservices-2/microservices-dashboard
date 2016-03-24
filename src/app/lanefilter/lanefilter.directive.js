@@ -19,9 +19,9 @@
         }
     }
 
-    LanefilterCtrl.$inject = ['$scope','GraphService', '$q'];
+    LanefilterCtrl.$inject = ['GraphService', '$q'];
 
-    function LanefilterCtrl($scope,GraphService, $q) {
+    function LanefilterCtrl(GraphService, $q) {
         var vm = this;
 
         $q.all([
@@ -35,8 +35,8 @@
         });
 
         vm.filter = {
-            details : {},
-           lane : parseInt(vm.lane)
+            details: {},
+            lane: parseInt(vm.lane)
         };
     }
 })();

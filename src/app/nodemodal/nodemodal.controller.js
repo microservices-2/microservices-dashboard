@@ -5,6 +5,8 @@
         .module('microServicesGui')
         .controller('NodeModalController', NodeModalController);
 
+    NodeModalController.$inject = ['$scope', '$filter', 'GraphService', 'NodeService', '$modalInstance', 'SetService', '$q'];
+
     function NodeModalController($scope, $filter, GraphService, NodeService, $modalInstance, SetService, $q) {
 
         $scope.states = [];
@@ -104,7 +106,7 @@
                     break;
                 default :
             }
-            $scope.availableNodes.sort(function(a,b){
+            $scope.availableNodes.sort(function (a, b) {
                 if (a.id < b.id)
                     return -1;
                 else if (a.id > b.id)
@@ -123,7 +125,7 @@
                     }
                 });
             }
-            $scope.linkedNodes.sort(function(a,b){
+            $scope.linkedNodes.sort(function (a, b) {
                 if (a.id < b.id)
                     return -1;
                 else if (a.id > b.id)
