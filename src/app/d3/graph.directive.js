@@ -436,10 +436,8 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
         var connectedNodes = findConnectedNodes(d);
         nodes.style("stroke-opacity", function (node) {
             if (connectedNodes.indexOf(node) > -1) {
-                this.setAttribute('fill-opacity', 1);
                 return 1;
             } else {
-                this.setAttribute('fill-opacity', opacity);
                 return opacity;
             }
         });

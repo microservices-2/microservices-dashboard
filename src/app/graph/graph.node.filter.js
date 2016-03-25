@@ -34,11 +34,17 @@
                 }
 
                 function validateType(node) {
-                    return (nodeSearch.details.type !== undefined && nodeSearch.type !== null && nodeSearch.type.key !== "ALL") ? (node.details !== undefined && node.details.type !== undefined && node.details.type.toUpperCase() === nodeSearch.type.key) : true;
+                    if (!isUndefinedOrNull(nodeSearch.details.type)) {
+                        return node.details.type === nodeSearch.details.type;
+                    }
+                    return true;
                 }
 
                 function validateGroup(node) {
-                    return (nodeSearch.details.group !== undefined && nodeSearch.group !== null && nodeSearch.group.key !== "ALL") ? (node.details !== undefined && node.details.group !== undefined && node.details.group.toUpperCase() === nodeSearch.group.key) : true;
+                    if (!isUndefinedOrNull(nodeSearch.details.group)) {
+                        return node.details.group === nodeSearch.details.group;
+                    }
+                    return true;
                 }
 
                 function isUndefinedOrNull(obj) {

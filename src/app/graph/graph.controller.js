@@ -17,22 +17,22 @@ function GraphController($scope, $rootScope, $filter, $q, GraphService, Nodecolo
     $scope.beFilter = {};
 
     $scope.$watch('uiFilter', function (value, prev) {
-        if (prev) {
+        if (!angular.equals({}, prev)) {
             init()
         }
     }, true);
     $scope.$watch('epFilter', function (value, prev) {
-        if (prev) {
+        if (!angular.equals({}, prev)) {
             init()
         }
     }, true);
     $scope.$watch('msFilter', function (value, prev) {
-        if (prev) {
+        if (!angular.equals({}, prev)) {
             init()
         }
     }, true);
     $scope.$watch('beFilter', function (value, prev) {
-        if (prev) {
+        if (!angular.equals({}, prev)) {
             init()
         }
     }, true);
@@ -59,11 +59,9 @@ function GraphController($scope, $rootScope, $filter, $q, GraphService, Nodecolo
 
             nodesData = resultData.nodes;
             linksData = resultData.links;
-            console.log(linksData);
 
             $scope.graphData = applyFilters(resultData);
             $rootScope.dataLoading = false;
-            //$scope.$emit('nodesFiltered',applyFilters(resultData));
         });
     }
 
