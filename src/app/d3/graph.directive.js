@@ -7,25 +7,22 @@ angular.module('msgGraph')
 MsgD3Graph.$inject = ['d3', 'NodeService', '$modal', 'NodecolorService'];
 function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
 
-    // define a margin
     var margin = {top: 20, right: 0, bottom: 20, left: 0},
         width = window.innerWidth - margin.right - margin.left - 16,
         height = window.innerHeight,
-        minheight = window.innerHeight;
-
-    //    height -= d3.select("#navigation-container")[0][0].offsetHeight;
-    //    height -= d3.select("#control-bar")[0][0].offsetHeight;
-
-    var linkedByIndex = {};
-
-    var graphWidth, graphHeight;
-
-    var data, nodesData, linksData, graph, layout, lanes, links, clickableLinks, nodes, arrowheads;
-
-    var element;
-
-    var titleFontSize, textFontSize;
-    var nodeR = 16;
+        minheight = window.innerHeight,
+        linkedByIndex = {},
+        data,
+        graph,
+        layout,
+        links,
+        clickableLinks,
+        nodes,
+        arrowheads,
+        element,
+        titleFontSize,
+        textFontSize,
+        nodeR = 16;
 
     function getGraphHeight(data) {
         var numberOfNodesOnBiggestLane = _.max(_.values(_.groupBy(data.nodes, function (n) {
@@ -43,8 +40,6 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
         } else {
             return 0
         }
-
-        return numberOfNodesOnBiggestLane ? numberOfNodesOnBiggestLane * 75 : 0;
     }
 
     function render(element) {
@@ -137,6 +132,7 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
             })
             .attr("y", 70)
             .attr("text-anchor", "middle")
+            .attr("class", "lane-title")
             .style("font-size", titleFontSize);
 
         ////legend
@@ -172,26 +168,37 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
             .append("svg:path")
             .attr("d", "M0,-5L10,0L0,5");
 
+        var lineFunction = d3.svg.line()
+            .x(function (d) {
+                return d.x;
+            })
+            .y(function (d) {
+                return d.y;
+            })
+            .interpolate("basis");
+
         links = graph.append('svg:g')
             .selectAll("line")
             .data(data.links)
             .enter()
-            .append("line")
+            .append("path")
             .on("click", onLinkMouseDown)
             .attr("class", "link")
-            .attr("x1", function (l) {
+            .attr("d", function (l) {
                 var sourceNode = data.nodes.filter(function (d, i) {
                     return i === l.source.index;
                 })[0];
-                d3.select(this).attr("y1", sourceNode.y);
-                return sourceNode.x;
-            })
-            .attr("x2", function (l) {
                 var targetNode = data.nodes.filter(function (d, i) {
                     return i === l.target.index;
                 })[0];
-                d3.select(this).attr("y2", targetNode.y);
-                return targetNode.x;
+                if (sourceNode.lane === targetNode.lane) {
+                    var curve = {
+                        "x":targetNode.x + 100,
+                        "y":(targetNode.y + sourceNode.y) / 2
+                    };
+                    return lineFunction([sourceNode,curve,targetNode]);
+                }
+                return lineFunction([sourceNode,targetNode]);
             })
             .attr("stroke", "black")
             .attr("pointer-events", "none")

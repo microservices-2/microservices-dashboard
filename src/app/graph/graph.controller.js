@@ -59,6 +59,7 @@ function GraphController($scope, $rootScope, $filter, $q, GraphService, Nodecolo
 
             nodesData = resultData.nodes;
             linksData = resultData.links;
+            console.log(linksData);
 
             $scope.graphData = applyFilters(resultData);
             $rootScope.dataLoading = false;
