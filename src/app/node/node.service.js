@@ -18,7 +18,7 @@
 
         function pushNode(node) {
             //TODO: POST request to backend
-            $http.post('/dependencies/node', node)
+            $http.post(BASE_URL+'/node', node)
                 .then(function (response) {
                     $rootScope.$broadcast('nodesChanged', 'Refresh nodes');
                 }, function (error) {
