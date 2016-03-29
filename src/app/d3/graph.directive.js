@@ -419,7 +419,6 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
     }
 
     function findConnectedNodes(currentNode) {
-        console.log(currentNode);
         var connectedNodes = [currentNode];
         data.links.forEach(function (link) {
             if (link.source.id === currentNode.id) {
@@ -428,7 +427,6 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
                 connectedNodes.push(link.source);
             }
         });
-        console.log(connectedNodes);
         return connectedNodes;
     }
 
@@ -443,8 +441,10 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
         });
 
         links.style("opacity", function (link) {
-            if (connectedNodes.indexOf(link.source) > -1 && connectedNodes.indexOf(link.target) > -1) {
-                return 1;
+            if(link.source.id === connectedNodes[0].id && connectedNodes.indexOf(link.target)){
+                return 1
+            } else if(link.target.id === connectedNodes[0].id && connectedNodes.indexOf(link.source)) {
+                return 1
             } else {
                 return opacity;
             }
