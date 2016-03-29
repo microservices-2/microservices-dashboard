@@ -3,7 +3,7 @@
     angular.module('microServicesGui')
         .filter('linkedNodesFilter', [function () {
             return function (nodes, links) {
-                console.log(nodes,links);
+                //console.log(nodes,links);
                 var filteredNodes = [];
                 nodes.forEach(function(n){
                     for(var i = 0; i<links.length;i++){
@@ -16,12 +16,6 @@
                             break;
                         }
                     }
-                    //links.forEach(function(l){
-                    //    if(l.target.id === n.id || l.source.id === n.id){
-                    //        filteredNodes.push(n);
-                    //        return null;
-                    //    }
-                    //});
                 });
                 return filteredNodes;
             };

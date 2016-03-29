@@ -68,12 +68,14 @@ function GraphController($scope, $rootScope, $filter, $q, GraphService, Nodecolo
     init();
 
     function applyFilters(data) {
-        data.nodes = $filter('nodeFilter')(data.nodes, $scope.uiFilter);
-        data.nodes = $filter('nodeFilter')(data.nodes, $scope.epFilter);
-        data.nodes = $filter('nodeFilter')(data.nodes, $scope.msFilter);
+        //data.nodes = $filter('nodeFilter')(data.nodes, $scope.uiFilter);
+        //data.nodes = $filter('nodeFilter')(data.nodes, $scope.epFilter);
+        //data.nodes = $filter('nodeFilter')(data.nodes, $scope.msFilter);
         data.nodes = $filter('nodeFilter')(data.nodes, $scope.beFilter);
         data.links = $filter('linkFilter')(data.links, data.nodes);
-        //data.nodes = $filter('linkedNodesFilter')(data.nodes, data.links);
+        console.log(data.nodes, data.links);
+        data.nodes = $filter('linkedNodesFilter')(nodesData, data.links);
+        console.log(data.nodes,data.links);
         return data;
     }
 

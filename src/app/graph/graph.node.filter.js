@@ -8,7 +8,7 @@
                 var filteredNodes = [];
                 for (var i = 0; i < nodes.length; i++) {
                     if (isCurrentLane(nodes[i])) {
-                        if (validateId(nodes[i]) && validateStatus(nodes[i]) && validateType(nodes[i]) && validateGroup(nodes[i])) {
+                        if ((typeof nodeSearch.details === 'undefined') || validateId(nodes[i]) && validateStatus(nodes[i]) && validateType(nodes[i]) && validateGroup(nodes[i])) {
                             filteredNodes.push(nodes[i]);
                         }
                     } else {
