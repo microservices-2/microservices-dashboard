@@ -208,26 +208,42 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
             .selectAll("line")
             .data(data.links)
             .enter()
-            .append("svg:line")
+            .append("path")
             .on("click", onLinkMouseDown)
             .attr("class", "clickablelink")
-            .attr("x1", function (l) {
+            .attr("d", function (l) {
                 var sourceNode = data.nodes.filter(function (d, i) {
                     return i === l.source.index;
                 })[0];
-                d3.select(this).attr("y1", sourceNode.y);
-                return sourceNode.x;
-            })
-            .attr("x2", function (l) {
                 var targetNode = data.nodes.filter(function (d, i) {
                     return i === l.target.index;
                 })[0];
-                d3.select(this).attr("y2", targetNode.y);
-                return targetNode.x;
+                if (sourceNode.lane === targetNode.lane) {
+                    var curve = {
+                        "x":targetNode.x + 100,
+                        "y":(targetNode.y + sourceNode.y) / 2
+                    };
+                    return lineFunction([sourceNode,curve,targetNode]);
+                }
+                return lineFunction([sourceNode,targetNode]);
             })
+            //.attr("x1", function (l) {
+            //    var sourceNode = data.nodes.filter(function (d, i) {
+            //        return i === l.source.index;
+            //    })[0];
+            //    d3.select(this).attr("y1", sourceNode.y);
+            //    return sourceNode.x;
+            //})
+            //.attr("x2", function (l) {
+            //    var targetNode = data.nodes.filter(function (d, i) {
+            //        return i === l.target.index;
+            //    })[0];
+            //    d3.select(this).attr("y2", targetNode.y);
+            //    return targetNode.x;
+            //})
             .attr("visibility", "hidden")
             .attr("stroke-width", 10)
-            .attr("pointer-events", "all")
+            .attr("pointer-events", "stroke")
             .on("mouseover", function (d) {
                 tooltip.text(d.source.id + " - " + d.target.id);
                 return tooltip.style("visibility", "visible");
@@ -240,8 +256,7 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
             })
             .on("mouseout", function () {
                 return tooltip.style("visibility", "hidden");
-            })
-        ;
+            });
 
         // Nodes
         nodes = graph.append('svg:g')
@@ -394,6 +409,7 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
 
     function findElementByNode(prefix, node) {
         var selector = '.' + formatClassName(prefix, node);
+        console.log(selector);
         return graph.select(selector);
     }
 
