@@ -409,7 +409,6 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
 
     function findElementByNode(prefix, node) {
         var selector = '.' + formatClassName(prefix, node);
-        console.log(selector);
         return graph.select(selector);
     }
 

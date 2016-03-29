@@ -22,7 +22,9 @@
         $scope.isNewNode = angular.isUndefined($scope.newNode);
         if ($scope.isNewNode) {
             $scope.newNode = {
-                details: {},
+                details: {
+                    status: "VIRTUAL"
+                },
                 lane: currentLane
             };
         }
