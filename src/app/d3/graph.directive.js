@@ -230,17 +230,13 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
             .append("svg:g")
             .attr("class", "node")
             .call(layout.drag)
-            .on("mousedown", onNodeMouseDown);
-
-
-        nodes.attr("id", function (d) {
+            .on("mousedown", onNodeMouseDown)
+            .attr("id", function (d) {
             return formatClassName('node', d);
         });
 
         // Circles
-        nodes.filter(function(d){
-            return d.lane !== 1;
-        })
+        nodes.filter(function(d){return d.lane !== 1;})
             .append("svg:circle")
             .attr("class", function (d) {
                 return formatClassName('circle', d);
@@ -256,9 +252,9 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
             .on("mouseout", _.bind(onNodeMouseOut, this, nodes, links))
             .style("stroke", function (o) {
                 return fillColor(o);
-            })
-            .style("stroke-width", 5)
-            .style("fill", '#ffffff');
+            });
+            //.style("stroke-width", 5)
+            //.style("fill", '#ffffff');
 
         // Rectangles
         nodes.filter(function(d){
@@ -281,9 +277,7 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
             .on("mouseout", _.bind(onNodeMouseOut, this, nodes, links))
             .style("stroke", function (o) {
                 return fillColor(o);
-            })
-            .style("stroke-width", 5)
-            .style("fill", '#ffffff');
+            });
 
 
         // A copy of the text with a thick white stroke for legibility.
@@ -341,14 +335,13 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
             .attr("y1", 0)
             .attr("y2", height)
             .style("visibility", function (d, i) {
-                return i === 0 ? "hidden" : "visible";
+                return i === 0 ? null : "visible";
             });
 
         // tooltip
         var tooltip = graph
             .append("svg:text")
-            .style("visibility", "hidden")
-            .style("fill", "#5AADBB");
+            .attr("class","svgtooltip");
 
         // Build linked index
         data.links
@@ -502,7 +495,7 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
 
         // Highlight circle
         var elm = findElementByNode('circle', d);
-        elm.style("fill", '#ffffff');
+        elm.style("fill", null);
         //elm.style("stroke", "steelblue");
 
         // Highlight related nodes

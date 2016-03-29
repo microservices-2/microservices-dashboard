@@ -1,0 +1,14 @@
+//only fixed styles here, it increases the performance greatly over adding it in the code
+svg{
+ .node{
+   circle, rect{
+     stroke-width: 5;
+     fill:white;
+   }
+ }
+
+  .svgtooltip{
+    visibility: hidden;
+    fill: #5AADBB;
+  }
+}
