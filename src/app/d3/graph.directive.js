@@ -102,7 +102,7 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
                 case 1:
                     epCounter++;
                     node.x = x1(node.lane + 0.5)+(nodeWidth/2);
-                    node.y = verticalNodeSpaceRect * epCounter + 85;
+                    node.y = verticalNodeSpaceRect * epCounter + 95;
                     break;
                 case 2:
                     microCounter++;
