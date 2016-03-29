@@ -22,7 +22,13 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
         element,
         titleFontSize,
         textFontSize,
-        nodeR = 16;
+        verticalNodeSpace = 70,
+        verticalNodeSpaceRect = 35,
+        //for circles
+        nodeR = 16,
+        //for rects
+        nodeWidth = 140,
+        nodeHeight = 20;
 
     function getGraphHeight(data) {
         var numberOfNodesOnBiggestLane = _.max(_.values(_.groupBy(data.nodes, function (n) {
@@ -65,7 +71,6 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
 
     function renderGraph(data) {
         var laneLength = data.lanes.length;
-        var verticalNodeSpace = 70;
 
         var uiCounter = 0;
         var epCounter = 0;
@@ -96,7 +101,8 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
                     break;
                 case 1:
                     epCounter++;
-                    node.y = verticalNodeSpace * epCounter + 50;
+                    node.x = x1(node.lane + 0.5)+(nodeWidth/2);
+                    node.y = verticalNodeSpaceRect * epCounter + 50;
                     break;
                 case 2:
                     microCounter++;
@@ -107,15 +113,6 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
                     node.y = verticalNodeSpace * dbCounter + 50;
                     break;
             }
-
-            //        data.links.forEach(function (d) {
-            //          if (d.source === node.index) {
-            //            d.source = node;
-            //          }
-            //          if (d.target === node.index) {
-            //            d.target = node;
-            //          }
-            //        });
         }
 
         //Labels
@@ -134,25 +131,6 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
             .attr("text-anchor", "middle")
             .attr("class", "lane-title")
             .style("font-size", titleFontSize);
-
-        ////legend
-        //graph.append("svg:g")
-        //    .selectAll("type")
-        //    .data(GraphService.getTypes())
-        //    .enter()
-        //    .append("svg:text")
-        //    .text(function (d) {
-        //        return d.key;
-        //    })
-        //    .attr("x", 0)
-        //    .attr("y", function (d, i) {
-        //        return 20*i;
-        //    })
-        //    .attr("text-anchor", "left")
-        //    .style("font-size", textFontSize)
-        //    .style("fill", function (d) {
-        //        return NodecolorService.getColorFor(d.key)
-        //    });
 
         // Markers
         arrowheads = graph.append("svg:defs")
@@ -227,20 +205,6 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
                 }
                 return lineFunction([sourceNode,targetNode]);
             })
-            //.attr("x1", function (l) {
-            //    var sourceNode = data.nodes.filter(function (d, i) {
-            //        return i === l.source.index;
-            //    })[0];
-            //    d3.select(this).attr("y1", sourceNode.y);
-            //    return sourceNode.x;
-            //})
-            //.attr("x2", function (l) {
-            //    var targetNode = data.nodes.filter(function (d, i) {
-            //        return i === l.target.index;
-            //    })[0];
-            //    d3.select(this).attr("y2", targetNode.y);
-            //    return targetNode.x;
-            //})
             .attr("visibility", "hidden")
             .attr("stroke-width", 10)
             .attr("pointer-events", "stroke")
@@ -268,11 +232,16 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
             .call(layout.drag)
             .on("mousedown", onNodeMouseDown);
 
-        // Circles
+
         nodes.attr("id", function (d) {
             return formatClassName('node', d);
         });
-        nodes.append("svg:circle")
+
+        // Circles
+        nodes.filter(function(d){
+            return d.lane !== 1;
+        })
+            .append("svg:circle")
             .attr("class", function (d) {
                 return formatClassName('circle', d);
             })
@@ -291,6 +260,31 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
             .style("stroke-width", 5)
             .style("fill", '#ffffff');
 
+        // Rectangles
+        nodes.filter(function(d){
+                return d.lane === 1;
+            })
+            .append("svg:rect")
+            .attr("class", function (d) {
+                return formatClassName('circle', d);
+            })
+            //.attr("r", nodeR)
+            .attr("x", function (d) {
+                return d.x-nodeWidth;
+            })
+            .attr("y", function (d) {
+                return d.y;
+            })
+            .attr("width",nodeWidth)
+            .attr("height",nodeHeight)
+            .on("mouseover", _.bind(onNodeMouseOver, this, nodes, links))
+            .on("mouseout", _.bind(onNodeMouseOut, this, nodes, links))
+            .style("stroke", function (o) {
+                return fillColor(o);
+            })
+            .style("stroke-width", 5)
+            .style("fill", '#ffffff');
+
 
         // A copy of the text with a thick white stroke for legibility.
         nodes.append("svg:text")
@@ -298,7 +292,7 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
                 return x1(d.lane + 0.5);
             })
             .attr("y", function (d) {
-                return d.y + 25;
+                return d.y + (d.lane!=1?25:13);
             })
             .attr("class", function (d) {
                 return 'shadow ' + formatClassName('text', d);
@@ -319,7 +313,7 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
                 return x1(d.lane + 0.5);
             })
             .attr("y", function (d) {
-                return d.y + 25;
+                return d.y + (d.lane!=1?25:13);
             })
             .text(function (d) {
                 var name = d.id;
@@ -478,7 +472,8 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
         NodeService.setNode(node);
         var modalInstance = $modal.open({
             templateUrl: 'app/nodemodal/nodemodal.html',
-            controller: 'NodeModalController'
+            controller: 'NodeModalController',
+            resolve: {currentLane:function(){return node.lane}}
         });
 
         modalInstance.result.then(function (node) {
