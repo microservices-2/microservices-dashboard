@@ -15,11 +15,11 @@
                     NodeService.setNode(undefined);
                     var modalInstance = $modal.open({
                         templateUrl: 'app/nodemodal/nodemodal.html',
-                        controller: 'NodeModalController'
+                        controller: 'NodeModalController',
+                        resolve: { currentLane: function() {return lane} }
                     });
 
                     modalInstance.result.then(function (node) {
-                        node.lane = lane;
                         NodeService.pushNode(node);
                     });
                 };

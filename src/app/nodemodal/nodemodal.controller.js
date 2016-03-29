@@ -5,9 +5,9 @@
         .module('microServicesGui')
         .controller('NodeModalController', NodeModalController);
 
-    NodeModalController.$inject = ['$scope', '$filter', 'GraphService', 'NodeService', '$modalInstance', 'SetService', '$q'];
+    NodeModalController.$inject = ['$scope', '$filter', 'GraphService', 'NodeService', '$modalInstance', 'SetService', '$q', 'currentLane'];
 
-    function NodeModalController($scope, $filter, GraphService, NodeService, $modalInstance, SetService, $q) {
+    function NodeModalController($scope, $filter, GraphService, NodeService, $modalInstance, SetService, $q, currentLane) {
 
         $scope.states = [];
         $scope.types = [];
@@ -22,9 +22,11 @@
         $scope.isNewNode = angular.isUndefined($scope.newNode);
         if ($scope.isNewNode) {
             $scope.newNode = {
-                details: {}
+                details: {},
+                lane: currentLane
             };
         }
+        console.log(currentLane);
 
         var nodes = [],
             links = [];

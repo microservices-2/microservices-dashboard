@@ -396,7 +396,7 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
 
     // Helpers
     function formatClassName(prefix, object) {
-        return prefix + '-' + object.id.replace(/(\.|\/)/gi, '-');
+        return prefix + '-' + object.id.replace(/(\.|\/|:)/gi, '-');
     }
 
     function formatLinkNameByIndex(prefix, object) {
