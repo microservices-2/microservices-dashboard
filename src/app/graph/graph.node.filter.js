@@ -19,7 +19,10 @@
 
 
                 function isCurrentLane(node) {
-                    return nodeSearch.lane === node.lane;
+                    if(typeof nodeSearch.lane !== 'undefined') {
+                        return nodeSearch.lane === node.lane;
+                    }
+                    return true;
                 }
 
                 function validateId(node) {

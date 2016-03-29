@@ -35,8 +35,10 @@
         });
 
         vm.filter = {
-            details: {},
-            lane: parseInt(vm.lane)
+            details: {}
         };
+        if(typeof vm.lane !== 'undefined'){
+            vm.filter.lane = parseInt(vm.lane);
+        }
     }
 })();

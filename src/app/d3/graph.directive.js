@@ -23,7 +23,7 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
         titleFontSize,
         textFontSize,
         verticalNodeSpace = 70,
-        verticalNodeSpaceRect = 35,
+        verticalNodeSpaceRect = 25,
         //for circles
         nodeR = 16,
         //for rects
@@ -102,7 +102,7 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
                 case 1:
                     epCounter++;
                     node.x = x1(node.lane + 0.5)+(nodeWidth/2);
-                    node.y = verticalNodeSpaceRect * epCounter + 50;
+                    node.y = verticalNodeSpaceRect * epCounter + 85;
                     break;
                 case 2:
                     microCounter++;
@@ -269,7 +269,7 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
                 return d.x-nodeWidth;
             })
             .attr("y", function (d) {
-                return d.y;
+                return d.y - (nodeHeight/2);
             })
             .attr("width",nodeWidth)
             .attr("height",nodeHeight)
@@ -286,7 +286,7 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
                 return x1(d.lane + 0.5);
             })
             .attr("y", function (d) {
-                return d.y + (d.lane!=1?25:13);
+                return d.y + (d.lane!=1?25:4);
             })
             .attr("class", function (d) {
                 return 'shadow ' + formatClassName('text', d);
@@ -307,7 +307,7 @@ function MsgD3Graph(d3, NodeService, $modal, NodecolorService) {
                 return x1(d.lane + 0.5);
             })
             .attr("y", function (d) {
-                return d.y + (d.lane!=1?25:13);
+                return d.y + (d.lane!=1?25:4);
             })
             .text(function (d) {
                 var name = d.id;

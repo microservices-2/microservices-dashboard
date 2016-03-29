@@ -73,6 +73,7 @@ function GraphController($scope, $rootScope, $filter, $q, GraphService, Nodecolo
         data.nodes = $filter('nodeFilter')(data.nodes, $scope.msFilter);
         data.nodes = $filter('nodeFilter')(data.nodes, $scope.beFilter);
         data.links = $filter('linkFilter')(data.links, data.nodes);
+        //data.nodes = $filter('linkedNodesFilter')(data.nodes, data.links);
         return data;
     }
 

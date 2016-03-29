@@ -23,10 +23,11 @@
 
         function getStates() {
             return $q(function (resolve, reject) {
-                resolve([{key: "UP", value: "UP"}, {key: "DOWN", value: "DOWN"}, {
-                    key: "UNKNOWN",
-                    value: "UNKNOWN"
-                }]);
+                resolve([
+                    {key: "UP", value: "UP"},
+                    {key: "DOWN", value: "DOWN"},
+                    {key: "UNKNOWN", value: "UNKNOWN"},
+                    {key: "VIRTUAL", value: "VIRTUAL"}]);
             });
         }
 
