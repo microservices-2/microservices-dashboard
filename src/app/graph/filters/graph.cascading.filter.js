@@ -9,8 +9,7 @@
         .filter('cascadingFilter', function () {
             return function (links, allnodes, nodes) {
                 var filteredNodes = [],
-                    filteredLinks = [],
-                    cascadedNodes = [];
+                    filteredLinks = [];
 
                 links.forEach(function (l) {
                     if (contains(nodes, l.target)) {
