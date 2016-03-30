@@ -8,7 +8,7 @@
         .module('microServicesGui')
         .filter('cascadingFilter', function () {
             return function (links, allnodes, nodes) {
-                var filteredNodes = [],
+                var filteredNodes = nodes,
                     filteredLinks = [];
 
                 links.forEach(function (l) {
@@ -46,9 +46,6 @@
                         filteredNodes.push(l.source);
                     }
                 });
-
-                console.log(filteredLinks);
-                console.log(filteredNodes);
 
                 return {
                     links :filteredLinks,

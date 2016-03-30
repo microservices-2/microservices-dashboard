@@ -78,7 +78,7 @@
         function deleteNode(id) {
             $window.alert('this code is still untested, but should work if uncommented');
             $window.console.log('tried to delete node: ' + id);
-            //NodeService.deleteNode(id);
+            NodeService.deleteNode(id);
         }
 
         function saveNode() {

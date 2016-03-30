@@ -18,7 +18,6 @@
         return factory;
 
         function pushNode(node) {
-            //TODO: POST request to backend
             $http.post(BASE_URL+'/node', node)
                 .then(function () {
                     $rootScope.$broadcast('nodesChanged', 'Refresh nodes');

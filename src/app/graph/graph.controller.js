@@ -1,4 +1,3 @@
-
 (function () {
 
     "use strict";
@@ -14,29 +13,14 @@
         var nodesData, linksData, resultData;
 
         $scope.showLegend = {'height': '0'};
-        $scope.uiFilter = {};
-        $scope.epFilter = {};
-        $scope.msFilter = {};
         $scope.beFilter = {};
 
-        $scope.$watch('uiFilter', function (value, prev) {
-            if (!angular.equals({}, prev)) {
-                init(true);
-            }
-        }, true);
-        $scope.$watch('epFilter', function (value, prev) {
-            if (!angular.equals({}, prev)) {
-                init(true);
-            }
-        }, true);
-        $scope.$watch('msFilter', function (value, prev) {
-            if (!angular.equals({}, prev)) {
-                init(true);
-            }
-        }, true);
         $scope.$watch('beFilter', function (value, prev) {
-            if (!angular.equals({}, prev)) {
-                init(true);
+            if (!angular.equals({}, prev)){
+                if(value.details.type!==null || value.details.group!==null) {
+                    init(true);
+                }
+                init();
             }
         }, true);
 
@@ -63,9 +47,9 @@
                 nodesData = resultData.nodes;
                 linksData = resultData.links;
 
-                if(withFilter) {
+                if (withFilter) {
                     $scope.graphData = applyFilters(resultData);
-                }else{
+                } else {
                     $scope.graphData = resultData;
                 }
                 $rootScope.dataLoading = false;
@@ -78,11 +62,10 @@
             //data.nodes = $filter('nodeFilter')(data.nodes, $scope.uiFilter);
             //data.nodes = $filter('nodeFilter')(data.nodes, $scope.epFilter);
             //data.nodes = $filter('nodeFilter')(data.nodes, $scope.msFilter);
+            console.log($scope.beFilter, $scope.beFilter.details);
             data.nodes = $filter('nodeFilter')(data.nodes, $scope.beFilter);
             //data.links = $filter('linkFilter')(data.links, data.nodes);
-            console.log(data.nodes);
             var cf = $filter('cascadingFilter')(data.links, nodesData, data.nodes);
-            console.log(cf);
             data.nodes = cf.nodes;
             data.links = cf.links;
             return data;
