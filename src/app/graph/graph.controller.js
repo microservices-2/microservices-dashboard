@@ -21,26 +21,26 @@
 
         $scope.$watch('uiFilter', function (value, prev) {
             if (!angular.equals({}, prev)) {
-                init();
+                init(true);
             }
         }, true);
         $scope.$watch('epFilter', function (value, prev) {
             if (!angular.equals({}, prev)) {
-                init();
+                init(true);
             }
         }, true);
         $scope.$watch('msFilter', function (value, prev) {
             if (!angular.equals({}, prev)) {
-                init();
+                init(true);
             }
         }, true);
         $scope.$watch('beFilter', function (value, prev) {
             if (!angular.equals({}, prev)) {
-                init();
+                init(true);
             }
         }, true);
 
-        function init() {
+        function init(withFilter) {
             $rootScope.dataLoading = true;
             $q.all([
                 GraphService.getTypes(),
@@ -63,7 +63,11 @@
                 nodesData = resultData.nodes;
                 linksData = resultData.links;
 
-                $scope.graphData = applyFilters(resultData);
+                if(withFilter) {
+                    $scope.graphData = applyFilters(resultData);
+                }else{
+                    $scope.graphData = resultData;
+                }
                 $rootScope.dataLoading = false;
             });
         }
@@ -75,8 +79,12 @@
             //data.nodes = $filter('nodeFilter')(data.nodes, $scope.epFilter);
             //data.nodes = $filter('nodeFilter')(data.nodes, $scope.msFilter);
             data.nodes = $filter('nodeFilter')(data.nodes, $scope.beFilter);
-            data.links = $filter('linkFilter')(data.links, data.nodes);
-            data.nodes = $filter('linkedNodesFilter')(nodesData, data.links);
+            //data.links = $filter('linkFilter')(data.links, data.nodes);
+            console.log(data.nodes);
+            var cf = $filter('cascadingFilter')(data.links, nodesData, data.nodes);
+            console.log(cf);
+            data.nodes = cf.nodes;
+            data.links = cf.links;
             return data;
         }
 

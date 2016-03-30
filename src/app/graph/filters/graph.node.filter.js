@@ -7,12 +7,16 @@
             return function (nodes, nodeSearch) {
                 var filteredNodes = [];
                 for (var i = 0; i < nodes.length; i++) {
-                    if (isCurrentLane(nodes[i])) {
+                    if (angular.isUndefined(nodeSearch.lane)) {
+                        if ((typeof nodeSearch.details === 'undefined') || validateId(nodes[i]) && validateStatus(nodes[i]) && validateType(nodes[i]) && validateGroup(nodes[i])) {
+                            filteredNodes.push(nodes[i]);
+                        }
+                    } else if(isCurrentLane(nodes[i])){
                         if ((typeof nodeSearch.details === 'undefined') || validateId(nodes[i]) && validateStatus(nodes[i]) && validateType(nodes[i]) && validateGroup(nodes[i])) {
                             filteredNodes.push(nodes[i]);
                         }
                     } else {
-                        filteredNodes.push(nodes[i]);
+                        //filteredNodes.push(nodes[i]);
                     }
                 }
                 return filteredNodes;
