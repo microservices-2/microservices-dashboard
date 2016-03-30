@@ -5,9 +5,9 @@
         .module('microServicesGui')
         .controller('NodeModalController', NodeModalController);
 
-    NodeModalController.$inject = ['$scope', '$filter', 'GraphService', 'NodeService', '$modalInstance', 'SetService', '$q', 'currentLane'];
+    NodeModalController.$inject = ['$scope', '$filter', '$window', 'GraphService', 'NodeService', '$modalInstance', 'SetService', '$q', 'currentLane'];
 
-    function NodeModalController($scope, $filter, GraphService, NodeService, $modalInstance, SetService, $q, currentLane) {
+    function NodeModalController($scope, $filter, $window, GraphService, NodeService, $modalInstance, SetService, $q, currentLane) {
 
         $scope.states = [];
         $scope.types = [];
@@ -28,7 +28,6 @@
                 lane: currentLane
             };
         }
-        console.log(currentLane);
 
         var nodes = [],
             links = [];
@@ -46,7 +45,7 @@
             links = values[3].data.links;
         }).finally(function () {
             searchLinkableNodes();
-            searchLinkedNodes()
+            searchLinkedNodes();
         });
 
         $scope.ok = function () {
@@ -64,8 +63,8 @@
         };
 
         function deleteNode(id) {
-            alert('this code is still untested, but should work if uncommented');
-            console.log('tried to delete node: ' + id);
+            $window.alert('this code is still untested, but should work if uncommented');
+            $window.console.log('tried to delete node: ' + id);
             //NodeService.deleteNode(id);
         }
 
@@ -111,14 +110,14 @@
                 default :
             }
             $scope.availableNodes.sort(function (a, b) {
-                if (a.id < b.id)
+                if (a.id < b.id) {
                     return -1;
-                else if (a.id > b.id)
+                }else if (a.id > b.id) {
                     return 1;
-                else
+                }else {
                     return 0;
+                }
             });
-            //Add the nodes to the links
         }
 
         function searchLinkedNodes() {
@@ -130,12 +129,13 @@
                 });
             }
             $scope.linkedNodes.sort(function (a, b) {
-                if (a.id < b.id)
+                if (a.id < b.id) {
                     return -1;
-                else if (a.id > b.id)
+                }else if (a.id > b.id) {
                     return 1;
-                else
+                }else {
                     return 0;
+                }
             });
         }
 

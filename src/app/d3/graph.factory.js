@@ -1,10 +1,10 @@
-'use strict';
+(function () {
+    "use strict";
 
-// graph module
-angular.module('msgGraph', [])
+    angular.module('msgGraph', [])
 
-// D3 factory
-.factory('d3', function(){
-  /* We could declare locals or other D3.js specific configurations here. */
-  return d3;
-});
+        .factory('d3', function () {
+            /* We could declare locals or other D3.js specific configurations here. */
+            return d3;
+        });
+})();

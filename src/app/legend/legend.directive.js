@@ -15,7 +15,7 @@
             controllerAs: 'legend',
             bindToController: true,
             controller: LegendCtrl
-        }
+        };
     }
 
     LegendCtrl.$inject = ['NodecolorService'];
@@ -31,9 +31,9 @@
 
         legend.toggle = function () {
             if (legend.showLegend.height === '0') {
-                legend.showLegend = {'height': 'auto'}
+                legend.showLegend = {'height': 'auto'};
             } else {
-                legend.showLegend = {'height': '0'}
+                legend.showLegend = {'height': '0'};
             }
         };
     }

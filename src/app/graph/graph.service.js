@@ -22,7 +22,7 @@
         }
 
         function getStates() {
-            return $q(function (resolve, reject) {
+            return $q(function (resolve) {
                 resolve([
                     {key: "UP", value: "UP"},
                     {key: "DOWN", value: "DOWN"},
@@ -32,7 +32,7 @@
         }
 
         function getTypes() {
-            return $q(function (resolve, reject) {
+            return $q(function (resolve) {
                 resolve([{key: "DB", value: "DB"}, {key: "MICROSERVICE", value: "MICROSERVICE"}, {
                     key: "REST",
                     value: "REST"
@@ -43,7 +43,7 @@
         }
 
         function getGroups() {
-            return $q(function (resolve, reject) {
+            return $q(function (resolve) {
                 resolve([{key: "BCI", value: "BCI"}, {key: "BPS", value: "BPS"}, {key: "BUSC", value: "BUSC"}, {
                         key: "CRMODS",
                         value: "CRMODS"

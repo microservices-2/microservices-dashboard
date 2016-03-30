@@ -1,85 +1,87 @@
-'use strict';
 
-angular
-    .module('microServicesGui')
-    .controller('GraphController', GraphController);
+(function () {
 
-GraphController.$inject = ['$scope', '$rootScope', '$filter', '$q', 'GraphService', 'NodecolorService'];
+    "use strict";
 
-function GraphController($scope, $rootScope, $filter, $q, GraphService, NodecolorService) {
+    angular
+        .module('microServicesGui')
+        .controller('GraphController', GraphController);
 
-    var nodesData, linksData, resultData;
+    GraphController.$inject = ['$scope', '$rootScope', '$filter', '$q', 'GraphService', 'NodecolorService'];
 
-    $scope.showLegend = {'height': '0'};
-    $scope.uiFilter = {};
-    $scope.epFilter = {};
-    $scope.msFilter = {};
-    $scope.beFilter = {};
+    function GraphController($scope, $rootScope, $filter, $q, GraphService, NodecolorService) {
 
-    $scope.$watch('uiFilter', function (value, prev) {
-        if (!angular.equals({}, prev)) {
-            init()
-        }
-    }, true);
-    $scope.$watch('epFilter', function (value, prev) {
-        if (!angular.equals({}, prev)) {
-            init()
-        }
-    }, true);
-    $scope.$watch('msFilter', function (value, prev) {
-        if (!angular.equals({}, prev)) {
-            init()
-        }
-    }, true);
-    $scope.$watch('beFilter', function (value, prev) {
-        if (!angular.equals({}, prev)) {
-            init()
-        }
-    }, true);
+        var nodesData, linksData, resultData;
 
-    function init() {
-        $rootScope.dataLoading = true;
-        $q.all([
-            GraphService.getTypes(),
-            GraphService.getGraph()
-        ]).then(function (values) {
-            $scope.types = values[0];
-            resultData = values[1].data;
-            resultData.nodes.forEach(function (node, index) {
-                node.index = index;
-                resultData.links.forEach(function (d) {
-                    if (d.source === node.index) {
-                        d.source = node;
-                    }
-                    if (d.target === node.index) {
-                        d.target = node;
-                    }
-                })
+        $scope.showLegend = {'height': '0'};
+        $scope.uiFilter = {};
+        $scope.epFilter = {};
+        $scope.msFilter = {};
+        $scope.beFilter = {};
+
+        $scope.$watch('uiFilter', function (value, prev) {
+            if (!angular.equals({}, prev)) {
+                init();
+            }
+        }, true);
+        $scope.$watch('epFilter', function (value, prev) {
+            if (!angular.equals({}, prev)) {
+                init();
+            }
+        }, true);
+        $scope.$watch('msFilter', function (value, prev) {
+            if (!angular.equals({}, prev)) {
+                init();
+            }
+        }, true);
+        $scope.$watch('beFilter', function (value, prev) {
+            if (!angular.equals({}, prev)) {
+                init();
+            }
+        }, true);
+
+        function init() {
+            $rootScope.dataLoading = true;
+            $q.all([
+                GraphService.getTypes(),
+                GraphService.getGraph()
+            ]).then(function (values) {
+                $scope.types = values[0];
+                resultData = values[1].data;
+                resultData.nodes.forEach(function (node, index) {
+                    node.index = index;
+                    resultData.links.forEach(function (d) {
+                        if (d.source === node.index) {
+                            d.source = node;
+                        }
+                        if (d.target === node.index) {
+                            d.target = node;
+                        }
+                    });
+                });
+
+                nodesData = resultData.nodes;
+                linksData = resultData.links;
+
+                $scope.graphData = applyFilters(resultData);
+                $rootScope.dataLoading = false;
             });
+        }
 
-            nodesData = resultData.nodes;
-            linksData = resultData.links;
+        init();
 
-            $scope.graphData = applyFilters(resultData);
-            $rootScope.dataLoading = false;
-        });
+        function applyFilters(data) {
+            //data.nodes = $filter('nodeFilter')(data.nodes, $scope.uiFilter);
+            //data.nodes = $filter('nodeFilter')(data.nodes, $scope.epFilter);
+            //data.nodes = $filter('nodeFilter')(data.nodes, $scope.msFilter);
+            data.nodes = $filter('nodeFilter')(data.nodes, $scope.beFilter);
+            data.links = $filter('linkFilter')(data.links, data.nodes);
+            data.nodes = $filter('linkedNodesFilter')(nodesData, data.links);
+            return data;
+        }
+
+        $scope.getColor = function (node) {
+            return {'background-color': '' + NodecolorService.getColorFor(node)};
+        };
     }
-
-    init();
-
-    function applyFilters(data) {
-        //data.nodes = $filter('nodeFilter')(data.nodes, $scope.uiFilter);
-        //data.nodes = $filter('nodeFilter')(data.nodes, $scope.epFilter);
-        //data.nodes = $filter('nodeFilter')(data.nodes, $scope.msFilter);
-        data.nodes = $filter('nodeFilter')(data.nodes, $scope.beFilter);
-        data.links = $filter('linkFilter')(data.links, data.nodes);
-        console.log(data.nodes, data.links);
-        data.nodes = $filter('linkedNodesFilter')(nodesData, data.links);
-        console.log(data.nodes,data.links);
-        return data;
-    }
-
-    $scope.getColor = function (node) {
-        return {'background-color': '' + NodecolorService.getColorFor(node)};
-    };
-}
+})();

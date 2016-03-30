@@ -16,7 +16,7 @@
             controllerAs: 'vm',
             bindToController: true,
             controller: LanefilterCtrl
-        }
+        };
     }
 
     LanefilterCtrl.$inject = ['GraphService', '$q'];

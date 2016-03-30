@@ -16,7 +16,9 @@
                     var modalInstance = $modal.open({
                         templateUrl: 'app/nodemodal/nodemodal.html',
                         controller: 'NodeModalController',
-                        resolve: { currentLane: function() {return lane} }
+                        resolve: {
+                            currentLane: function() {return lane;}
+                        }
                     });
 
                     modalInstance.result.then(function (node) {

@@ -12,22 +12,25 @@
         var factory = {
             pushNode: pushNode,
             getNode: getNode,
-            setNode: setNode
+            setNode: setNode,
+            deleteNode: deleteNode
         };
         return factory;
 
         function pushNode(node) {
             //TODO: POST request to backend
             $http.post(BASE_URL+'/node', node)
-                .then(function (response) {
+                .then(function () {
                     $rootScope.$broadcast('nodesChanged', 'Refresh nodes');
-                }, function (error) {
+                }, function () {
 
                 });
         }
 
         function deleteNode(nodeId) {
-            $http.delete(BASE_URL + 'node/' + nodeId);
+            if(typeof nodeId !== 'undefined') {
+                $http.delete(BASE_URL + 'node/' + nodeId);
+            }
         }
 
         function getNode() {
