@@ -17,8 +17,8 @@
         return factory;
 
         function getGraph() {
-            return $http.get(BASE_URL + 'graph');
-            //return $http.get('graphdata.json');
+            //return $http.get(BASE_URL + 'graph');
+            return $http.get('graphdata.json');
         }
 
         function getStates() {

@@ -23,7 +23,8 @@
         if ($scope.isNewNode) {
             $scope.newNode = {
                 details: {
-                    status: "VIRTUAL"
+                    status: "VIRTUAL",
+                    custom: []
                 },
                 lane: currentLane
             };
@@ -60,6 +61,18 @@
         $scope.delete = function () {
             deleteNode($scope.newNode.id);
             $modalInstance.dismiss('cancel');
+        };
+
+        $scope.addCustomValue = function () {
+            $scope.newNode.details.custom.push({key:'',value:'',isNew:true});
+        };
+
+        $scope.checkFilledIn = function (custom) {
+            if (custom.key !== '' && custom.value !== ''){
+                delete custom.isNew;
+                return custom;
+            }
+            return custom;
         };
 
         function deleteNode(id) {

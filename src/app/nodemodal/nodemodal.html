@@ -42,7 +42,7 @@
                 <label>Type
                     <select ng-model="newNode.details.type"
                             ng-options="type.key as type.value for type in types"
-                            >
+                    >
                     </select>
                 </label>
             </div>
@@ -50,8 +50,83 @@
                 <label>Group
                     <select ng-model="newNode.details.group"
                             ng-options="group.key as group.value for group in groups"
-                            >
+                    >
                     </select>
+                </label>
+            </div>
+        </div>
+        <div class="row" ng-if="newNode.details.status==='VIRTUAL'">
+            <div class="large-3 columns">
+                <label>Launch date
+                    <input type="text"
+                           placeholder="Enter expected launch date"
+                           ng-model="newNode.details.launchDate"
+                           name="launchDate"
+                           ng-init="newNode.details.launchDate = newNode.details.launchDate"
+                    />
+                </label>
+            </div>
+            <div class="large-3 columns">
+                <label>Project
+                    <input type="text"
+                           placeholder="Enter project name"
+                           ng-model="newNode.details.project"
+                           name="project"
+                           ng-init="newNode.details.project = newNode.details.project"
+                    />
+                </label>
+            </div>
+            <div class="large-3 columns">
+                <label>Intake
+                    <input type="text"
+                           placeholder="Enter intake"
+                           ng-model="newNode.details.intake"
+                           name="intake"
+                           ng-init="newNode.details.intake = newNode.details.intake"
+                    />
+                </label>
+            </div>
+            <div class="large-3 columns">
+                <label>Contact
+                    <input type="text"
+                           placeholder="Enter contact"
+                           ng-model="newNode.details.contact"
+                           name="contact"
+                           ng-init="newNode.details.contact = newNode.details.contact"
+                    />
+                </label>
+            </div>
+        </div>
+        <div class="row" ng-if="newNode.details.status==='VIRTUAL'">
+            <div class="large-4 columns" ng-repeat="custom in newNode.details.custom">
+                <label ng-if="!custom.isNew">{{custom.key}}
+                    <input type="text"
+                           placeholder="Enter {{custom.key}}"
+                           ng-model="custom.value"
+                           name="project"
+                    />
+                </label>
+                <div class="row collapse" ng-if="custom.isNew">
+                    <label>new value</label>
+                    <div class="large-4 columns">
+                        <input type="text"
+                               placeholder="Enter the key"
+                               ng-model="custom.key"
+                               ng-blur="checkFilledIn(custom)"
+                        />
+                    </div>
+                    <div class="large-8 columns">
+                        <input type="text"
+                               placeholder="Enter the value"
+                               ng-model="custom.value"
+                               ng-blur="checkFilledIn(custom)"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="large-4 columns">
+                <label><br>
+                    <button type="button" class="button round" ng-click="addCustomValue()">Add custom field</button>
                 </label>
             </div>
         </div>
@@ -81,7 +156,7 @@
             <input type="submit" role="button" aria-label="submit form"
                    class="blue radius button" value="Submit"/>
           </span>
-                <span class="small-3 columns" ng-if="!isNewNode">
+                <span class="small-3 columns" ng-if="!isNewNode && newNode.details.status==='VIRTUAL'">
             <input role="button" aria-label="delete node"
                    class="button radius alert" value="Delete"
                    ng-click="delete()"/>
