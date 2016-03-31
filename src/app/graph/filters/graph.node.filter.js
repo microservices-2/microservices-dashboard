@@ -4,59 +4,70 @@
 
     angular.module('microServicesGui')
         .filter('nodeFilter', function () {
-            return function (nodes, nodeSearch) {
-                var filteredNodes = [];
-                for (var i = 0; i < nodes.length; i++) {
+                return function (nodes, nodeSearch) {
+                    var filteredNodes = [];
                     if (angular.isUndefined(nodeSearch.lane)) {
-                        if ((typeof nodeSearch.details === 'undefined') || validateId(nodes[i]) && validateStatus(nodes[i]) && validateType(nodes[i]) && validateGroup(nodes[i])) {
-                            filteredNodes.push(nodes[i]);
-                        }
-                    } else if(isCurrentLane(nodes[i])){
-                        if ((typeof nodeSearch.details === 'undefined') || validateId(nodes[i]) && validateStatus(nodes[i]) && validateType(nodes[i]) && validateGroup(nodes[i])) {
-                            filteredNodes.push(nodes[i]);
-                        }
+                        nodes.forEach(function (n) {
+                            if (validateId(n)) {
+                                if (angular.isUndefined(nodeSearch.details)) {
+                                    filteredNodes.push(n);
+                                } else if (validateStatus(n) && validateGroup(n) && validateType(n)) {
+                                    filteredNodes.push(n);
+                                }
+                            }
+                        });
                     } else {
-                        //filteredNodes.push(nodes[i]);
+                        nodes.forEach(function (n) {
+                            if (isCurrentLane(n)) {
+                                if (validateId(n)) {
+                                    if (angular.isUndefined(nodeSearch.details)) {
+                                        filteredNodes.push(n);
+                                    } else if (validateStatus(n) && validateGroup(n) && validateType(n)) {
+                                        filteredNodes.push(n);
+                                    }
+                                }
+                            }
+                        });
                     }
-                }
-                return filteredNodes;
+                    return filteredNodes;
 
 
-                function isCurrentLane(node) {
-                    if(typeof nodeSearch.lane !== 'undefined') {
-                        return nodeSearch.lane === node.lane;
+                    function isCurrentLane(node) {
+                        if (typeof nodeSearch.lane !== 'undefined') {
+                            return nodeSearch.lane === node.lane;
+                        }
+                        return true;
                     }
-                    return true;
-                }
 
-                function validateId(node) {
-                    return nodeSearch.id !== undefined ? (node.id !== undefined && node.id.toLowerCase().indexOf(nodeSearch.id) > -1) : true;
-                }
-
-                function validateStatus(node) {
-                    if (!isUndefinedOrNull(nodeSearch.details.status)) {
-                        return node.details.status === nodeSearch.details.status;
+                    function validateId(node) {
+                        return nodeSearch.id !== undefined ? (node.id !== undefined && node.id.toLowerCase().indexOf(nodeSearch.id) > -1) : true;
                     }
-                    return true;
-                }
 
-                function validateType(node) {
-                    if (!isUndefinedOrNull(nodeSearch.details.type)) {
-                        return node.details.type === nodeSearch.details.type;
+                    function validateStatus(node) {
+                        if (!isUndefinedOrNull(nodeSearch.details.status)) {
+                            return node.details.status === nodeSearch.details.status;
+                        }
+                        return true;
                     }
-                    return true;
-                }
 
-                function validateGroup(node) {
-                    if (!isUndefinedOrNull(nodeSearch.details.group)) {
-                        return node.details.group === nodeSearch.details.group;
+                    function validateType(node) {
+                        if (!isUndefinedOrNull(nodeSearch.details.type)) {
+                            return node.details.type === nodeSearch.details.type;
+                        }
+                        return true;
                     }
-                    return true;
-                }
 
-                function isUndefinedOrNull(obj) {
-                    return (typeof obj === 'undefined' || obj === null);
-                }
-            };
-        });
+                    function validateGroup(node) {
+                        if (!isUndefinedOrNull(nodeSearch.details.group)) {
+                            return node.details.group === nodeSearch.details.group;
+                        }
+                        return true;
+                    }
+
+                    function isUndefinedOrNull(obj) {
+                        return (typeof obj === 'undefined' || obj === null || obj === "");
+                    }
+                };
+            }
+        );
 })();

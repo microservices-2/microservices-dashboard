@@ -16,11 +16,12 @@
         $scope.beFilter = {};
 
         $scope.$watch('beFilter', function (value, prev) {
-            if (!angular.equals({}, prev)){
-                if(value.details.type!==null || value.details.group!==null) {
+            if (!angular.equals({}, prev)) {
+                if (isUndefinedEmptyOrNull(value.details.type) && isUndefinedEmptyOrNull(value.details.group) && isUndefinedEmptyOrNull(value.details.status)) {
+                    init();
+                } else {
                     init(true);
                 }
-                init();
             }
         }, true);
 
@@ -59,12 +60,8 @@
         init();
 
         function applyFilters(data) {
-            //data.nodes = $filter('nodeFilter')(data.nodes, $scope.uiFilter);
-            //data.nodes = $filter('nodeFilter')(data.nodes, $scope.epFilter);
-            //data.nodes = $filter('nodeFilter')(data.nodes, $scope.msFilter);
-            console.log($scope.beFilter, $scope.beFilter.details);
+            console.log("applied");
             data.nodes = $filter('nodeFilter')(data.nodes, $scope.beFilter);
-            //data.links = $filter('linkFilter')(data.links, data.nodes);
             var cf = $filter('cascadingFilter')(data.links, nodesData, data.nodes);
             data.nodes = cf.nodes;
             data.links = cf.links;
@@ -74,5 +71,9 @@
         $scope.getColor = function (node) {
             return {'background-color': '' + NodecolorService.getColorFor(node)};
         };
+
+        function isUndefinedEmptyOrNull(obj) {
+            return (typeof obj === 'undefined' || obj === null || obj === "");
+        }
     }
 })();
