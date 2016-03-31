@@ -62,7 +62,7 @@
         function applyFilters(data) {
             console.log("applied");
             data.nodes = $filter('nodeFilter')(data.nodes, $scope.beFilter);
-            var cf = $filter('cascadingFilter')(data.links, nodesData, data.nodes);
+            var cf = $filter('cascadingFilter2')(data.links, nodesData, data.nodes);
             data.nodes = cf.nodes;
             data.links = cf.links;
             return data;

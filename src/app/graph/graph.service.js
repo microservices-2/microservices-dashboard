@@ -36,9 +36,9 @@
                 resolve([{key: "DB", value: "DB"},
                     {key: "REST", value: "REST"},
                     {key: "SOAP", value: "SOAP"},
-                    {key: "JMS", value: "JMS"}
-                    //{key: "MICROSERVICE", value: "MICROSERVICE"},
-                    //{key: "RESOURCE", value: "RESOURCE"}
+                    {key: "JMS", value: "JMS"},
+                    {key: "MICROSERVICE", value: "MICROSERVICE"},
+                    {key: "RESOURCE", value: "RESOURCE"}
                 ]);
             });
         }

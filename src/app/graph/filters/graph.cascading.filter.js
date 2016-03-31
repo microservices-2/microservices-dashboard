@@ -32,9 +32,10 @@
                     if(l.target.lane === 1 || l.source.lane === 1) {
                         if (contains(filteredNodes, l.target) && filteredLinks.indexOf(l) < 0) {
                             filteredLinks.push(l);
-                        } else if (contains(filteredNodes, l.source) && filteredLinks.indexOf(l) < 0) {
-                            filteredLinks.push(l);
                         }
+                        //else if (contains(filteredNodes, l.source) && filteredLinks.indexOf(l) < 0) {
+                        //    filteredLinks.push(l);
+                        //}
                     }
                 });
 

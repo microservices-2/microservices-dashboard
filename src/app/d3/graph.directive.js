@@ -540,7 +540,6 @@
                 //});
 
                 scope.$watch('graphData', function (newVal) {
-                    console.log(newVal);
                     if (newVal) {
                         data = newVal;
                         render(element);
