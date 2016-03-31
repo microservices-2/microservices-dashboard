@@ -8,7 +8,6 @@
     function LanefilterDirective() {
         return {
             restrict: 'A',
-            replace:true,
             templateUrl: 'app/lanefilter/lanefilter.html',
             scope: {
                 lane: '@',
