@@ -1,15 +1,22 @@
-    <div class="columns small-12 medium-12 large-12">
-        <select ng-model="vm.filter.details.status" ng-options="state.key as state.value for state in vm.states">
-            <option value="">states</option>
-        </select>
-    </div>
-    <div class="columns small-12 medium-12 large-12">
-        <select ng-model="vm.filter.details.type" ng-options="type.key as type.value for type in vm.types">
-            <option value="">types</option>
-        </select>
-    </div>
-    <div class="columns small-12 medium-12 large-12">
-        <select ng-model="vm.filter.details.group" ng-options="group.key as group.value for group in vm.groups">
-            <option value="">groups</option>
-        </select>
-    </div>
+<div class="columns small-12 medium-12 large-12">
+    <input type="text"
+           placeholder="Enter node name"
+           ng-model="vm.filter.id"
+           name="identifier"
+    />
+</div>
+<div class="columns small-12 medium-12 large-12">
+    <select ng-model="vm.filter.details.status" ng-options="state.key as state.value for state in vm.states">
+        <option value="">states</option>
+    </select>
+</div>
+<div class="columns small-12 medium-12 large-12">
+    <select ng-model="vm.filter.details.type" ng-options="type.key as type.value for type in vm.types">
+        <option value="">types</option>
+    </select>
+</div>
+<div class="columns small-12 medium-12 large-12">
+    <select ng-model="vm.filter.details.group" ng-options="group.key as group.value for group in vm.groups">
+        <option value="">groups</option>
+    </select>
+</div>
