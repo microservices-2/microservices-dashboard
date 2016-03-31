@@ -6,6 +6,7 @@
         .filter('nodeFilter', function () {
                 return function (nodes, nodeSearch) {
                     var filteredNodes = [];
+                    nodeSearch.id ? nodeSearch.id = nodeSearch.id.toLowerCase() : null;
                     if (angular.isUndefined(nodeSearch.lane)) {
                         nodes.forEach(function (n) {
                             if (validateId(n)) {
@@ -40,7 +41,10 @@
                     }
 
                     function validateId(node) {
-                        return nodeSearch.id !== undefined ? (node.id !== undefined && node.id.toLowerCase().indexOf(nodeSearch.id) > -1) : true;
+                        if(!isUndefinedOrNull(nodeSearch.id)){
+                            return node.id.toLowerCase().indexOf(nodeSearch.id) > -1;
+                        }
+                        return true;
                     }
 
                     function validateStatus(node) {

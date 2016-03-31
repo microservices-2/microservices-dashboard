@@ -17,7 +17,7 @@
 
         $scope.$watch('beFilter', function (value, prev) {
             if (!angular.equals({}, prev)) {
-                if (isUndefinedEmptyOrNull(value.details.type) && isUndefinedEmptyOrNull(value.details.group) && isUndefinedEmptyOrNull(value.details.status)) {
+                if (isUndefinedEmptyOrNull(value.details.type) && isUndefinedEmptyOrNull(value.details.group) && isUndefinedEmptyOrNull(value.details.status) && isUndefinedEmptyOrNull(value.id)) {
                     init();
                 } else {
                     init(true);
