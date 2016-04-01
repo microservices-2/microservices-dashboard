@@ -93,49 +93,63 @@
                 }
 
                 function getLinksForResources(node){
-                    var linksFirstItr = [],
-                        linksSecondItr = [],
-                        linksThirdItr = [],
-                        tmpNodes = [];
-                    linksFirstItr = getAllLinksWithSource(node);
-                    tmpNodes = getTargetNodes(linksFirstItr);
-                    tmpNodes.forEach(function (n) {
-                        linksSecondItr = linksSecondItr.concat(getAllLinksWithSource(n));
-                    });
-                    tmpNodes = getTargetNodes(linksSecondItr);
-                    tmpNodes.forEach(function (n) {
-                        linksThirdItr = linksThirdItr.concat(getAllLinksWithSource(n));
-                    });
-                    return linksFirstItr.concat(linksSecondItr,linksThirdItr);
+                    var finalLinks = [],
+                        tempLinks = [],
+                        whileLinks = [],
+                        prevCount = 0,
+                        tempNodes = [];
+                    tempLinks = getAllLinksWithSource(node);
+                    do{
+                        tempNodes = getTargetNodes(tempLinks);
+                        tempNodes.forEach(function (n) {
+                            whileLinks = whileLinks.concat(getAllLinksWithSource(n));
+                        });
+                        prevCount = finalLinks.count;
+                        finalLinks = finalLinks.concat(tempLinks);
+                        tempLinks = whileLinks;
+                        whileLinks = [];
+                    }while (tempLinks.length !== 0);
+                    return finalLinks;
                 }
 
                 function getLinksForMicroservice(node){
-                    var linksFirstItr = [],
-                        linksSecondItr = [],
-                        nodesFirstItr = [];
-                    linksFirstItr = getAllLinksWithTarget(node);
-                    nodesFirstItr = getSourceNodes(linksFirstItr);
-                    nodesFirstItr.forEach(function (n) {
-                        linksSecondItr = linksSecondItr.concat(getAllLinksWithTarget(n));
-                    });
-                    return linksFirstItr.concat(linksSecondItr,getAllLinksWithSource(node));
+                    var finalLinks = [],
+                        tempLinks = [],
+                        whileLinks = [],
+                        prevCount = 0,
+                        tempNodes = [];
+                    tempLinks = getAllLinksWithTarget(node);
+                    do{
+                        tempNodes = getSourceNodes(tempLinks);
+                        tempNodes.forEach(function (n) {
+                            whileLinks = whileLinks.concat(getAllLinksWithTarget(n));
+                        });
+                        prevCount = finalLinks.count;
+                        finalLinks = finalLinks.concat(tempLinks);
+                        tempLinks = whileLinks;
+                        whileLinks = [];
+                    }while (tempLinks.length !== 0);
+                    return finalLinks.concat(getAllLinksWithSource(node));
                 }
 
                 function getLinksForBackend(node){
-                    var linksFirstItr = [],
-                        linksSecondItr = [],
-                        linksThirdItr = [],
-                        tmpNodes = [];
-                    linksFirstItr = getAllLinksWithTarget(node);
-                    tmpNodes = getSourceNodes(linksFirstItr);
-                    tmpNodes.forEach(function (n) {
-                        linksSecondItr = linksSecondItr.concat(getAllLinksWithTarget(n));
-                    });
-                    tmpNodes = getSourceNodes(linksSecondItr);
-                    tmpNodes.forEach(function (n) {
-                        linksThirdItr = linksThirdItr.concat(getAllLinksWithTarget(n));
-                    });
-                    return linksFirstItr.concat(linksSecondItr,linksThirdItr);
+                    var finalLinks = [],
+                        tempLinks = [],
+                        whileLinks = [],
+                        prevCount = 0,
+                        tempNodes = [];
+                    tempLinks = getAllLinksWithTarget(node);
+                    do{
+                        tempNodes = getSourceNodes(tempLinks);
+                        tempNodes.forEach(function (n) {
+                            whileLinks = whileLinks.concat(getAllLinksWithTarget(n));
+                        });
+                        prevCount = finalLinks.count;
+                        finalLinks = finalLinks.concat(tempLinks);
+                        tempLinks = whileLinks;
+                        whileLinks = [];
+                    }while (tempLinks.length !== 0);
+                    return finalLinks;
                 }
 
                 filteredNodes.forEach(function (n) {
