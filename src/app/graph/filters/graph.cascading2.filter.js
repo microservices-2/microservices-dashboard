@@ -92,32 +92,61 @@
                     return results;
                 }
 
+                function getLinksForResources(node){
+                    var linksFirstItr = [],
+                        linksSecondItr = [],
+                        linksThirdItr = [],
+                        tmpNodes = [];
+                    linksFirstItr = getAllLinksWithSource(node);
+                    tmpNodes = getTargetNodes(linksFirstItr);
+                    tmpNodes.forEach(function (n) {
+                        linksSecondItr = linksSecondItr.concat(getAllLinksWithSource(n));
+                    });
+                    tmpNodes = getTargetNodes(linksSecondItr);
+                    tmpNodes.forEach(function (n) {
+                        linksThirdItr = linksThirdItr.concat(getAllLinksWithSource(n));
+                    });
+                    return linksFirstItr.concat(linksSecondItr,linksThirdItr);
+                }
+
+                function getLinksForMicroservice(node){
+                    var linksFirstItr = [],
+                        linksSecondItr = [],
+                        nodesFirstItr = [];
+                    linksFirstItr = getAllLinksWithTarget(node);
+                    nodesFirstItr = getSourceNodes(linksFirstItr);
+                    nodesFirstItr.forEach(function (n) {
+                        linksSecondItr = linksSecondItr.concat(getAllLinksWithTarget(n));
+                    });
+                    return linksFirstItr.concat(linksSecondItr,getAllLinksWithSource(node));
+                }
+
+                function getLinksForBackend(node){
+                    var linksFirstItr = [],
+                        linksSecondItr = [],
+                        linksThirdItr = [],
+                        tmpNodes = [];
+                    linksFirstItr = getAllLinksWithTarget(node);
+                    tmpNodes = getSourceNodes(linksFirstItr);
+                    tmpNodes.forEach(function (n) {
+                        linksSecondItr = linksSecondItr.concat(getAllLinksWithTarget(n));
+                    });
+                    tmpNodes = getSourceNodes(linksSecondItr);
+                    tmpNodes.forEach(function (n) {
+                        linksThirdItr = linksThirdItr.concat(getAllLinksWithTarget(n));
+                    });
+                    return linksFirstItr.concat(linksSecondItr,linksThirdItr);
+                }
+
                 filteredNodes.forEach(function (n) {
-                    var links1 = [],
-                        nodes1 = [];
                     if (n.lane === 0) {
 
                     } else if (n.lane === 1) {
-
+                        filteredLinks = merge(getLinksForResources(n),filteredLinks);
                     } else if (n.lane === 2) {
-                        links1 = getAllLinksWithTarget(n);
-                        nodes1 = getSourceNodes(links1);
-                        nodes1.forEach(function (n1) {
-                            links1 = links1.concat(getAllLinksWithTarget(n1));
-                        });
-                        links1 = links1.concat(getAllLinksWithSource(n));
-                        filteredLinks = merge(links1,filteredLinks);
+                        filteredLinks = merge(getLinksForMicroservice(n),filteredLinks);
                     } else if (n.lane === 3) {
-                        links1 = getAllLinksWithTarget(n);
-                        nodes1 = getSourceNodes(links1);
-                        nodes1.forEach(function (n1) {
-                            links1 = links1.concat(getAllLinksWithTarget(n1));
-                        });
-                        nodes1 = getSourceNodes(links1);
-                        nodes1.forEach(function (n1) {
-                            links1 = links1.concat(getAllLinksWithTarget(n1));
-                        });
-                        filteredLinks = merge(links1,filteredLinks);
+                        filteredLinks = merge(getLinksForBackend(n),filteredLinks);
                     }
                 });
 
