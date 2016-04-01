@@ -32,13 +32,9 @@
                            name="version"
                            ng-init="newNode.details.version = newNode.details.version"
                     />
-
                 </label>
             </div>
-            <div class="large-4 columns">
-                <button type="button" ng-if="newNode.details.docs" href="{{newNode.details.docs}}">Read documentation
-                </button>
-            </div>
+            <div class="large-4 columns"></div>
         </div>
         <div class="row">
             <div class="large-4 columns">
@@ -140,6 +136,21 @@
             <div class="large-4 columns">
                 <label><br>
                     <button type="button" class="button round" ng-click="addCustomValue()">Add custom field</button>
+                </label>
+            </div>
+        </div>
+        <div class="row" ng-if="newNode.details.type === 'RESOURCE'">
+            <div class="large-12 columns">
+                <label>Link to documentation
+                    <div class="row collapse">
+                        <div class="small-10 columns">
+                            <input ng-model="newNode.details.docs"
+                                   ng-disabled="!isVirtualNode"/>
+                        </div>
+                        <div class="small-2 columns">
+                            <a href="{{newNode.details.docs}}" class="button postfix">Go</a>
+                        </div>
+                    </div>
                 </label>
             </div>
         </div>
