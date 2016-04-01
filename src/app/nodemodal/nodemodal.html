@@ -2,6 +2,8 @@
     <h2 id="modalTitle" ng-hide="newNode.id">Add Node</h2>
 
     <h2 ng-show="newNode.id">{{newNode.id}}</h2>
+    <a href="{{newNode.details.docs}}">Read documentation</a>
+
 
     <form name="nodeForm" novalidate ng-submit="nodeForm.$valid && ok()">
         <div class="row">

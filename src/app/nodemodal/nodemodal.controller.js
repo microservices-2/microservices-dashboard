@@ -19,6 +19,7 @@
         $scope.availableNodes = [];
         $scope.linkedNodes = [];
         $scope.newNode = NodeService.getNode();
+        console.log($scope.newNode);
         $scope.isNewNode = angular.isUndefined($scope.newNode);
         if ($scope.isNewNode) {
             $scope.newNode = {
