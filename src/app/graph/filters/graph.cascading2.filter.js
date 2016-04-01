@@ -94,11 +94,10 @@
 
                 function getLinksForResources(node){
                     var finalLinks = [],
-                        tempLinks = [],
+                        tempLinks = getAllLinksWithSource(node),
                         whileLinks = [],
                         prevCount = 0,
                         tempNodes = [];
-                    tempLinks = getAllLinksWithSource(node);
                     do{
                         tempNodes = getTargetNodes(tempLinks);
                         tempNodes.forEach(function (n) {
@@ -114,11 +113,10 @@
 
                 function getLinksForMicroservice(node){
                     var finalLinks = [],
-                        tempLinks = [],
+                        tempLinks = getAllLinksWithTarget(node),
                         whileLinks = [],
                         prevCount = 0,
                         tempNodes = [];
-                    tempLinks = getAllLinksWithTarget(node);
                     do{
                         tempNodes = getSourceNodes(tempLinks);
                         tempNodes.forEach(function (n) {
@@ -129,16 +127,26 @@
                         tempLinks = whileLinks;
                         whileLinks = [];
                     }while (tempLinks.length !== 0);
-                    return finalLinks.concat(getAllLinksWithSource(node));
+                    tempLinks = getAllLinksWithSource(node);
+                    do{
+                        tempNodes = getTargetNodes(tempLinks);
+                        tempNodes.forEach(function (n) {
+                            whileLinks = whileLinks.concat(getAllLinksWithSource(n));
+                        });
+                        prevCount = finalLinks.count;
+                        finalLinks = finalLinks.concat(tempLinks);
+                        tempLinks = whileLinks;
+                        whileLinks = [];
+                    }while (tempLinks.length !== 0);
+                    return finalLinks;
                 }
 
                 function getLinksForBackend(node){
                     var finalLinks = [],
-                        tempLinks = [],
+                        tempLinks = getAllLinksWithTarget(node),
                         whileLinks = [],
                         prevCount = 0,
                         tempNodes = [];
-                    tempLinks = getAllLinksWithTarget(node);
                     do{
                         tempNodes = getSourceNodes(tempLinks);
                         tempNodes.forEach(function (n) {
