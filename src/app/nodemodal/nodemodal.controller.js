@@ -18,18 +18,10 @@
         };
         $scope.availableNodes = [];
         $scope.linkedNodes = [];
+
         $scope.newNode = NodeService.getNode();
-        console.log($scope.newNode);
-        $scope.isNewNode = angular.isUndefined($scope.newNode);
-        if ($scope.isNewNode) {
-            $scope.newNode = {
-                details: {
-                    status: "VIRTUAL",
-                    custom: []
-                },
-                lane: currentLane
-            };
-        }
+        configureNode();
+
 
         var nodes = [],
             links = [];
@@ -45,6 +37,9 @@
             $scope.groups = values[2];
             nodes = values[3].data.nodes;
             links = values[3].data.links;
+            if($scope.isNewNode){
+                $scope.newNode.id = getFreeIdFromNodes()
+            }
         }).finally(function () {
             searchLinkableNodes();
             searchLinkedNodes();
@@ -75,6 +70,43 @@
             }
             return custom;
         };
+
+        function getFreeIdFromNodes(){
+            var previd = 0;
+            nodes.forEach(function (n) {
+                if(typeof n.id !== "string" && n.id > previd){
+                    previd = n.id;
+                }
+            });
+            return ++previd;
+        }
+
+        function configureNode(){
+            $scope.isNewNode = angular.isUndefined($scope.newNode);
+            if ($scope.isNewNode) {
+                $scope.newNode = {
+                    details: {
+                        status: "VIRTUAL",
+                        type: setNodeType(),
+                        custom: []
+                    },
+                    lane: currentLane
+                };
+            }
+            $scope.isVirtualNode = $scope.newNode.details.status === "VIRTUAL";
+
+            function setNodeType(){
+                if(currentLane === 1){
+                    $scope.isFixedLane = true;
+                    return "RESOURCE";
+                } else if(currentLane === 2){
+                    $scope.isFixedLane = true;
+                    return "MICROSERVICE";
+                }else{
+                    return "";
+                }
+            }
+        }
 
         function deleteNode(id) {
             $window.alert('this code is still untested, but should work if uncommented');

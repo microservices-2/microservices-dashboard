@@ -294,9 +294,9 @@
                 .attr("class", function (d) {
                     return 'shadow ' + formatClassName('text', d);
                 }).text(function (d) {
-                    var name = d.id;
-                    if (d.details.virtual === true) {
-                        name = d.id + ' (virtual)';
+                    var name = d.details.name? d.details.name : d.id;
+                    if (d.details.virtual === true){
+                        name = d.details.name + ' (virtual)';
                     }
                     return name;
                 })
@@ -314,9 +314,9 @@
                     return d.y + (d.lane !== 1 ? 25 : 4);
                 })
                 .text(function (d) {
-                    var name = d.id;
+                    var name = d.details.name? d.details.name : d.id;
                     if (d.details.virtual === true){
-                        name = d.id + ' (virtual)';
+                        name = d.details.name + ' (virtual)';
                     }
                     return name;
                 })

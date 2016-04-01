@@ -1,22 +1,23 @@
 <div>
     <h2 id="modalTitle" ng-hide="newNode.id">Add Node</h2>
 
-    <h2 ng-show="newNode.id">{{newNode.id}}</h2>
-    <a href="{{newNode.details.docs}}">Read documentation</a>
-
+    <h2 ng-show="newNode.id">{{newNode.details.name?newNode.details.name:newNode.id}}</h2>
 
     <form name="nodeForm" novalidate ng-submit="nodeForm.$valid && ok()">
         <div class="row">
-            <div class="large-4 columns">
-                <label ng-class="{error: (nodeForm.id.$dirty || nodeForm.$submitted) && nodeForm.id.$error.required}">Id
-                    <input type="text" placeholder="Enter Id" ng-model="newNode.id" name="id" required/>
-                    <span ng-show="(nodeForm.id.$dirty || nodeForm.$submitted) && nodeForm.id.$error.required"
-                          class="error">ID is required.</span>
-                </label>
-            </div>
+            <!--<div class="large-4 columns">-->
+            <!--<label ng-class="{error: (nodeForm.id.$dirty || nodeForm.$submitted) && nodeForm.id.$error.required}">Id-->
+            <!--<input type="text" placeholder="Enter Id" ng-model="newNode.id" name="id" required/>-->
+            <!--<span ng-show="(nodeForm.id.$dirty || nodeForm.$submitted) && nodeForm.id.$error.required"-->
+            <!--class="error">ID is required.</span>-->
+            <!--</label>-->
+            <!--</div>-->
             <div class="large-4 columns">
                 <label>Name
-                    <input type="text" placeholder="Enter Name" ng-model="newNode.details.name" name="name"
+                    <input type="text" placeholder="Enter Name"
+                           ng-model="newNode.details.name"
+                           ng-disabled="!isVirtualNode"
+                           name="name"
                            ng-init="newNode.details.name = newNode.details.name"
                     />
 
@@ -24,11 +25,19 @@
             </div>
             <div class="large-4 columns">
                 <label>Version
-                    <input type="text" placeholder="Enter Version" ng-model="newNode.details.version" name="version"
+                    <input type="text"
+                           placeholder="Enter Version"
+                           ng-model="newNode.details.version"
+                           ng-disabled="!isVirtualNode"
+                           name="version"
                            ng-init="newNode.details.version = newNode.details.version"
                     />
 
                 </label>
+            </div>
+            <div class="large-4 columns">
+                <button type="button" ng-if="newNode.details.docs" href="{{newNode.details.docs}}">Read documentation
+                </button>
             </div>
         </div>
         <div class="row">
@@ -44,6 +53,7 @@
                 <label>Type
                     <select ng-model="newNode.details.type"
                             ng-options="type.key as type.value for type in types"
+                            ng-disabled="(!isVirtualNode || isNewNode && isFixedLane)"
                     >
                     </select>
                 </label>
@@ -52,12 +62,13 @@
                 <label>Group
                     <select ng-model="newNode.details.group"
                             ng-options="group.key as group.value for group in groups"
+                            ng-disabled="!isVirtualNode"
                     >
                     </select>
                 </label>
             </div>
         </div>
-        <div class="row" ng-if="newNode.details.status==='VIRTUAL'">
+        <div class="row" ng-if="isVirtualNode">
             <div class="large-3 columns">
                 <label>Launch date
                     <input type="text"
@@ -99,7 +110,7 @@
                 </label>
             </div>
         </div>
-        <div class="row" ng-if="newNode.details.status==='VIRTUAL'">
+        <div class="row" ng-if="isVirtualNode">
             <div class="large-4 columns" ng-repeat="custom in newNode.details.custom">
                 <label ng-if="!custom.isNew">{{custom.key}}
                     <input type="text"
@@ -135,7 +146,10 @@
         <div class="row">
             <div class="large-12 columns">
                 <label>Description
-                    <textarea ng-model="newNode.details.description" placeholder="Enter Description"></textarea>
+                    <textarea ng-model="newNode.details.description"
+                              placeholder="Enter Description"
+                              ng-disabled="!isVirtualNode">
+                    </textarea>
                 </label>
             </div>
         </div>
