@@ -32,11 +32,9 @@
         function init(withFilter) {
             $rootScope.dataLoading = true;
             $q.all([
-                GraphService.getTypes(),
                 GraphService.getGraph()
             ]).then(function (values) {
-                $scope.types = values[0];
-                resultData = values[1].data;
+                resultData = values[0].data;
                 resultData.nodes.forEach(function (node, index) {
                     node.index = index;
                     resultData.links.forEach(function (d) {

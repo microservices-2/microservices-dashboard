@@ -33,12 +33,13 @@
 
         function getTypes() {
             return $q(function (resolve) {
-                resolve([{key: "DB", value: "DB"},
-                    {key: "REST", value: "REST"},
-                    {key: "SOAP", value: "SOAP"},
-                    {key: "JMS", value: "JMS"},
+                resolve([
+                    {key: "RESOURCE", value: "RESOURCE"},
                     {key: "MICROSERVICE", value: "MICROSERVICE"},
-                    {key: "RESOURCE", value: "RESOURCE"}
+                    {key: "DB", value: "DB"},
+                    {key: "SOAP", value: "SOAP"},
+                    {key: "REST", value: "REST"},
+                    {key: "JMS", value: "JMS"},
                 ]);
             });
         }

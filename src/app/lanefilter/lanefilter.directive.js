@@ -37,6 +37,14 @@
         vm.filter = {
             details: {}
         };
+
+        vm.refresh = function(){
+            console.log('lol');
+            vm.filter = {
+                details: {}
+            };
+        };
+
         if(typeof vm.lane !== 'undefined'){
             vm.filter.lane = parseInt(vm.lane);
         }

@@ -1,21 +1,32 @@
 #legenda {
-  background-color: steelblue;
-  padding:4px;
-
-  >button {
-    width: 20px;
-    height: 20px;
-    margin:0;
-    padding:0;
-    float: right;
-  }
-
+  padding: 8px;
   > ul {
-    overflow:hidden;
+    float: right;
     list-style: none;
     margin:0;
     > li {
       padding:4px;
+      float: left;
+
+      > .circle{
+        float:left;
+        border: 4px solid;
+        width: 24px;
+        height: 24px;
+        border-radius: 12px;
+      }
+
+      > .rectangle{
+        border: 3px solid;
+        border-radius: 0;
+      }
+
+      > .circle-type{
+        padding:2px;
+      }
     }
   }
+
+
+
 }

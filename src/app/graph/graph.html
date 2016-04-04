@@ -1,4 +1,13 @@
-<div legend types="types"></div>
+<!--<div legend types="types"></div>-->
+<div id="legenda" class="column large-12" ng-controller="LegendController as legend">
+    <ul>
+        <li ng-repeat="type in legend.types">
+            <div class="circle" ng-style="legend.getColor(type.key)" ng-if="type.key !== 'RESOURCE'"></div>
+            <div class="circle rectangle" ng-style="legend.getColor(type.key)" ng-if="type.key === 'RESOURCE'"></div>
+            <span class="circle-type">{{type.key}}</span>
+        </li>
+    </ul>
+</div>
 <!--<div lanefilter lane="0" filter="uiFilter"></div>-->
 <!--<div lanefilter lane="1" filter="epFilter"></div>-->
 <!--<div lanefilter lane="2" filter="msFilter"></div>-->
