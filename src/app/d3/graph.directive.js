@@ -35,12 +35,15 @@
             var numberOfNodesOnBiggestLane = _.max(_.values(_.groupBy(data.nodes, function (n) {
                     return n.lane;
                 })), function (nodes) {
-                    return nodes.length;
+                    if(nodes.lane !== 1){
+                        return nodes.length;
+                    }
+                    return 0;
                 }).length + 1;
 
             if (numberOfNodesOnBiggestLane) {
-                if (numberOfNodesOnBiggestLane * 75 > minheight) {
-                    return numberOfNodesOnBiggestLane * 75;
+                if (numberOfNodesOnBiggestLane * 44 > minheight) {
+                    return numberOfNodesOnBiggestLane * 44;
                 } else {
                     return minheight;
                 }
@@ -98,20 +101,20 @@
                 switch (node.lane) {
                     case 0:
                         uiCounter++;
-                        node.y = verticalNodeSpace * uiCounter + 50;
+                        node.y = verticalNodeSpace * uiCounter + 10;
                         break;
                     case 1:
                         epCounter++;
                         node.x = x1(node.lane + 0.5) + (nodeWidth / 2);
-                        node.y = verticalNodeSpaceRect * epCounter + 95;
+                        node.y = verticalNodeSpaceRect * epCounter + 55;
                         break;
                     case 2:
                         microCounter++;
-                        node.y = verticalNodeSpace * microCounter + 50;
+                        node.y = verticalNodeSpace * microCounter + 10;
                         break;
                     case 3:
                         dbCounter++;
-                        node.y = verticalNodeSpace * dbCounter + 50;
+                        node.y = verticalNodeSpace * dbCounter + 10;
                         break;
                 }
             }
@@ -128,7 +131,7 @@
                 .attr("x", function (d, i) {
                     return x1(i + 0.5);
                 })
-                .attr("y", 70)
+                .attr("y", 30)
                 .attr("text-anchor", "middle")
                 .attr("class", "lane-title")
                 .style("font-size", titleFontSize);

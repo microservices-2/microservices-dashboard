@@ -1,0 +1,15 @@
+@font-face {
+  font-family: 'molotregular';
+  src: url('../../assets/fonts/molot_regular_macroman/Molot-webfont.eot');
+  src: url('../../assets/fonts/molot_regular_macroman/Molot-webfont.eot?#iefix') format('embedded-opentype'),
+  url('../../assets/fonts/molot_regular_macroman/Molot-webfont.woff') format('woff'),
+  url('../../assets/fonts/molot_regular_macroman/Molot-webfont.ttf') format('truetype'),
+  url('../../assets/fonts/molot_regular_macroman/Molot-webfont.svg#molotregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+h1 > a {
+  font-family: 'molotregular';
+  font-size: 40px;
+}
