@@ -25,6 +25,10 @@
             }
         }, true);
 
+        $rootScope.$on("nodesChanged", function(){
+            init(true);
+        });
+
         function init(withFilter) {
             $rootScope.dataLoading = true;
             $q.all([
@@ -60,7 +64,6 @@
         init();
 
         function applyFilters(data) {
-            console.log("applied");
             data.nodes = $filter('nodeFilter')(data.nodes, $scope.beFilter);
             var cf = $filter('cascadingFilter2')(data.links, nodesData, data.nodes);
             data.nodes = cf.nodes;
