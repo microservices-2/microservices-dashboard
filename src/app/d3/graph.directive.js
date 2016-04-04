@@ -480,6 +480,7 @@
 
             modalInstance.result.then(function (node) {
                 NodeService.pushNode(node);
+                render(element);
             }, function () {
                 render(element);
             });
