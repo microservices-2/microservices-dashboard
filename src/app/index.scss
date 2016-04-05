@@ -2,7 +2,8 @@
  *  If you want to override some foundation settings, you have to change values here.
  *  The list of settings values are listed here bower_components/foundation/scss/foundation/_settings.scss
  */
-$topbar-bg-color: #5AADBB;
+$topbar-bg-color: #6db33f;
+$primary-color: #6db33f;
 
 /**
  *  The import of foundation is made manually because there is still no links of the
@@ -19,6 +20,10 @@ $topbar-bg-color: #5AADBB;
 @import "legend/style";
 @import "d3/styles";
 @import "navigation/style";
+
+*{
+  font-family:"Montserrat";
+}
 
 .browsehappy {
   margin: 0.2em 0;
