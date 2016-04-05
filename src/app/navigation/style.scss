@@ -1,17 +1,21 @@
-nav.top-bar ul.title-area {
-  float: none;
-  > li {
-    float: left;
-    > h1 > a {
-      font-size: 30px;
-      > img {
-        margin: 0 0 3px 0;
+nav.top-bar {
+  border-top:5px solid #6db33f;
+  ul.title-area {
+    float: none;
+    > li {
+      float: left;
+      > h1 > a {
+        font-size: 30px;
+        > img {
+          margin: 0 0 3px 0;
+        }
       }
     }
-  }
-  > li.credits {
-    font-size: 10px;
-    float: right;
+    > li.credits {
+      color:#6db33f;
+      font-size: 10px;
+      float: right;
+    }
   }
 }
 
