@@ -12,7 +12,7 @@
             <!--class="error">ID is required.</span>-->
             <!--</label>-->
             <!--</div>-->
-            <div class="large-4 columns" ng-if="newNode.details.name">
+            <div class="large-4 columns" ng-if="isNewNode || newNode.details.name">
                 <label>Name
                     <input type="text" placeholder="Enter Name"
                            ng-model="newNode.details.name"
