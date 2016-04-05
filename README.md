@@ -1,4 +1,4 @@
-# microservices-dashboard-server
+# microservices-dashboard
 
 ## Overview
 
