@@ -39,7 +39,6 @@
         };
 
         vm.refresh = function(){
-            console.log('lol');
             vm.filter = {
                 details: {}
             };

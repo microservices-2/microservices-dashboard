@@ -1,0 +1,9 @@
+<div id="legenda" class="column large-12">
+    <ul>
+        <li ng-repeat="type in legend.types">
+            <div class="circle" ng-style="legend.getColor(type.key)" ng-if="type.key !== 'RESOURCE'"></div>
+            <div class="circle rectangle" ng-style="legend.getColor(type.key)" ng-if="type.key === 'RESOURCE'"></div>
+            <span class="circle-type">{{type.key}}</span>
+        </li>
+    </ul>
+</div>

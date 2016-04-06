@@ -1,0 +1,6 @@
+{
+  "name": "microServicesGui",
+  "constants": {
+    "BASE_URL": "http://localhost:8383/"
+  }
+}
