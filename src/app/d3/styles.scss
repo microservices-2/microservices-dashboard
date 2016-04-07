@@ -15,11 +15,17 @@ svg {
   }
 
   .svgtooltip {
-    visibility: hidden;
+    transition: 0.2s opacity ease;
+    opacity: 0;
     fill: #5AADBB;
   }
 
-  .clickablelink, .link {
+  .link {
     transition: 0.5s opacity 0.3s ease;
+  }
+
+  .clickablelink {
+    transition: 0.5s opacity 0.3s ease;
+    stroke-width: 10px;
   }
 }

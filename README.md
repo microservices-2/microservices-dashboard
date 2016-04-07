@@ -19,9 +19,9 @@ Then bower dependencies should be installed:
 ```
 bower install
 ```
-And finally using gulp to serve the resources:
+And finally using gulp to serve the resources using the configuration file:
 ```
-gulp serve
+gulp serve:conf
 ```
 
 ## Screenshots

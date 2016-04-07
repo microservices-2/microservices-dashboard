@@ -23,32 +23,44 @@
             element,
             titleFontSize,
             textFontSize,
-            verticalNodeSpace = 70,
+            verticalNodeSpace = 75,
             verticalNodeSpaceRect = 25,
+            paddingAfterTitles = 10,
         //for circles
             nodeR = 16,
         //for rects
             nodeWidth = 140,
             nodeHeight = 20;
 
-        function getGraphHeight(data) {
-            var numberOfNodesOnBiggestLane = _.max(_.values(_.groupBy(data.nodes, function (n) {
-                    return n.lane;
-                })), function (nodes) {
-                    if(nodes.lane !== 1){
-                        return nodes.length;
-                    }
-                    return 0;
-                }).length + 1;
+        function countNodesByLane(nodes) {
+            var counts = [0, 0, 0, 0];
+            nodes.forEach(function (n) {
+                counts[n.lane]++;
+            });
+            return counts;
+        }
 
-            if (numberOfNodesOnBiggestLane) {
-                if (numberOfNodesOnBiggestLane * 44 > minheight) {
-                    return numberOfNodesOnBiggestLane * 44;
-                } else {
-                    return minheight;
+        function getGraphHeight(data) {
+            var numberOfNodes = 0,
+                biggestLane = 0,
+                numberOfNodesByLane = countNodesByLane(data.nodes);
+
+            numberOfNodesByLane.forEach(function (count, index) {
+                count++;
+                if(index === 1){
+                    count = Math.round(count*(verticalNodeSpaceRect/verticalNodeSpace));
                 }
+                if (count > numberOfNodes) {
+                    numberOfNodes = count;
+                    biggestLane = index;
+                }
+            });
+
+
+            if (numberOfNodes * verticalNodeSpace > minheight) {
+                return numberOfNodes * verticalNodeSpace;
             } else {
-                return 0;
+                return minheight;
             }
         }
 
@@ -56,14 +68,11 @@
 
             height = getGraphHeight(data);
 
-            //NODE_TYPES = getNodeTypes(data.nodes);
-
             d3.select("svg").remove();
             graph = d3.select(element).append("svg")
                 .attr("width", width + margin.right + margin.left)
                 .attr("height", height)
                 .append("g");
-            //.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
             layout = d3.layout.force()
                 .size([width, height]);
@@ -81,17 +90,9 @@
             var microCounter = 0;
             var dbCounter = 0;
 
-            // Scales
-            //var x = d3.scale.linear()
-            //    .domain([margin.right, margin.right + width])
-            //    .range([0, width]);
-
             var x1 = d3.scale.linear()
                 .domain([0, laneLength])
                 .range([margin.left, width]);
-
-            //var y1 = d3.scale.linear()
-            //    .range([0, height]);
 
             //Update data
             for (var i = 0; i < data.nodes.length; i++) {
@@ -101,20 +102,20 @@
                 switch (node.lane) {
                     case 0:
                         uiCounter++;
-                        node.y = verticalNodeSpace * uiCounter + 10;
+                        node.y = verticalNodeSpace * uiCounter + paddingAfterTitles;
                         break;
                     case 1:
-                        epCounter++;
                         node.x = x1(node.lane + 0.5) + (nodeWidth / 2);
-                        node.y = verticalNodeSpaceRect * epCounter + 55;
+                        node.y = (verticalNodeSpaceRect * epCounter) + verticalNodeSpace;
+                        epCounter++;
                         break;
                     case 2:
                         microCounter++;
-                        node.y = verticalNodeSpace * microCounter + 10;
+                        node.y = verticalNodeSpace * microCounter;
                         break;
                     case 3:
                         dbCounter++;
-                        node.y = verticalNodeSpace * dbCounter + 10;
+                        node.y = verticalNodeSpace * dbCounter + paddingAfterTitles;
                         break;
                 }
             }
@@ -182,7 +183,6 @@
                     }
                     return lineFunction([sourceNode, targetNode]);
                 })
-                .attr("stroke", "black")
                 .attr("pointer-events", "none")
                 .attr("marker-end", "url(#arrow)");
 
@@ -209,12 +209,10 @@
                     }
                     return lineFunction([sourceNode, targetNode]);
                 })
-                .attr("visibility", "hidden")
-                .attr("stroke-width", 10)
                 .attr("pointer-events", "stroke")
                 .on("mouseover", function (d) {
                     tooltip.text(d.source.id + " - " + d.target.id);
-                    return tooltip.style("visibility", "visible");
+                    return tooltip.style("opacity", "1");
                 })
                 .on("mousemove", function () {
                     var coordinates = d3.mouse(this);
@@ -223,7 +221,7 @@
                     return tooltip.attr("x", (x + 15) + "px").attr("y", (y + 20) + "px");
                 })
                 .on("mouseout", function () {
-                    return tooltip.style("visibility", "hidden");
+                    return tooltip.style("opacity", "0");
                 });
 
             // Nodes
@@ -297,8 +295,8 @@
                 .attr("class", function (d) {
                     return 'shadow ' + formatClassName('text', d);
                 }).text(function (d) {
-                    var name = d.details.name? d.details.name : d.id;
-                    if (d.details.virtual === true){
+                    var name = d.details.name ? d.details.name : d.id;
+                    if (d.details.virtual === true) {
                         name = d.details.name + ' (virtual)';
                     }
                     return name;
@@ -317,8 +315,8 @@
                     return d.y + (d.lane !== 1 ? 25 : 4);
                 })
                 .text(function (d) {
-                    var name = d.details.name? d.details.name : d.id;
-                    if (d.details.virtual === true){
+                    var name = d.details.name ? d.details.name : d.id;
+                    if (d.details.virtual === true) {
                         name = d.details.name + ' (virtual)';
                     }
                     return name;
@@ -495,24 +493,17 @@
 
         function onNodeMouseOver(nodes, links, d) {
 
-            // Highlight circle
             var elm = findElementByNode('circle', d);
             elm.style("fill", fillColor(d));
 
-            // Highlight related nodes
-            //fadeRelatedNodes(d, 0.05, nodes, links);
             fadeUnrelatedNodes(d, 0.2, nodes, links);
         }
 
         function onNodeMouseOut(nodes, links, d) {
 
-            // Highlight circle
             var elm = findElementByNode('circle', d);
             elm.style("fill", null);
-            //elm.style("stroke", "steelblue");
 
-            // Highlight related nodes
-            //fadeRelatedNodes(d, 1, nodes, links);
             fadeUnrelatedNodes(d, 1, nodes, links);
         }
 
@@ -536,12 +527,6 @@
             link: function (scope, elem) {
 
                 element = elem[0];
-
-                //scope.$on('nodesFiltered', function (event, value) {
-                //    console.log(value);
-                //    data = value;
-                //    render(element);
-                //});
 
                 scope.$watch('graphData', function (newVal) {
                     if (newVal) {
