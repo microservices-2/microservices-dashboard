@@ -4,10 +4,10 @@
 
 The primary goal of this project is to visualize links between microservices and the encompassing ecosystem.
 This AngularJS application consumes endpoints exposed by [microservices-dashboard-server](https://github.com/ordina-jworks/microservices-dashboard-server).
-It displays four columns: UI, Endpoints, Microservices and Backends.
+It displays four columns: UI, Resources, Microservices and Backends.
 Each of these columns show nodes and links between them.
-Currently only microservices and backends are supported.
-The information for these links come from Spring Boot Actuator health endpoints, which are aggregated in the [microservices-dashboard-server](https://github.com/ordina-jworks/microservices-dashboard-server) project.
+Currently only resources, microservices and backends are supported.
+The information for these links come from Spring Boot Actuator health endpoints and hypermedia indexes, which are aggregated in the [microservices-dashboard-server](https://github.com/ordina-jworks/microservices-dashboard-server) project.
 
 ## Building from source
 
