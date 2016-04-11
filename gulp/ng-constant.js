@@ -10,7 +10,7 @@ var conf = require('./conf');
 var ngConstant = require('gulp-ng-constant');
 
 gulp.task('config', function () {
-    gulp.src(path.join(conf.paths.src, '/app/index.constants.json'))
+    gulp.src(path.join(conf.paths.src, '/config.json'))
         .pipe(ngConstant({
             templatePath: 'gulp/index.constants.tpl'
         }))
