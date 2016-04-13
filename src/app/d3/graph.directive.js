@@ -106,12 +106,12 @@
                         break;
                     case 1:
                         node.x = x1(node.lane + 0.5) + (nodeWidth / 2);
-                        node.y = (verticalNodeSpaceRect * epCounter) + verticalNodeSpace;
+                        node.y = (verticalNodeSpaceRect * epCounter) + verticalNodeSpace + paddingAfterTitles;
                         epCounter++;
                         break;
                     case 2:
                         microCounter++;
-                        node.y = verticalNodeSpace * microCounter;
+                        node.y = verticalNodeSpace * microCounter + paddingAfterTitles;
                         break;
                     case 3:
                         dbCounter++;

@@ -4,6 +4,15 @@
     {
       "details": {
         "description": "Spring Cloud Eureka Discovery Client",
+        "type": "UI",
+        "status": "UP"
+      },
+      "id": "test ui",
+      "lane": 0
+    },
+    {
+      "details": {
+        "description": "Spring Cloud Eureka Discovery Client",
         "type": "MICROSERVICE",
         "status": "UP"
       },
