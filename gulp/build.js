@@ -47,7 +47,7 @@ gulp.task('html', ['inject', 'partials'], function () {
     .pipe($.uglify({ preserveComments: $.uglifySaveLicense })).on('error', conf.errorHandler('Uglify'))
     .pipe(jsFilter.restore())
     .pipe(cssFilter)
-    .pipe($.csso())
+    //.pipe($.csso())
     .pipe(cssFilter.restore())
     .pipe(assets.restore())
     .pipe($.useref())
@@ -90,4 +90,4 @@ gulp.task('clean', function (done) {
   $.del([path.join(conf.paths.dist, '/'), path.join(conf.paths.tmp, '/')], done);
 });
 
-gulp.task('build', ['config','html', 'fonts', 'other']);
+gulp.task('build', ['config', 'html', 'fonts', 'other']);
