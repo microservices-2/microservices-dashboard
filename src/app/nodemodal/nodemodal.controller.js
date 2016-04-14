@@ -38,7 +38,7 @@
             nodes = values[3].data.nodes;
             links = values[3].data.links;
             if($scope.isNewNode){
-                $scope.newNode.id = getFreeIdFromNodes()
+                $scope.newNode.id = getFreeIdFromNodes();
             }
         }).finally(function () {
             searchLinkableNodes();

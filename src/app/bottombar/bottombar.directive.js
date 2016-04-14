@@ -10,7 +10,7 @@
         return {
             templateUrl: 'app/bottombar/bottombar.html',
             controller: BottomBarController
-        }
+        };
     }
 
     BottomBarController.$inject = ['$scope', '$modal', 'NodeService'];

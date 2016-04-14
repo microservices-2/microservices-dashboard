@@ -86,7 +86,7 @@
                             results.push(l.source);
                         }
                         if(!containsNode(results, l.target)){
-                            results.push(l.target)
+                            results.push(l.target);
                         }
                     });
                     return results;
@@ -177,7 +177,7 @@
                 return {
                     links: filteredLinks,
                     nodes: filteredNodes
-                }
+                };
             };
         });
 })();

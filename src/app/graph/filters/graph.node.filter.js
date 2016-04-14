@@ -6,7 +6,9 @@
         .filter('nodeFilter', function () {
                 return function (nodes, nodeSearch) {
                     var filteredNodes = [];
-                    nodeSearch.id ? nodeSearch.id = nodeSearch.id.toLowerCase() : null;
+                    if(nodeSearch.id){
+                        nodeSearch.id = nodeSearch.id.toLowerCase();
+                    }
                     if (angular.isUndefined(nodeSearch.lane)) {
                         nodes.forEach(function (n) {
                             if (validateId(n)) {

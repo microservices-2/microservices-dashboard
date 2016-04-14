@@ -51,7 +51,7 @@
                 return {
                     links :filteredLinks,
                     nodes : filteredNodes
-                }
+                };
             };
 
             function contains(nodelist, node) {
