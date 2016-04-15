@@ -28,6 +28,7 @@
             });
 
             modalInstance.result.then(function (node) {
+                console.log(node);
                 NodeService.pushNode(node);
             });
         };

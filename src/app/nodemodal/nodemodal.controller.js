@@ -74,7 +74,7 @@
         function getFreeIdFromNodes(){
             var previd = 0;
             nodes.forEach(function (n) {
-                if(typeof n.id !== "string" && n.id > previd){
+                if(isNaN(parseInt(n.id))){
                     previd = n.id;
                 }
             });
@@ -96,21 +96,22 @@
             $scope.isVirtualNode = $scope.newNode.details.status === "VIRTUAL";
 
             function setNodeType(){
-                if(currentLane === 1){
+                if(currentLane === 0){
+                    $scope.isFixedLane = true;
+                    return "UI";
+                } else if(currentLane === 1){
                     $scope.isFixedLane = true;
                     return "RESOURCE";
                 } else if(currentLane === 2){
                     $scope.isFixedLane = true;
                     return "MICROSERVICE";
-                }else{
+                }else {
                     return "";
                 }
             }
         }
 
         function deleteNode(id) {
-            $window.alert('this code is still untested, but should work if uncommented');
-            $window.console.log('tried to delete node: ' + id);
             NodeService.deleteNode(id);
         }
 
