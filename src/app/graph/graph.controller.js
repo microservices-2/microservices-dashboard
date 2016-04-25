@@ -53,6 +53,7 @@
                 if (withFilter) {
                     $scope.graphData = applyFilters(resultData);
                 } else {
+                    resultData.links = $filter('linkFilter')(resultData.links, resultData.nodes);
                     $scope.graphData = resultData;
                 }
                 $rootScope.dataLoading = false;
@@ -62,6 +63,7 @@
         init();
 
         function applyFilters(data) {
+            data.links = $filter('linkFilter')(data.links, data.nodes);
             data.nodes = $filter('nodeFilter')(data.nodes, $scope.beFilter);
             var cf = $filter('cascadingFilter2')(data.links, nodesData, data.nodes);
             data.nodes = cf.nodes;
