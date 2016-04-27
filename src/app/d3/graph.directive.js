@@ -176,9 +176,9 @@
                     })[0];
 
                   if (_.isUndefined(sourceNode)) {
-                    $log.error('sourceNode ' + l.source.id + ' is undefined');
+                    $log.error('sourceNode is undefined. link: ' + JSON.stringify(l));
                   } else if (_.isUndefined(targetNode)) {
-                    $log.error('targetNode ' + l.target.id + ' is undefined');
+                    $log.error('targetNode is undefined. link: ' + JSON.stringify(l) + ', sourceNode: ' + JSON.stringify(sourceNode));
                   } else {
                       if (sourceNode.lane === targetNode.lane) {
                         var curve = {
@@ -210,9 +210,9 @@
                     })[0];
 
                     if (_.isUndefined(sourceNode)) {
-                      $log.error('sourceNode ' + l.source.id + ' is undefined');
+                      $log.error('sourceNode is undefined. link: ' + JSON.stringify(l));
                     } else if (_.isUndefined(targetNode)) {
-                      $log.error('targetNode ' + l.target.id + ' is undefined');
+                      $log.error('targetNode is undefined. link: ' + JSON.stringify(l) + ', sourceNode: ' + JSON.stringify(sourceNode));
                     } else {
                       if (sourceNode.lane === targetNode.lane) {
                         var curve = {
