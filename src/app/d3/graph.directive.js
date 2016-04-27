@@ -5,8 +5,8 @@
     angular.module('msgGraph')
         .directive('msgD3Graph', MsgD3Graph);
 
-    MsgD3Graph.$inject = ['d3', '$modal', '$window', 'NodeService', 'NodecolorService'];
-    function MsgD3Graph(d3, $modal, $window, NodeService, NodecolorService) {
+    MsgD3Graph.$inject = ['d3', '$modal', '$window', 'NodeService', 'NodecolorService', '$log'];
+    function MsgD3Graph(d3, $modal, $window, NodeService, NodecolorService, $log) {
 
         var margin = {top: 20, right: 0, bottom: 20, left: 0},
             width = $window.innerWidth - margin.right - margin.left - 16,
@@ -174,14 +174,22 @@
                     var targetNode = data.nodes.filter(function (d, i) {
                         return i === l.target.index;
                     })[0];
-                    if (sourceNode.lane === targetNode.lane) {
+
+                  if (_.isUndefined(sourceNode)) {
+                    $log.error('sourceNode ' + l.source.id + ' is undefined');
+                  } else if (_.isUndefined(targetNode)) {
+                    $log.error('targetNode ' + l.target.id + ' is undefined');
+                  } else {
+                      if (sourceNode.lane === targetNode.lane) {
                         var curve = {
-                            "x": targetNode.x + 100,
-                            "y": (targetNode.y + sourceNode.y) / 2
+                          "x": targetNode.x + 100,
+                          "y": (targetNode.y + sourceNode.y) / 2
                         };
                         return lineFunction([sourceNode, curve, targetNode]);
-                    }
-                    return lineFunction([sourceNode, targetNode]);
+                      }
+                      return lineFunction([sourceNode, targetNode]);
+                  }
+
                 })
                 .attr("pointer-events", "none")
                 .attr("marker-end", "url(#arrow)");
@@ -200,14 +208,21 @@
                     var targetNode = data.nodes.filter(function (d, i) {
                         return i === l.target.index;
                     })[0];
-                    if (sourceNode.lane === targetNode.lane) {
+
+                    if (_.isUndefined(sourceNode)) {
+                      $log.error('sourceNode ' + l.source.id + ' is undefined');
+                    } else if (_.isUndefined(targetNode)) {
+                      $log.error('targetNode ' + l.target.id + ' is undefined');
+                    } else {
+                      if (sourceNode.lane === targetNode.lane) {
                         var curve = {
-                            "x": targetNode.x + 100,
-                            "y": (targetNode.y + sourceNode.y) / 2
+                          "x": targetNode.x + 100,
+                          "y": (targetNode.y + sourceNode.y) / 2
                         };
                         return lineFunction([sourceNode, curve, targetNode]);
+                      }
+                      return lineFunction([sourceNode, targetNode]);
                     }
-                    return lineFunction([sourceNode, targetNode]);
                 })
                 .attr("pointer-events", "stroke")
                 .on("mouseover", function (d) {
