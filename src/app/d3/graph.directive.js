@@ -45,14 +45,14 @@
                 biggestLane = 0,
                 numberOfNodesByLane = countNodesByLane(data.nodes);
 
-            numberOfNodesByLane.forEach(function (count, index) {
+            numberOfNodesByLane.forEach(function (count, lane) {
                 count++;
-                if(index === 1){
+                if(lane === 1){
                     count = Math.round(count*(verticalNodeSpaceRect/verticalNodeSpace));
                 }
                 if (count > numberOfNodes) {
                     numberOfNodes = count;
-                    biggestLane = index;
+                    biggestLane = lane;
                 }
             });
 
@@ -168,28 +168,7 @@
                 .on("click", onLinkMouseDown)
                 .attr("class", "link")
                 .attr("d", function (l) {
-                    var sourceNode = data.nodes.filter(function (d, i) {
-                        return i === l.source.index;
-                    })[0];
-                    var targetNode = data.nodes.filter(function (d, i) {
-                        return i === l.target.index;
-                    })[0];
-
-                  if (_.isUndefined(sourceNode)) {
-                    $log.error('sourceNode is undefined. link: ' + JSON.stringify(l));
-                  } else if (_.isUndefined(targetNode)) {
-                    $log.error('targetNode is undefined. link: ' + JSON.stringify(l) + ', sourceNode: ' + JSON.stringify(sourceNode));
-                  } else {
-                      if (sourceNode.lane === targetNode.lane) {
-                        var curve = {
-                          "x": targetNode.x + 100,
-                          "y": (targetNode.y + sourceNode.y) / 2
-                        };
-                        return lineFunction([sourceNode, curve, targetNode]);
-                      }
-                      return lineFunction([sourceNode, targetNode]);
-                  }
-
+                    return lineFunction(getPointsArray(l));
                 })
                 .attr("pointer-events", "none")
                 .attr("marker-end", "url(#arrow)");
@@ -202,27 +181,7 @@
                 .on("click", onLinkMouseDown)
                 .attr("class", "clickablelink")
                 .attr("d", function (l) {
-                    var sourceNode = data.nodes.filter(function (d, i) {
-                        return i === l.source.index;
-                    })[0];
-                    var targetNode = data.nodes.filter(function (d, i) {
-                        return i === l.target.index;
-                    })[0];
-
-                    if (_.isUndefined(sourceNode)) {
-                      $log.error('sourceNode is undefined. link: ' + JSON.stringify(l));
-                    } else if (_.isUndefined(targetNode)) {
-                      $log.error('targetNode is undefined. link: ' + JSON.stringify(l) + ', sourceNode: ' + JSON.stringify(sourceNode));
-                    } else {
-                      if (sourceNode.lane === targetNode.lane) {
-                        var curve = {
-                          "x": targetNode.x + 100,
-                          "y": (targetNode.y + sourceNode.y) / 2
-                        };
-                        return lineFunction([sourceNode, curve, targetNode]);
-                      }
-                      return lineFunction([sourceNode, targetNode]);
-                    }
+                    return lineFunction(getPointsArray(l));
                 })
                 .attr("pointer-events", "stroke")
                 .on("mouseover", function (d) {
@@ -233,7 +192,9 @@
                     var coordinates = d3.mouse(this);
                     var x = coordinates[0];
                     var y = coordinates[1];
-                    return tooltip.attr("x", (x + 15) + "px").attr("y", (y + 20) + "px");
+                    return tooltip
+                        .attr("x", (x + 15) + "px")
+                        .attr("y", (y + 20) + "px");
                 })
                 .on("mouseout", function () {
                     return tooltip.style("opacity", "0");
@@ -383,6 +344,41 @@
                 .attr("height", height);
 
             render(element);
+        }
+
+        function getPointsArray(l){
+            var sourceNode = data.nodes.filter(function (d, i) {
+                return i === l.source.index;
+            })[0];
+            var targetNode = data.nodes.filter(function (d, i) {
+                return i === l.target.index;
+            })[0];
+
+            //TODO: should be removed cause they always evaluate false, if evaluate true it results in a console error which is not desirable imho
+            if (_.isUndefined(sourceNode)) {
+                $log.error('sourceNode is undefined. link: ' + JSON.stringify(l));
+            } else if (_.isUndefined(targetNode)) {
+                $log.error('targetNode is undefined. link: ' + JSON.stringify(l) + ', sourceNode: ' + JSON.stringify(sourceNode));
+            } else {
+                if (sourceNode.lane === targetNode.lane) {
+                    var curve = {
+                        "x": targetNode.x + 100,
+                        "y": (targetNode.y + sourceNode.y) / 2
+                    };
+                    return [sourceNode, curve, targetNode];
+                }else if (targetNode.lane === 1) {
+                    var target = {
+                        "x": targetNode.x - nodeWidth + nodeR,
+                        "y": targetNode.y
+                    };
+                    var curve = {
+                        "x": target.x - 120,
+                        "y": target.y
+                    };
+                    return [sourceNode, curve ,target];
+                }
+                return [sourceNode, targetNode];
+            }
         }
 
         function determineFontSize() {
