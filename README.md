@@ -19,10 +19,17 @@ Then bower dependencies should be installed:
 ```
 bower install
 ```
-And finally using gulp to serve the resources using the configuration file:
+
+## Running
+
+Use gulp to serve the resources using the configuration file:
 ```
 gulp serve:conf
 ```
+
+Note:
+
+The server needs to be started to get any data in the dashboard: [microservices-dashboard-server](https://github.com/ordina-jworks/microservices-dashboard-server)
 
 ## Screenshots
 
