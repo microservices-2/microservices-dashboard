@@ -92,83 +92,53 @@
                     return results;
                 }
 
-                function getLinksForResources(node){
-                    var finalLinks = [],
-                        tempLinks = getAllLinksWithSource(node),
-                        whileLinks = [],
-                        prevCount = 0,
-                        tempNodes = [];
-                    do{
-                        tempNodes = getTargetNodes(tempLinks);
-                        tempNodes.forEach(function (n) {
-                            whileLinks = whileLinks.concat(getAllLinksWithSource(n));
-                        });
-                        prevCount = finalLinks.count;
-                        finalLinks = finalLinks.concat(tempLinks);
-                        tempLinks = whileLinks;
-                        whileLinks = [];
-                    }while (tempLinks.length !== 0);
-                    return finalLinks;
-                }
+                function getLinksForNode(node) {
+                  var finalLinks = [],
+                    tempLinks = getAllLinksWithTarget(node),
+                    whileLinks = [],
+                    prevCount = 0,
+                    tempNodes = [];
 
-                function getLinksForMicroservice(node){
-                    var finalLinks = [],
-                        tempLinks = getAllLinksWithTarget(node),
-                        whileLinks = [],
-                        prevCount = 0,
-                        tempNodes = [];
-                    do{
-                        tempNodes = getSourceNodes(tempLinks);
-                        tempNodes.forEach(function (n) {
-                            whileLinks = whileLinks.concat(getAllLinksWithTarget(n));
-                        });
-                        prevCount = finalLinks.count;
-                        finalLinks = finalLinks.concat(tempLinks);
-                        tempLinks = whileLinks;
-                        whileLinks = [];
-                    }while (tempLinks.length !== 0);
+                  if (node.lane != 0) {
+                    do {
+                      tempNodes = getSourceNodes(tempLinks);
+                      tempNodes.forEach(function (n) {
+                        whileLinks = whileLinks.concat(getAllLinksWithTarget(n));
+                      });
+                      prevCount = finalLinks.count;
+                      finalLinks = finalLinks.concat(tempLinks);
+                      tempLinks = whileLinks;
+                      whileLinks = [];
+                    } while (tempLinks.length !== 0);
+                  }
+
+                  if (node.lane != 3) {
                     tempLinks = getAllLinksWithSource(node);
-                    do{
-                        tempNodes = getTargetNodes(tempLinks);
-                        tempNodes.forEach(function (n) {
-                            whileLinks = whileLinks.concat(getAllLinksWithSource(n));
-                        });
-                        prevCount = finalLinks.count;
-                        finalLinks = finalLinks.concat(tempLinks);
-                        tempLinks = whileLinks;
-                        whileLinks = [];
-                    }while (tempLinks.length !== 0);
-                    return finalLinks;
-                }
 
-                function getLinksForBackend(node){
-                    var finalLinks = [],
-                        tempLinks = getAllLinksWithTarget(node),
-                        whileLinks = [],
-                        prevCount = 0,
-                        tempNodes = [];
-                    do{
-                        tempNodes = getSourceNodes(tempLinks);
-                        tempNodes.forEach(function (n) {
-                            whileLinks = whileLinks.concat(getAllLinksWithTarget(n));
-                        });
-                        prevCount = finalLinks.count;
-                        finalLinks = finalLinks.concat(tempLinks);
-                        tempLinks = whileLinks;
-                        whileLinks = [];
-                    }while (tempLinks.length !== 0);
-                    return finalLinks;
+                    do {
+                      tempNodes = getTargetNodes(tempLinks);
+                      tempNodes.forEach(function (n) {
+                        whileLinks = whileLinks.concat(getAllLinksWithSource(n));
+                      });
+                      prevCount = finalLinks.count;
+                      finalLinks = finalLinks.concat(tempLinks);
+                      tempLinks = whileLinks;
+                      whileLinks = [];
+                    } while (tempLinks.length !== 0);
+                  }
+
+                  return finalLinks;
                 }
 
                 filteredNodes.forEach(function (n) {
                     if (n.lane === 0) {
-
+                        filteredLinks = merge(getLinksForNode(n), filteredLinks);
                     } else if (n.lane === 1) {
-                        filteredLinks = merge(getLinksForResources(n),filteredLinks);
+                        filteredLinks = merge(getLinksForNode(n),filteredLinks);
                     } else if (n.lane === 2) {
-                        filteredLinks = merge(getLinksForMicroservice(n),filteredLinks);
+                        filteredLinks = merge(getLinksForNode(n),filteredLinks);
                     } else if (n.lane === 3) {
-                        filteredLinks = merge(getLinksForBackend(n),filteredLinks);
+                        filteredLinks = merge(getLinksForNode(n),filteredLinks);
                     }
                 });
 
