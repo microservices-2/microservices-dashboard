@@ -46,10 +46,10 @@
                 numberOfNodesByLane = countNodesByLane(data.nodes);
 
             numberOfNodesByLane.forEach(function (count, lane) {
-                count++;
                 if(lane === 1){
-                    count = Math.round(count*(verticalNodeSpaceRect/verticalNodeSpace));
+                    count = Math.ceil(count*(verticalNodeSpaceRect/verticalNodeSpace));
                 }
+                count++;
                 if (count > numberOfNodes) {
                     numberOfNodes = count;
                     biggestLane = lane;
