@@ -354,11 +354,14 @@
                 return i === l.target.index;
             })[0];
 
-            //TODO: should be removed cause they always evaluate false, if evaluate true it results in a console error which is not desirable imho
+            //TODO: should be removed cause they always evaluate false, if evaluate true it results in a console error which is not desirable imho.
+            // return empty array when sourceNode or targetNode is undefined to prevent issue #34
             if (_.isUndefined(sourceNode)) {
                 $log.error('sourceNode is undefined. link: ' + JSON.stringify(l));
+                return [];
             } else if (_.isUndefined(targetNode)) {
                 $log.error('targetNode is undefined. link: ' + JSON.stringify(l) + ', sourceNode: ' + JSON.stringify(sourceNode));
+                return [];
             } else {
                 if (sourceNode.lane === targetNode.lane) {
                     var target = {
