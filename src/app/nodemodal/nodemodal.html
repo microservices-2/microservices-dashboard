@@ -1,5 +1,5 @@
 <div>
-    <h2 id="modalTitle" ng-hide="newNode.id">Add Node</h2>
+    <h2 id="modalTitle" ng-hide="newNode.id">{{newNode.details.name?newNode.details.name:"Add Node"}}</h2>
 
     <h2 ng-show="newNode.id">{{newNode.details.name?newNode.details.name:newNode.id}}</h2>
 

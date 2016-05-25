@@ -142,7 +142,7 @@
                 .append("svg:marker")
                 .attr("id", "arrow")
                 .attr("viewBox", "0 -5 10 10")
-                .attr("refX", nodeR + 9)
+                .attr("refX", nodeR - 5)
                 .attr("refY", 0.0)
                 .attr("markerWidth", 6)
                 .attr("markerHeight", 6)
@@ -361,23 +361,29 @@
                 $log.error('targetNode is undefined. link: ' + JSON.stringify(l) + ', sourceNode: ' + JSON.stringify(sourceNode));
             } else {
                 if (sourceNode.lane === targetNode.lane) {
+                    var target = {
+                      "x": targetNode.x +nodeR,
+                      "y": targetNode.y
+                    };
+
                     var curve = {
                         "x": targetNode.x + 100,
                         "y": (targetNode.y + sourceNode.y) / 2
                     };
-                    return [sourceNode, curve, targetNode];
-                }else if (targetNode.lane === 1) {
+                    return [sourceNode, curve, target];
+                }else if (sourceNode.lane < targetNode.lane) {
                     var target = {
-                        "x": targetNode.x - nodeWidth + nodeR,
+                        "x": targetNode.x - (targetNode.lane === 1 ? nodeWidth : nodeR),
                         "y": targetNode.y
                     };
-                    var curve = {
-                        "x": target.x - 120,
-                        "y": target.y
+                    return [sourceNode ,target];
+                } else {
+                    var target = {
+                      "x": targetNode.x + (targetNode.lane === 1 ? 0 : nodeR),
+                      "y": targetNode.y
                     };
-                    return [sourceNode, curve ,target];
+                  return [sourceNode ,target];
                 }
-                return [sourceNode, targetNode];
             }
         }
 
