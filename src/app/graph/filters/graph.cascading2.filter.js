@@ -131,15 +131,7 @@
                 }
 
                 filteredNodes.forEach(function (n) {
-                    if (n.lane === 0) {
-                        filteredLinks = merge(getLinksForNode(n), filteredLinks);
-                    } else if (n.lane === 1) {
-                        filteredLinks = merge(getLinksForNode(n),filteredLinks);
-                    } else if (n.lane === 2) {
-                        filteredLinks = merge(getLinksForNode(n),filteredLinks);
-                    } else if (n.lane === 3) {
-                        filteredLinks = merge(getLinksForNode(n),filteredLinks);
-                    }
+                    filteredLinks = merge(getLinksForNode(n), filteredLinks);
                 });
 
                 filteredNodes = getNodesFromLinks(filteredLinks,filteredNodes);
