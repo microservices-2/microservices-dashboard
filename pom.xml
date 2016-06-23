@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
   <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>de.codecentric</groupId>
+    <groupId>be.ordina</groupId>
     <artifactId>microservices-dashboard-ui</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     
     <properties>
-      <destDir>${project.build.outputDirectory}/META-INF/resources/webjars/${project.artifactId}/${project.version}</destDir>
+      <destDir>${project.build.outputDirectory}/META-INF/resources</destDir>
     </properties>
     
     <build>
@@ -24,7 +24,9 @@
               <configuration>
                 <executable>npm</executable>
                 <arguments>
-                  <argument>install --config.interactive=false --force-latest</argument>
+                  <argument>install</argument>
+		              <argument>--config.interactive=false</argument>
+		              <argument>--force-latest</argument>
                 </arguments>
               </configuration>
             </execution>
@@ -70,7 +72,7 @@
       </plugins>
       <resources>
         <resource>
-          <directory>target/dist</directory>
+          <directory>dist</directory>
           <targetPath>${destDir}</targetPath>
           <filtering>true</filtering>
         </resource>
