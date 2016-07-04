@@ -12,7 +12,20 @@ Each of these columns show nodes and links between them.
 Currently only resources, microservices and backends are supported, although the UI-part is almost complete.
 The information for these links come from Spring Boot Actuator health endpoints and hypermedia indexes, which are aggregated in the [microservices-dashboard-server](https://github.com/ordina-jworks/microservices-dashboard-server) project.
 
-## Building from source
+## Setting up the dashboard
+
+There are two ways of getting up and running with the microservices-dashboard.
+Either by running a sample, or by creating your own instance of the dashboard.
+
+The samples can be found in the [microservices-dashboard-server repository](https://github.com/ordina-jworks/microservices-dashboard-server/tree/master/samples).
+
+The microservices-dashboard consists of two components: the UI and the server.
+This repository contains the UI while the server is located under the [microservices-dashboard-server](https://github.com/ordina-jworks/microservices-dashboard-server) repository.
+These two components can either be packaged and deployed together as a single Spring Boot application (as explained in the [microservices-dashboard-server README](https://github.com/ordina-jworks/microservices-dashboard-server#using-a-vanilla-spring-boot-application)), or separately as a NodeJS application and a Spring Boot application.
+In case of the former, the UI is served from the embedded Tomcat inside the Spring Boot application.
+In case of the latter, the UI is ran separately on a NodeJS server, while the Spring Boot application simply exposes the JSON API.
+
+## Building the UI from source
 
 First a basic build should be done:
 ```
@@ -23,7 +36,7 @@ Then bower dependencies should be installed:
 bower install
 ```
 
-## Running
+## Running the UI
 
 Use gulp to serve the resources using the configuration file:
 ```
