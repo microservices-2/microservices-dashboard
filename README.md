@@ -41,6 +41,7 @@ The samples can be found in the [microservices-dashboard-server repository](http
 ### Using a vanilla Spring Boot application
 
 First you need to setup a simple Spring Boot project (using [start.spring.io](http://start.spring.io) for example).
+Microservices-dashboard-server requires Java 8 or later.
 
 Add the microservices-dashboard-server as a dependency to your new Spring Boot's dependencies:
 
