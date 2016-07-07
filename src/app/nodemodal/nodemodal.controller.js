@@ -47,6 +47,13 @@
 
         $scope.ok = function () {
             saveNode();
+            var id = $scope.newNode.details.name;
+            if(!nameExists(id,nodes)){
+              $scope.newNode.id = id;
+            }else{
+              //todo generate unique id?
+              
+            }
             $modalInstance.close($scope.newNode);
         };
 
@@ -109,6 +116,11 @@
                     return "";
                 }
             }
+        }
+        
+        function nameExists(name,nodes){
+            var equalNodeNamesCount = nodes.filter(function(node){return node.id === name}).length;
+            return equalNodeNamesCount > 0;
         }
 
         function deleteNode(id) {
