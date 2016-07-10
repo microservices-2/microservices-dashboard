@@ -11,6 +11,10 @@ It displays four columns: UI, Resources, Microservices and Backends.
 Each of these columns show nodes and links between them.
 The information for these links come from Spring Boot Actuator health endpoints, pact consumer-driven-contract-tests and hypermedia indexes, which are aggregated in the [microservices-dashboard-server](https://github.com/ordina-jworks/microservices-dashboard-server) project.
 
+## Reference documentation
+
+To learn everything there is to know about the Microservices Dashboard, please consult the [reference documentation](http://ordina-jworks.github.io/microservices-dashboard/0.2.0-SNAPSHOT/).
+
 ## Screenshots
 
 <img width="1440" alt="screen shot 2016-04-07 at 10 56 44" src="https://cloud.githubusercontent.com/assets/6663110/14345954/11db9980-fcb0-11e5-963f-38bca041e5bb.png">

@@ -150,7 +150,7 @@ When running the UI separately, ideally the Spring Boot server shouldn't serve t
 <dependency>
     <groupId>be.ordina</groupId>
     <artifactId>microservices-dashboard-server</artifactId>
-    <version>x.y.z</version>
+    <version>{project-version}</version>
     <exclusions>
       <exclusion>
         <artifactId>microservices-dashboard-ui</artifactId>
