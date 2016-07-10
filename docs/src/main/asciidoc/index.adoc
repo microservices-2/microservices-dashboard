@@ -1,0 +1,236 @@
+= Microservices Dashboard Reference Guide =
+Andreas Evers <https://twitter.com/andreasevers[@andreasevers]>
+:revnumber: {project-version}
+:revdate: {commit-time}
+:toc: left
+:toclevels: 3
+:doctype: book
+:sectanchors:
+:sectlinks:
+:sectnums:
+:icons: font
+:hide-uri-scheme:
+:last-update-label!:
+
+== What is the Microservices Dashboard? ==
+
+Microservices Dashboard is a simple application to visualize links between microservices and the encompassing ecosystem. This AngularJS application consumes endpoints exposed by microservices-dashboard-server. It displays four columns: UI, Resources, Microservices and Backends. Each of these columns show nodes and links between them. The information for these links come from Spring Boot Actuator health endpoints, pact consumer-driven-contract-tests and hypermedia indexes, which are aggregated in the microservices-dashboard-server project.
+
+=== Driving forces behind the dashboard effort ===
+
+Existing tooling doesn’t expose links between the different components in a microservices architecture::
+- [ ] Eureka shows which microservices are out there
+- [ ] Spring Boot Admin only shows the details of the individual services
+- [ ] Hystrix dashboard shows integration points but not a total view
+- [ ] Zipkin focuses on performance and only shows a temporal view of the connections
+
+Analysts need to know what functionality is out there::
+- [*] They want to see which resources are exposed by what microservices
+- [*] They want to know what services are impacted when a component has to change
+- [*] They like to have an end-to-end trace of where a frontend call goes through
+- [*] They would like to have a view of what’s coming and perhaps give input on that
+
+Developers can benefit from a broader view as well::
+- [*] They like an easy access point for documentation
+- [*] They want to see where which version of their components are deployed
+
+Managers like to have a grip on things::
+- [*] They want to get a sense of compliancy and maturity of the components
+- [*] They want some level of change management
+
+
+[[getting-started]]
+== Getting started ==
+
+[[default-set-up]]
+=== Default set up ===
+
+First you need to setup a simple Spring Boot project (using http://start.spring.io for example).
+Microservices-dashboard-server requires Java 8 or later.
+
+. Add the microservices-dashboard-server as a dependency to your new Spring Boot's dependencies:
++
+[source,xml,subs="verbatim,attributes"]
+.pom.xml
+----
+<dependency>
+    <groupId>be.ordina</groupId>
+    <artifactId>microservices-dashboard-server</artifactId>
+    <version>{project-version}</version>
+</dependency>
+----
+
+. In case you use a `SNAPSHOT` version, add the JFrog OSS Artifactory repository:
++
+[source,xml,subs="verbatim,attributes"]
+.pom.xml
+----
+<repositories>
+    <repository>
+        <id>oss-snapshots</id>
+        <name>JFrog OSS Snapshots</name>
+        <url>https://oss.jfrog.org/simple/oss-snapshot-local/</url>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
+----
+
+. Pull in the Microservices Dashboard Server configuration via adding `@EnableMicroservicesDashboardServer` to your configuration:
++
+[source,java]
+----
+@SpringBootApplication
+@EnableMicroservicesDashboardServer
+public class MicroservicesDashboardServerApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+----
+
+NOTE: There are a number of other ways to set up the Microservices Dashboard. Please refer to the <<alternative-set-up,Alternative set up>> section for more information.
+
+[[default-usage]]
+=== Default usage ===
+
+You can either start the application from within your IDE, or use the command line to build and start the application:
+
+[source,shell,subs="verbatim,attributes"]
+.Using the embedded maven wrapper
+----
+$ mvnw spring-boot:run
+----
+
+[source,shell,subs="verbatim,attributes"]
+.Using your own maven installation
+----
+$ mvn spring-boot:run
+----
+
+If successful, you should see the following output in the log:
+
+> o.s.b.c.e.t.TomcatEmbeddedServletContainer Tomcat started on port(s): 8080 (http)
+
+You should now be able to view the empty dashboard at `http://localhost:8080`.
+
+You can now configure integrations with your ecosystem to start aggregating node information.
+More details on how to do this can be found at the <<aggregation-configuration,Aggregation configuration>> section.
+
+[[alternative-set-up]]
+== Alternative set up ==
+
+[[deploying-on-standalone-server]]
+=== Deploying on a standalone server ===
+
+If you want to setup the Microservices Dashboard via war-deployment in a servlet-container, please have a look at the http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#build-tool-plugins-maven-packaging[reference documentation of Spring Boot].
+
+A sample project will be created soon to illustrate this, tracked through this https://github.com/ordina-jworks/microservices-dashboard-server/issues/25[issue].
+
+[[deploying-ui-separately]]
+=== Deploying the UI separately from the server ===
+
+The microservices-dashboard consists of two components: the UI and the server.
+The UI is located under the https://github.com/ordina-jworks/microservices-dashboard[microservices-dashboard repository], while the server is located under the https://github.com/ordina-jworks/microservices-dashboard-server[microservices-dashboard-server repository].
+These two components can either be packaged and deployed together as a single Spring Boot application (as explained in the <<default-set-up,Default set up>> section), or separately as a NodeJS application and a Spring Boot application. +
+In case of the former, the UI is served from the embedded Tomcat or Jetty inside the Spring Boot application. +
+In case of the latter, the UI is ran separately on a NodeJS server, while the Spring Boot application simply exposes the JSON API.
+
+TIP: Deploying the UI separately from the server can be very useful when you want to extend or modify the UI application. Simply build the UI from source and deploy it. No need to package it within the server application first.
+
+[[excluding-ui-from-server]]
+==== Excluding the UI from the Spring Boot application ====
+
+When running the UI separately, ideally the Spring Boot server shouldn't serve the UI in this case.
+
+[source,xml,subs="verbatim,attributes"]
+.pom.xml
+----
+<dependency>
+    <groupId>be.ordina</groupId>
+    <artifactId>microservices-dashboard-server</artifactId>
+    <version>x.y.z</version>
+    <exclusions>
+      <exclusion>
+        <artifactId>microservices-dashboard-ui</artifactId>
+        <groupId>be.ordina</groupId>
+       </exclusion>
+    </exclusions>
+</dependency>
+----
+
+[[building-ui-from-source]]
+==== Building and running the UI from source ====
+
+. First a basic build should be done:
++
+[source,Shell,subs="verbatim,attributes"]
+----
+$ npm install
+----
+
+. Then bower dependencies should be installed:
++
+[source,shell,subs="verbatim,attributes"]
+----
+$ bower install
+----
+
+. Use gulp to serve the resources using the configuration file:
++
+[source,shell,subs="verbatim,attributes"]
+----
+$ gulp serve:conf
+----
+
+IMPORTANT: The Microservices Dashboard server needs to be started to get any data in the dashboard.
+
+[[starting-from-sample]]
+=== Starting from a sample ===
+
+Starting from a sample application is an easy and quick way to get up and running, without having to write any code yourself.
+This can be particulary useful for people not familiar with Java and who simply want to configure and run the application without any custom extensions.
+
+TIP: There are other samples available as well. See the <<samples,Samples>> section for more information on what they contain.
+
+[[starting-from-sample-set-up]]
+
+. The first step is to clone the Git repository:
++
+[source,shell,subs="verbatim,attributes"]
+----
+git clone https://github.com/ordina-jworks/microservices-dashboard-server
+----
+
+. Once the clone is complete, you’re ready to get the service up and running:
++
+[source,shell,subs="verbatim,attributes"]
+----
+cd microservices-dashboard-server/samples/microservices-dashboard-simple
+./mvnw spring-boot:run
+----
+
+[[aggregation-configuration]]
+== Aggregation configuration ==
+
+Currently three aggregators are provided out-of-the-box:
+
+* Health aggregator _(requires service discovery)_
+* Index aggregator _(requires service discovery)_
+* Pact aggregator _(requires pact broker)_
+
+More information will be added as soon as possible.
+
+[[samples]]
+== Samples ==
+
+In case you simply want to get started with the Microservices Dashboard, you can use a sample to get up an running quickly.
+The basics are described in the <<starting-from-sample,Starting from a sample>> section.
+
+More information will be added as soon as possible.
+
+[[extending]]
+== Extending the Microservices Dashboard ==
+
+More information will be added as soon as possible.
