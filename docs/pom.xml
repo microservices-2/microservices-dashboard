@@ -10,6 +10,25 @@
     <name>Microservices Dashboard Docs</name>
     <description>Microservices Dashboard Documentation</description>
     <url>https://github.com/ordina-jworks/microservices-dashboard/</url>
+    
+    <distributionManagement>
+        <!--<repository>
+            <id>bintray-ordina-jworks-microservices-dashboard-server</id>
+            <name>ordina-jworks-microservices-dashboard-server</name>
+            <url>https://api.bintray.com/maven/ordina-jworks/microservices-dashboard-server/microservices-dashboard-server/;publish=1</url>
+        </repository>-->
+        <repository>
+            <id>central</id>
+            <name>oss-jfrog-artifactory-releases</name>
+            <url>https://oss.jfrog.org/artifactory/oss-release-local</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>oss-jfrog-artifactory-snapshots</name>
+            <url>https://oss.jfrog.org/artifactory/oss-snapshot-local</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
