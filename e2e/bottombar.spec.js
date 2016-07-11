@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 describe('The bottom bar', function () {
   var page;
