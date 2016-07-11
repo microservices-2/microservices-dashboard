@@ -7,8 +7,8 @@ var proxyMiddleware = require('proxy-middleware');
 var proxyOptions_loc = url.parse('http://localhost:8383/dependencies');
 proxyOptions_loc.route = '/dependencies';
 
-var mwLoc = proxyMiddleware(proxyOptions_loc);
+var mw_loc = proxyMiddleware(proxyOptions_loc);
 
 module.exports = {
-  loc: mwLoc
+  loc: mw_loc
 };
