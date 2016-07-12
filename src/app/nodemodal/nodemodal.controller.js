@@ -99,27 +99,27 @@
             if ($scope.isNewNode) {
                 $scope.newNode = {
                     details: {
-                        status: "VIRTUAL",
+                        status: 'VIRTUAL',
                         type: setNodeType(),
                         custom: []
                     },
                     lane: currentLane
                 };
             }
-            $scope.isVirtualNode = $scope.newNode.details.status === "VIRTUAL";
+            $scope.isVirtualNode = $scope.newNode.details.status === 'VIRTUAL';
 
             function setNodeType(){
                 if(currentLane === 0){
                     $scope.isFixedLane = true;
-                    return "UI";
+                    return 'UI';
                 } else if(currentLane === 1){
                     $scope.isFixedLane = true;
-                    return "RESOURCE";
+                    return 'RESOURCE';
                 } else if(currentLane === 2){
                     $scope.isFixedLane = true;
-                    return "MICROSERVICE";
+                    return 'MICROSERVICE';
                 }else {
-                    return "";
+                    return '';
                 }
             }
         }
@@ -187,7 +187,7 @@
             if (!$scope.isNewNode) {
                 links.forEach(function (link) {
                     if (link.source.id === $scope.newNode.id) {
-                        addLinkedNode($filter("nodeModalFilter")(nodes, link.target)[0]);
+                        addLinkedNode($filter('nodeModalFilter')(nodes, link.target)[0]);
                     }
                 });
             }

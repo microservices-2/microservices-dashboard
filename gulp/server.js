@@ -22,9 +22,9 @@ function browserSyncInit(baseDir, browser) {
   }
 
   var server = {
-    baseDir: baseDir,
+    baseDir,
     middleware: [proxy.loc],
-    routes: routes
+    routes
   };
 
   browserSync.instance = browserSync.init({

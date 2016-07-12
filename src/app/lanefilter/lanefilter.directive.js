@@ -48,4 +48,4 @@
             vm.filter.lane = parseInt(vm.lane);
         }
     }
-})();
+}());

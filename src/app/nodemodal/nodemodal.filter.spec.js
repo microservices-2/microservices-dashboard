@@ -10,7 +10,7 @@
     }));
 
     it('should have a node filter that produces an array of nodes',
-      inject(function($filter) {
+      $inject(function($filter) {
 
         var node1 = {id:'node1'};
         var node2 = {id:'node2'};

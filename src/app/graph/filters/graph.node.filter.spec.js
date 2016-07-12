@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    describe("Test graph node filter", function () {
+    describe('Test graph node filter', function () {
 
         beforeEach(module('microServicesGui'));
 

@@ -9,7 +9,7 @@
 
     // define the directive
     elm = angular.element(
-      "<my-scatter-chart class="chart" data="data">" +
+      "<my-scatter-chart class='chart' data='data'>" +
       "</my-scatter-chart>"
     );
 

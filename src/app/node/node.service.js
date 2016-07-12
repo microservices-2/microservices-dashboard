@@ -10,10 +10,10 @@
         var nodeToOpen;
 
         var factory = {
-            pushNode: pushNode,
-            getNode: getNode,
-            setNode: setNode,
-            deleteNode: deleteNode
+            pushNode,
+            getNode,
+            setNode,
+            deleteNode
         };
         return factory;
 

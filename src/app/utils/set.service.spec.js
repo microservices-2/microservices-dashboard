@@ -6,7 +6,7 @@
     var SetService;
     beforeEach(module('microServicesGui'));
 
-    beforeEach(inject(function (_SetService_) {
+    beforeEach($inject(function (_SetService_) {
       SetService = _SetService_;
     }));
 
