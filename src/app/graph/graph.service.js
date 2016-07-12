@@ -8,6 +8,11 @@
     GraphService.$inject = ['$http', '$q', 'BASE_URL'];
 
     function GraphService($http, $q, BASE_URL) {
+        function getGraph() {
+        return $http.get(BASE_URL + 'graph');
+        //return $http.get('graphdata.json');
+      }
+
         var factory = {
             getGraph: getGraph,
             getStates: getStates,
@@ -16,10 +21,7 @@
         };
         return factory;
 
-        function getGraph() {
-            return $http.get(BASE_URL + 'graph');
-            //return $http.get('graphdata.json');
-        }
+
 
         function getStates() {
             return $q(function (resolve) {

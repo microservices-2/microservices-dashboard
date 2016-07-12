@@ -26,6 +26,20 @@
         var nodes = [],
             links = [];
 
+        function getFreeIdFromNodes(){
+          var previd = 0;
+          nodes.forEach(function (n) {
+            if(isNaN(parseInt(n.id))){
+              previd = n.id;
+            }
+          });
+          return ++previd;
+        }
+
+        function deleteNode(id) {
+          NodeService.deleteNode(id);
+        }
+
         $q.all([
             GraphService.getStates(),
             GraphService.getTypes(),
@@ -52,7 +66,7 @@
               $scope.newNode.id = id;
             }else{
               //todo generate unique id?
-              
+
             }
             $modalInstance.close($scope.newNode);
         };
@@ -78,15 +92,7 @@
             return custom;
         };
 
-        function getFreeIdFromNodes(){
-            var previd = 0;
-            nodes.forEach(function (n) {
-                if(isNaN(parseInt(n.id))){
-                    previd = n.id;
-                }
-            });
-            return ++previd;
-        }
+
 
         function configureNode(){
             $scope.isNewNode = angular.isUndefined($scope.newNode);
@@ -117,15 +123,13 @@
                 }
             }
         }
-        
+
         function nameExists(name,nodes){
             var equalNodeNamesCount = nodes.filter(function(node){return node.id === name}).length;
             return equalNodeNamesCount > 0;
         }
 
-        function deleteNode(id) {
-            NodeService.deleteNode(id);
-        }
+
 
         function saveNode() {
             $scope.newNode.linkedNodes = $scope.linkedNodes;

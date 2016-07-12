@@ -7,6 +7,16 @@
     angular
         .module('microServicesGui')
         .filter('cascadingFilter', function () {
+            function contains(nodelist, node) {
+            var count = nodelist.length;
+            for (var i = 0; i < count; i++) {
+              if (nodelist[i].id === node.id) {
+                return true;
+              }
+            }
+            return false;
+          }
+
             return function (links, allnodes, nodes) {
                 var filteredNodes = nodes,
                     filteredLinks = [];
@@ -54,14 +64,6 @@
                 };
             };
 
-            function contains(nodelist, node) {
-                var count = nodelist.length;
-                for (var i = 0; i < count; i++) {
-                    if (nodelist[i].id === node.id) {
-                        return true;
-                    }
-                }
-                return false;
-            }
+
         });
 })();

@@ -12,12 +12,6 @@
       $compile = _$compile_;
     }));
 
-    it('Should initialize the scope for the navigation directive',function() {
-      givenTemplate();
-      whenDirectiveUsed();
-      thenScopeIsDefined();
-    });
-
     function givenTemplate(){
       template='<div data-msg-navigation></div>';
     }
@@ -26,6 +20,16 @@
       element = $compile(template)($scope);
       $scope.$digest();
     }
+
+
+    it('Should initialize the scope for the navigation directive',function() {
+      givenTemplate();
+      whenDirectiveUsed();
+      thenScopeIsDefined();
+    });
+
+
+
 
     function thenScopeIsDefined(){
       expect($scope).toBeDefined();

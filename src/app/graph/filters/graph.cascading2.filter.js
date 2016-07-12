@@ -2,11 +2,11 @@
  * Created by yave on 30/03/16.
  */
 (function () {
-    "use strict";
+    'use strict';
 
     angular
-        .module('microServicesGui')
-        .filter('cascadingFilter2', function () {
+        .module("microServicesGui")
+        .filter("cascadingFilter2", function () {
             return function (links, allnodes, nodes) {
                 var filteredNodes = nodes,
                     filteredLinks = [];
@@ -31,6 +31,16 @@
                     return linked;
                 }
 
+                function containsNode(nodelist, node) {
+                var count = nodelist.length;
+                for (var i = 0; i < count; i++) {
+                  if (nodelist[i].id === node.id) {
+                    return true;
+                  }
+                }
+                return false;
+              }
+
                 function getTargetNodes(arrLinks) {
                     var arrNodes = [];
                     arrLinks.forEach(function (l) {
@@ -51,15 +61,7 @@
                     return arrNodes;
                 }
 
-                function containsNode(nodelist, node) {
-                    var count = nodelist.length;
-                    for (var i = 0; i < count; i++) {
-                        if (nodelist[i].id === node.id) {
-                            return true;
-                        }
-                    }
-                    return false;
-                }
+
 
                 function containsLink(linklist, link) {
                     var count = linklist.length;

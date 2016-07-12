@@ -3,6 +3,15 @@
 
   describe('NodeModalController', function(){
 
+    var mockSetService = {
+      add: function() {
+
+      },
+      has: function() {
+        return true;
+      }
+    };
+
     beforeEach(module('microServicesGui'), function($provide) {
       $provide.value('GraphService', mockGraphService);
       $provide.value('NodeService', mockNodeService);
@@ -38,14 +47,7 @@
       }
     };
 
-    var mockSetService = {
-      add: function() {
 
-      },
-      has: function() {
-        return true;
-      }
-    };
 
     beforeEach(inject(function($rootScope, $controller, _$filter_) {
       scope = $rootScope.$new();

@@ -1,10 +1,5 @@
 (function() {
   'use strict';
-
-  angular
-    .module('microServicesGui')
-    .config(routeConfig);
-
   /** @ngInject */
   function routeConfig($stateProvider, $urlRouterProvider) {
 
@@ -17,5 +12,11 @@
 
     $urlRouterProvider.otherwise('/');
   }
+
+  angular
+    .module('microServicesGui')
+    .config(routeConfig);
+
+
 
 })();
