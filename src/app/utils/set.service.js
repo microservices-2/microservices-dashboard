@@ -14,17 +14,15 @@
           return array;
         }
 
+        function has(element, array) {
+          return array.indexOf(element) > -1;
+        }
+
         var factory = {
             add,
             has
         };
         return factory;
-
-
-
-        function has(element, array) {
-            return array.indexOf(element) > -1;
-        }
 
     }
 })();

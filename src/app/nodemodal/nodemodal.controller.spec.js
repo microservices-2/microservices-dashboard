@@ -12,6 +12,18 @@
       }
     };
 
+    var mockNodeService = {
+      pushNode: function() {
+
+      },
+      getNode: function() {
+        return {};
+      },
+      setNode: function() {
+
+      }
+    };
+
     beforeEach(module('microServicesGui'), function($provide) {
       $provide.value('GraphService', mockGraphService);
       $provide.value('NodeService', mockNodeService);
@@ -35,17 +47,7 @@
       }
     };
 
-    var mockNodeService = {
-      pushNode: function() {
 
-      },
-      getNode: function() {
-        return {};
-      },
-      setNode: function() {
-
-      }
-    };
 
 
 

@@ -21,19 +21,15 @@
       $scope.$digest();
     }
 
+    function thenScopeIsDefined(){
+      expect($scope).toBeDefined();
+    }
 
     it('Should initialize the scope for the navigation directive',function() {
       givenTemplate();
       whenDirectiveUsed();
       thenScopeIsDefined();
     });
-
-
-
-
-    function thenScopeIsDefined(){
-      expect($scope).toBeDefined();
-    }
 
   });
 })();

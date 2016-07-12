@@ -42,6 +42,10 @@
                         return true;
                     }
 
+                    function isUndefinedOrNull(obj) {
+                      return (typeof obj === 'undefined' || obj === null || obj === "");
+                    }
+
                     function validateId(node) {
                         if(!isUndefinedOrNull(nodeSearch.id)){
                             return node.id.toLowerCase().indexOf(nodeSearch.id) > -1;
@@ -70,9 +74,7 @@
                         return true;
                     }
 
-                    function isUndefinedOrNull(obj) {
-                        return (typeof obj === 'undefined' || obj === null || obj === "");
-                    }
+
                 };
             }
         );
