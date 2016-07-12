@@ -5,15 +5,15 @@
         .module('microServicesGui')
         .directive('msgBottombar', BottomBarDirective);
 
-    BottomBarDirective.$inject = [];
     function BottomBarDirective() {
-        return {
-            templateUrl: 'app/bottombar/bottombar.html',
-            controller: BottomBarController
-        };
+      return {
+        templateUrl: 'app/bottombar/bottombar.html',
+        controller: BottomBarController
+      };
     }
 
-    BottomBarController.$inject = ['$scope', '$modal', 'NodeService'];
+    BottomBarDirective.$inject = [];
+
     function BottomBarController($scope, $modal, NodeService) {
         $scope.open = function (lane) {
             NodeService.setNode(undefined);
@@ -34,5 +34,7 @@
         };
 
     }
+
+    BottomBarController.$inject = ['$scope', '$modal', 'NodeService'];
 })
 ();

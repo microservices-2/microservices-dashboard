@@ -104,7 +104,58 @@
           return i === l.target.index;
         })[0];
 
-        /*
+        // Helpers
+        function formatClassName(prefix, object) {
+          return prefix + '-' + object.id.replace(/(\.|\/|:)/gi, '-');
+        }
+
+        function findElementByNode(prefix, node) {
+          var selector = '.' + formatClassName(prefix, node);
+          return graph.select(selector);
+        }
+
+        function fillColor(o) {
+
+          if (o.details !== undefined) {
+            return NodecolorService.getColorFor(o.details.type);
+          }
+
+        }
+
+        function findConnectedNodes(currentNode) {
+          var connectedNodes = [currentNode];
+          data.links.forEach(function (link) {
+            if (link.source.id === currentNode.id) {
+              connectedNodes.push(link.target);
+            } else if (link.target.id === currentNode.id) {
+              connectedNodes.push(link.source);
+            }
+          });
+          return connectedNodes;
+        }
+
+        function fadeUnrelatedNodes(d, opacity, nodes, links) {
+          var connectedNodes = findConnectedNodes(d);
+          nodes.style('stroke-opacity', function (node) {
+            if (connectedNodes.indexOf(node) > -1) {
+              return 1;
+            } else {
+              return opacity;
+            }
+          });
+
+          links.style('opacity', function (link) {
+            if (link.source.id === connectedNodes[0].id && connectedNodes.indexOf(link.target)) {
+              return 1;
+            } else if (link.target.id === connectedNodes[0].id && connectedNodes.indexOf(link.source)) {
+              return 1;
+            } else {
+              return opacity;
+            }
+          });
+        }
+
+          /*
          Mouse events
          */
 
@@ -435,10 +486,7 @@
 
 
 
-        // Helpers
-        function formatClassName(prefix, object) {
-            return prefix + '-' + object.id.replace(/(\.|\/|:)/gi, '-');
-        }
+
 
         //function formatLinkNameByIndex(prefix, object) {
         //    return prefix + '-' + object.source + '-' + object.target;
@@ -448,10 +496,7 @@
         //    return prefix + '-' + object.source.index + '-' + object.target.index;
         //}
 
-        function findElementByNode(prefix, node) {
-            var selector = '.' + formatClassName(prefix, node);
-            return graph.select(selector);
-        }
+
 
         //function findElementByLink(prefix, link) {
         //    var selector = '#' + formatLinkNameByObject(prefix, link);
@@ -474,46 +519,9 @@
         //    return connected;
         //}
 
-        function findConnectedNodes(currentNode) {
-            var connectedNodes = [currentNode];
-            data.links.forEach(function (link) {
-                if (link.source.id === currentNode.id) {
-                    connectedNodes.push(link.target);
-                } else if (link.target.id === currentNode.id) {
-                    connectedNodes.push(link.source);
-                }
-            });
-            return connectedNodes;
-        }
 
-        function fadeUnrelatedNodes(d, opacity, nodes, links) {
-            var connectedNodes = findConnectedNodes(d);
-            nodes.style('stroke-opacity', function (node) {
-                if (connectedNodes.indexOf(node) > -1) {
-                    return 1;
-                } else {
-                    return opacity;
-                }
-            });
 
-            links.style('opacity', function (link) {
-                if (link.source.id === connectedNodes[0].id && connectedNodes.indexOf(link.target)) {
-                    return 1;
-                } else if (link.target.id === connectedNodes[0].id && connectedNodes.indexOf(link.source)) {
-                    return 1;
-                } else {
-                    return opacity;
-                }
-            });
-        }
 
-        function fillColor(o) {
-
-            if (o.details !== undefined) {
-                return NodecolorService.getColorFor(o.details.type);
-            }
-
-        }
 
         function showTheDetails(node) {
             NodeService.setNode(node);

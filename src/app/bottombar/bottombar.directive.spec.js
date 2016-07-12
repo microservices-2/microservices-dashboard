@@ -12,11 +12,6 @@
       $compile = _$compile_;
     }));
 
-    it('Should initialize the scope for the bottombar directive',function() {
-      givenTemplate();
-      whenDirectiveUsed();
-      thenScopeIsDefined();
-    });
 
     function givenTemplate(){
       template='<div data-msg-bottombar></div>';
@@ -30,6 +25,12 @@
     function thenScopeIsDefined(){
       expect($scope).toBeDefined();
     }
+
+    it('Should initialize the scope for the bottombar directive',function() {
+      givenTemplate();
+      whenDirectiveUsed();
+      thenScopeIsDefined();
+    });
 
   });
 })();
