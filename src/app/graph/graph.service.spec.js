@@ -35,7 +35,7 @@
     function givenBackendReturnsGraph() {
       $httpBackend
         .expectGET('/dependencies/graph')
-        .respond(function (method, url, data, headers) {
+        .respond(function (method, url, data) {
           return [200, graph];
         });
     }
