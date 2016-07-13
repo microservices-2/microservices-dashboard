@@ -3,6 +3,38 @@
 
     function NodeModalController($scope, $filter, $window, GraphService, NodeService, $modalInstance, SetService, $q, currentLane) {
 
+    function configureNode(){
+        $scope.isNewNode = angular.isUndefined($scope.newNode);
+        function setNodeType(){
+          if(currentLane === 0){
+            $scope.isFixedLane = true;
+            return 'UI';
+          } else if(currentLane === 1){
+            $scope.isFixedLane = true;
+            return 'RESOURCE';
+          } else if(currentLane === 2){
+            $scope.isFixedLane = true;
+            return 'MICROSERVICE';
+          }else {
+            return '';
+          }
+        }
+
+        if ($scope.isNewNode) {
+          $scope.newNode = {
+            details: {
+              status: 'VIRTUAL',
+              type: setNodeType(),
+              custom: []
+            },
+            lane: currentLane
+          };
+        }
+        $scope.isVirtualNode = $scope.newNode.details.status === 'VIRTUAL';
+
+
+      }
+
     $scope.states = [];
     $scope.types = [];
     $scope.groups = [];
@@ -167,45 +199,6 @@
       }
       return custom;
     };
-
-
-
-    function configureNode(){
-      $scope.isNewNode = angular.isUndefined($scope.newNode);
-      function setNodeType(){
-        if(currentLane === 0){
-          $scope.isFixedLane = true;
-          return 'UI';
-        } else if(currentLane === 1){
-          $scope.isFixedLane = true;
-          return 'RESOURCE';
-        } else if(currentLane === 2){
-          $scope.isFixedLane = true;
-          return 'MICROSERVICE';
-        }else {
-          return '';
-        }
-      }
-
-      if ($scope.isNewNode) {
-        $scope.newNode = {
-          details: {
-            status: 'VIRTUAL',
-            type: setNodeType(),
-            custom: []
-          },
-          lane: currentLane
-        };
-      }
-      $scope.isVirtualNode = $scope.newNode.details.status === 'VIRTUAL';
-
-
-    }
-
-
-
-
-
   }
 
     angular

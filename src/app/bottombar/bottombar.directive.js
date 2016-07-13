@@ -1,6 +1,13 @@
 (function () {
     'use strict';
 
+    function BottomBarDirective() {
+    return {
+      templateUrl: 'app/bottombar/bottombar.html',
+      controller: BottomBarController
+    };
+  }
+
     angular
         .module('microServicesGui')
         .directive('msgBottombar', BottomBarDirective);
@@ -25,13 +32,6 @@
     };
 
   }
-
-    function BottomBarDirective() {
-      return {
-        templateUrl: 'app/bottombar/bottombar.html',
-        controller: BottomBarController
-      };
-    }
 
     BottomBarDirective.$inject = [];
 

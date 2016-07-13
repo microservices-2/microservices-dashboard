@@ -77,6 +77,24 @@
       }
     }
 
+    function render(element) {
+
+      height = getGraphHeight(data);
+
+      d3.select('svg').remove();
+      graph = d3.select(element).append('svg')
+        .attr('width', width + margin.right + margin.left)
+        .attr('height', height)
+        .append('g');
+
+      layout = d3.layout.force()
+        .size([width, height]);
+
+      d3.select($window).on('resize', resize); //Adds or removes an event listener to each element in the current selection, for the specified type.
+      determineFontSize();
+      renderGraph(data);
+    }
+
     function resize() {
       width = $window.innerWidth - margin.right - margin.left;
       height = $window.innerHeight;
@@ -482,25 +500,6 @@
 
 
     }
-
-    function render(element) {
-
-      height = getGraphHeight(data);
-
-      d3.select('svg').remove();
-      graph = d3.select(element).append('svg')
-        .attr('width', width + margin.right + margin.left)
-        .attr('height', height)
-        .append('g');
-
-      layout = d3.layout.force()
-        .size([width, height]);
-
-      d3.select($window).on('resize', resize); //Adds or removes an event listener to each element in the current selection, for the specified type.
-      determineFontSize();
-      renderGraph(data);
-    }
-
 
 
     //function formatLinkNameByIndex(prefix, object) {

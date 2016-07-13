@@ -40,6 +40,13 @@
       expect(result.status).toEqual(404);
       expect(result.data).toBeUndefined();
     }
+    function givenBackendReturnsGraph() {
+      $httpBackend
+        .expectGET('/dependencies/graph')
+        .respond(function () {
+          return [200, graph];
+        });
+    }
 
     it('Should call graph rest service', function () {
       givenGraph();
@@ -54,16 +61,5 @@
       whenGetGraphCalled();
       thenExpectResultToBeEmpty();
     });
-
-
-
-    function givenBackendReturnsGraph() {
-      $httpBackend
-        .expectGET('/dependencies/graph')
-        .respond(function () {
-          return [200, graph];
-        });
-    }
-
   });
 })();
