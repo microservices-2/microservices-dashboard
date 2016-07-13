@@ -3,7 +3,7 @@
 
   var elm, scope;
 
-  beforeEach(module("msgGraph"));
+  beforeEach(module('msgGraph'));
 
   beforeEach(inject(function($rootScope, $compile){
 

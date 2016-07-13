@@ -18,7 +18,7 @@
       return data;
     }
     function isUndefinedEmptyOrNull(obj) {
-      return (typeof obj === 'undefined' || obj === null || obj === "");
+      return (typeof obj === "undefined" || obj === null || obj === "");
     }
     function init(withFilter) {
       $rootScope.dataLoading = true;
@@ -82,4 +82,4 @@
 
     GraphController.$inject = ['$scope', '$rootScope', '$filter', '$q', 'GraphService', 'NodecolorService'];
 
-})();
+}());

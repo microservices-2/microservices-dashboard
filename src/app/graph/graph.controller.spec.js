@@ -74,5 +74,5 @@
 //      expect(vm.awesomeThings.length > 5).toBeTruthy();
     }));
   });
-})();
+}());
 */

@@ -13,8 +13,8 @@
 
     function givenGraph() {
       graph = [{
-        "name": "Top Level",
-        "parent": "null"
+        "name": 'Top Level',
+        "parent": 'null'
       }];
     }
     function whenGetGraphCalled() {
@@ -62,4 +62,4 @@
       thenExpectResultToBeEmpty();
     });
   });
-})();
+}());

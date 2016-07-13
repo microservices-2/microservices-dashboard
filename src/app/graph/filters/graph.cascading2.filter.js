@@ -5,8 +5,8 @@
     'use strict';
 
     angular
-        .module("microServicesGui")
-        .filter("cascadingFilter2", function () {
+        .module('microServicesGui')
+        .filter('cascadingFilter2', function () {
             return function (links, allnodes, nodes) {
                 var filteredNodes = nodes,
                     filteredLinks = [];
