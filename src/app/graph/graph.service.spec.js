@@ -11,6 +11,28 @@
       GraphService = _GraphService_;
     }));
 
+    function givenGraph() {
+      graph = [{
+        "name": "Top Level",
+        "parent": "null"
+      }];
+    }
+    function whenGetGraphCalled() {
+      result = GraphService.getGraph().then(function (value) {
+        result = value;
+      }, function (error) {
+        result = error;
+      });
+      $httpBackend.flush();
+    }
+    function givenBackendReturnsError() {
+      $httpBackend
+        .expectGET('/dependencies/graph')
+        .respond(function () {
+          return [404];
+        });
+    }
+
     it('Should call graph rest service', function () {
       givenGraph();
       givenBackendReturnsGraph();
@@ -25,12 +47,7 @@
       thenExpectResultToBeEmpty();
     });
 
-    function givenGraph() {
-      graph = [{
-        "name": "Top Level",
-        "parent": "null"
-      }];
-    }
+
 
     function givenBackendReturnsGraph() {
       $httpBackend
@@ -40,22 +57,7 @@
         });
     }
 
-    function givenBackendReturnsError() {
-      $httpBackend
-        .expectGET('/dependencies/graph')
-        .respond(function () {
-          return [404];
-        });
-    }
 
-    function whenGetGraphCalled() {
-      result = GraphService.getGraph().then(function (value) {
-        result = value;
-      }, function (error) {
-        result = error;
-      });
-      $httpBackend.flush();
-    }
 
     function thenExpectResultToBeGraph() {
       expect(result.status).toEqual(200);

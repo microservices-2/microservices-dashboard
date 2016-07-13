@@ -1,6 +1,14 @@
 (function() {
   'use strict';
 
+  /** @ngInject */
+  function config($logProvider) {
+
+    // enable log debug
+    $logProvider.debugEnabled(true);
+
+  }
+
   angular
     .module('microServicesGui')
     .config(config)
@@ -9,12 +17,6 @@
       delete $httpProvider.defaults.headers.common['X-Requested-With'];
     }]);
 
-  /** @ngInject */
-  function config($logProvider) {
 
-    // enable log debug
-    $logProvider.debugEnabled(true);
-
-  }
 
 })();

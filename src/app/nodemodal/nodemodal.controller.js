@@ -68,6 +68,12 @@
         }
       });
     }
+    function addLinkedNode(node) {
+      $scope.linkedNodes.push(node);
+      if ($scope.availableNodes.indexOf(node) > -1) {
+        $scope.availableNodes.splice($scope.availableNodes.indexOf(node), 1);
+      }
+    }
 
     function searchLinkedNodes() {
       if (!$scope.isNewNode) {
@@ -204,12 +210,7 @@
 
 
 
-    function addLinkedNode(node) {
-      $scope.linkedNodes.push(node);
-      if ($scope.availableNodes.indexOf(node) > -1) {
-        $scope.availableNodes.splice($scope.availableNodes.indexOf(node), 1);
-      }
-    }
+
   }
 
   NodeModalController.$inject = ['$scope', '$filter', '$window', 'GraphService', 'NodeService', '$modalInstance', 'SetService', '$q', 'currentLane'];
