@@ -6,6 +6,14 @@
         .filter('nodeFilter', function () {
                 return function (nodes, nodeSearch) {
                     var filteredNodes = [];
+
+                    function isCurrentLane(node) {
+                    if (typeof nodeSearch.lane !== 'undefined') {
+                      return nodeSearch.lane === node.lane;
+                    }
+                    return true;
+                  }
+
                     if(nodeSearch.id){
                         nodeSearch.id = nodeSearch.id.toLowerCase();
                     }
@@ -34,13 +42,6 @@
                     }
                     return filteredNodes;
 
-
-                    function isCurrentLane(node) {
-                        if (typeof nodeSearch.lane !== 'undefined') {
-                            return nodeSearch.lane === node.lane;
-                        }
-                        return true;
-                    }
 
                     function isUndefinedOrNull(obj) {
                       return (typeof obj === 'undefined' || obj === null || obj === "");

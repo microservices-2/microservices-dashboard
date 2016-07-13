@@ -27,6 +27,16 @@
         });
       }
 
+    function getStates() {
+        return $q(function (resolve) {
+          resolve([
+            {key: 'UP', value: 'UP'},
+            {key: 'DOWN', value: 'DOWN'},
+            {key: 'UNKNOWN', value: 'UNKNOWN'},
+            {key: 'VIRTUAL', value: 'VIRTUAL'}]);
+        });
+      }
+
     var factory = {
       getGraph,
       getStates,
@@ -35,17 +45,6 @@
     };
     return factory;
 
-
-
-    function getStates() {
-      return $q(function (resolve) {
-        resolve([
-          {key: 'UP', value: 'UP'},
-          {key: 'DOWN', value: 'DOWN'},
-          {key: 'UNKNOWN', value: 'UNKNOWN'},
-          {key: 'VIRTUAL', value: 'VIRTUAL'}]);
-      });
-    }
 
     function getTypes() {
       return $q(function (resolve) {
