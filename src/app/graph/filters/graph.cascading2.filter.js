@@ -101,7 +101,7 @@
                     prevCount = 0,
                     tempNodes = [];
 
-                  if (node.lane != 0) {
+                  if (node.lane !== 0) {
                     do {
                       tempNodes = getSourceNodes(tempLinks);
                       tempNodes.forEach(function (n) {
@@ -114,7 +114,7 @@
                     } while (tempLinks.length !== 0);
                   }
 
-                  if (node.lane != 3) {
+                  if (node.lane !== 3) {
                     tempLinks = getAllLinksWithSource(node);
 
                     do {
