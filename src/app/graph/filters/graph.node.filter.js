@@ -7,14 +7,45 @@
                 return function (nodes, nodeSearch) {
                     var filteredNodes = [];
 
-                    function isCurrentLane(node) {
+                  function isCurrentLane(node) {
                     if (typeof nodeSearch.lane !== 'undefined') {
                       return nodeSearch.lane === node.lane;
                     }
                     return true;
                   }
+                  function isUndefinedOrNull(obj) {
+                    return (typeof obj === 'undefined' || obj === null || obj === "");
+                  }
 
-                    if(nodeSearch.id){
+                  function validateId(node) {
+                    if(!isUndefinedOrNull(nodeSearch.id)){
+                      return node.id.toLowerCase().indexOf(nodeSearch.id) > -1;
+                    }
+                    return true;
+                  }
+
+
+                  function validateType(node) {
+                    if (!isUndefinedOrNull(nodeSearch.details.type)) {
+                      return node.details.type === nodeSearch.details.type;
+                    }
+                    return true;
+                  }
+
+                  function validateGroup(node) {
+                    if (!isUndefinedOrNull(nodeSearch.details.group)) {
+                      return node.details.group === nodeSearch.details.group;
+                    }
+                    return true;
+                  }
+                  function validateStatus(node) {
+                    if (!isUndefinedOrNull(nodeSearch.details.status)) {
+                      return node.details.status === nodeSearch.details.status;
+                    }
+                    return true;
+                  }
+
+                  if(nodeSearch.id){
                         nodeSearch.id = nodeSearch.id.toLowerCase();
                     }
                     if (angular.isUndefined(nodeSearch.lane)) {
@@ -41,39 +72,6 @@
                         });
                     }
                     return filteredNodes;
-
-
-                    function isUndefinedOrNull(obj) {
-                      return (typeof obj === 'undefined' || obj === null || obj === "");
-                    }
-
-                    function validateId(node) {
-                        if(!isUndefinedOrNull(nodeSearch.id)){
-                            return node.id.toLowerCase().indexOf(nodeSearch.id) > -1;
-                        }
-                        return true;
-                    }
-
-                    function validateStatus(node) {
-                        if (!isUndefinedOrNull(nodeSearch.details.status)) {
-                            return node.details.status === nodeSearch.details.status;
-                        }
-                        return true;
-                    }
-
-                    function validateType(node) {
-                        if (!isUndefinedOrNull(nodeSearch.details.type)) {
-                            return node.details.type === nodeSearch.details.type;
-                        }
-                        return true;
-                    }
-
-                    function validateGroup(node) {
-                        if (!isUndefinedOrNull(nodeSearch.details.group)) {
-                            return node.details.group === nodeSearch.details.group;
-                        }
-                        return true;
-                    }
 
 
                 };

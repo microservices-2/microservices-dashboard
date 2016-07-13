@@ -91,6 +91,146 @@
       render(element);
     }
 
+    function getPointsArray(l){
+      var sourceNode = data.nodes.filter(function (d, i) {
+        return i === l.source.index;
+      })[0];
+      var targetNode = data.nodes.filter(function (d, i) {
+        return i === l.target.index;
+      })[0];
+
+      // Helpers
+      function formatClassName(prefix, object) {
+        return prefix + '-' + object.id.replace(/(\.|\/|:)/gi, '-');
+      }
+
+      function findElementByNode(prefix, node) {
+        var selector = '.' + formatClassName(prefix, node);
+        return graph.select(selector);
+      }
+
+      function fillColor(o) {
+
+        if (o.details !== undefined) {
+          return NodecolorService.getColorFor(o.details.type);
+        }
+
+      }
+
+      function findConnectedNodes(currentNode) {
+        var connectedNodes = [currentNode];
+        data.links.forEach(function (link) {
+          if (link.source.id === currentNode.id) {
+            connectedNodes.push(link.target);
+          } else if (link.target.id === currentNode.id) {
+            connectedNodes.push(link.source);
+          }
+        });
+        return connectedNodes;
+      }
+
+      function fadeUnrelatedNodes(d, opacity, nodes, links) {
+        var connectedNodes = findConnectedNodes(d);
+        nodes.style('stroke-opacity', function (node) {
+          if (connectedNodes.indexOf(node) > -1) {
+            return 1;
+          } else {
+            return opacity;
+          }
+        });
+
+        links.style('opacity', function (link) {
+          if (link.source.id === connectedNodes[0].id && connectedNodes.indexOf(link.target)) {
+            return 1;
+          } else if (link.target.id === connectedNodes[0].id && connectedNodes.indexOf(link.source)) {
+            return 1;
+          } else {
+            return opacity;
+          }
+        });
+      }
+
+      /*
+       Mouse events
+       */
+
+      function onNodeMouseOver(nodes, links, d) {
+
+        var elm = findElementByNode('circle', d);
+        elm.style('fill', fillColor(d));
+
+        fadeUnrelatedNodes(d, 0.2, nodes, links);
+      }
+
+      function onNodeMouseOut(nodes, links, d) {
+
+        var elm = findElementByNode('circle', d);
+        elm.style('fill', null);
+
+        fadeUnrelatedNodes(d, 1, nodes, links);
+      }
+
+      function showTheDetails(node) {
+        NodeService.setNode(node);
+        var modalInstance = $modal.open({
+          templateUrl: 'app/nodemodal/nodemodal.html',
+          controller: 'NodeModalController',
+          resolve: {
+            currentLane: function () {
+              return node.lane;
+            }
+          }
+        });
+
+        modalInstance.result.then(function (node) {
+          NodeService.pushNode(node);
+          render(element);
+        }, function () {
+          render(element);
+        });
+      }
+
+      function onNodeMouseDown(d) {
+        d.fixed = true;
+        d3.select(this).classed('sticky', true);
+        showTheDetails(d);
+      }
+      //TODO: should be removed cause they always evaluate false, if evaluate true it results in a console error which is not desirable imho.
+      // return empty array when sourceNode or targetNode is undefined to prevent issue #34
+      if (_.isUndefined(sourceNode)) {
+        $log.error('sourceNode is undefined. link: ' + JSON.stringify(l));
+        return [];
+      } else if (_.isUndefined(targetNode)) {
+        $log.error('targetNode is undefined. link: ' + JSON.stringify(l) + ', sourceNode: ' + JSON.stringify(sourceNode));
+        return [];
+      } else {
+        if (sourceNode.lane === targetNode.lane) {
+          var target = {
+            "x": targetNode.x +nodeR,
+            "y": targetNode.y
+          };
+
+          var curve = {
+            "x": targetNode.x + 100,
+            "y": (targetNode.y + sourceNode.y) / 2
+          };
+          return [sourceNode, curve, target];
+        }else if (sourceNode.lane < targetNode.lane) {
+          var target = {
+            "x": targetNode.x - (targetNode.lane === 1 ? nodeWidth : nodeR),
+            "y": targetNode.y
+          };
+          return [sourceNode ,target];
+        } else {
+          var target = {
+            "x": targetNode.x + (targetNode.lane === 1 ? 0 : nodeR),
+            "y": targetNode.y
+          };
+          return [sourceNode ,target];
+        }
+      }
+    }
+
     function renderGraph(data) {
       var laneLength = data.lanes.length;
 
@@ -361,145 +501,6 @@
       renderGraph(data);
     }
 
-    function getPointsArray(l){
-      var sourceNode = data.nodes.filter(function (d, i) {
-        return i === l.source.index;
-      })[0];
-      var targetNode = data.nodes.filter(function (d, i) {
-        return i === l.target.index;
-      })[0];
-
-      // Helpers
-      function formatClassName(prefix, object) {
-        return prefix + '-' + object.id.replace(/(\.|\/|:)/gi, '-');
-      }
-
-      function findElementByNode(prefix, node) {
-        var selector = '.' + formatClassName(prefix, node);
-        return graph.select(selector);
-      }
-
-      function fillColor(o) {
-
-        if (o.details !== undefined) {
-          return NodecolorService.getColorFor(o.details.type);
-        }
-
-      }
-
-      function findConnectedNodes(currentNode) {
-        var connectedNodes = [currentNode];
-        data.links.forEach(function (link) {
-          if (link.source.id === currentNode.id) {
-            connectedNodes.push(link.target);
-          } else if (link.target.id === currentNode.id) {
-            connectedNodes.push(link.source);
-          }
-        });
-        return connectedNodes;
-      }
-
-      function fadeUnrelatedNodes(d, opacity, nodes, links) {
-        var connectedNodes = findConnectedNodes(d);
-        nodes.style('stroke-opacity', function (node) {
-          if (connectedNodes.indexOf(node) > -1) {
-            return 1;
-          } else {
-            return opacity;
-          }
-        });
-
-        links.style('opacity', function (link) {
-          if (link.source.id === connectedNodes[0].id && connectedNodes.indexOf(link.target)) {
-            return 1;
-          } else if (link.target.id === connectedNodes[0].id && connectedNodes.indexOf(link.source)) {
-            return 1;
-          } else {
-            return opacity;
-          }
-        });
-      }
-
-      /*
-       Mouse events
-       */
-
-      function onNodeMouseOver(nodes, links, d) {
-
-        var elm = findElementByNode('circle', d);
-        elm.style('fill', fillColor(d));
-
-        fadeUnrelatedNodes(d, 0.2, nodes, links);
-      }
-
-      function onNodeMouseOut(nodes, links, d) {
-
-        var elm = findElementByNode('circle', d);
-        elm.style('fill', null);
-
-        fadeUnrelatedNodes(d, 1, nodes, links);
-      }
-
-      function showTheDetails(node) {
-        NodeService.setNode(node);
-        var modalInstance = $modal.open({
-          templateUrl: 'app/nodemodal/nodemodal.html',
-          controller: 'NodeModalController',
-          resolve: {
-            currentLane: function () {
-              return node.lane;
-            }
-          }
-        });
-
-        modalInstance.result.then(function (node) {
-          NodeService.pushNode(node);
-          render(element);
-        }, function () {
-          render(element);
-        });
-      }
-
-      function onNodeMouseDown(d) {
-        d.fixed = true;
-        d3.select(this).classed('sticky', true);
-        showTheDetails(d);
-      }
-      //TODO: should be removed cause they always evaluate false, if evaluate true it results in a console error which is not desirable imho.
-      // return empty array when sourceNode or targetNode is undefined to prevent issue #34
-      if (_.isUndefined(sourceNode)) {
-        $log.error('sourceNode is undefined. link: ' + JSON.stringify(l));
-        return [];
-      } else if (_.isUndefined(targetNode)) {
-        $log.error('targetNode is undefined. link: ' + JSON.stringify(l) + ', sourceNode: ' + JSON.stringify(sourceNode));
-        return [];
-      } else {
-        if (sourceNode.lane === targetNode.lane) {
-          var target = {
-            "x": targetNode.x +nodeR,
-            "y": targetNode.y
-          };
-
-          var curve = {
-            "x": targetNode.x + 100,
-            "y": (targetNode.y + sourceNode.y) / 2
-          };
-          return [sourceNode, curve, target];
-        }else if (sourceNode.lane < targetNode.lane) {
-          var target = {
-            "x": targetNode.x - (targetNode.lane === 1 ? nodeWidth : nodeR),
-            "y": targetNode.y
-          };
-          return [sourceNode ,target];
-        } else {
-          var target = {
-            "x": targetNode.x + (targetNode.lane === 1 ? 0 : nodeR),
-            "y": targetNode.y
-          };
-          return [sourceNode ,target];
-        }
-      }
-    }
 
 
     //function formatLinkNameByIndex(prefix, object) {

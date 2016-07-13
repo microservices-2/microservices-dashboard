@@ -32,6 +32,14 @@
           return [404];
         });
     }
+    function thenExpectResultToBeGraph() {
+      expect(result.status).toEqual(200);
+      expect(result.data).toEqual(graph);
+    }
+    function thenExpectResultToBeEmpty() {
+      expect(result.status).toEqual(404);
+      expect(result.data).toBeUndefined();
+    }
 
     it('Should call graph rest service', function () {
       givenGraph();
@@ -57,16 +65,5 @@
         });
     }
 
-
-
-    function thenExpectResultToBeGraph() {
-      expect(result.status).toEqual(200);
-      expect(result.data).toEqual(graph);
-    }
-
-    function thenExpectResultToBeEmpty() {
-      expect(result.status).toEqual(404);
-      expect(result.data).toBeUndefined();
-    }
   });
 })();

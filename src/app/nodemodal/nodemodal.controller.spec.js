@@ -23,15 +23,6 @@
 
       }
     };
-
-    beforeEach(module('microServicesGui'), function($provide) {
-      $provide.value('GraphService', mockGraphService);
-      $provide.value('NodeService', mockNodeService);
-      $provide.value('SetService', mockSetService);
-    });
-
-    var NodeModalController, scope, filter, modalInstance;
-
     var mockGraphService = {
       getGraph: function () {
         return [];
@@ -47,6 +38,13 @@
       }
     };
 
+    beforeEach(module('microServicesGui'), function($provide) {
+      $provide.value('GraphService', mockGraphService);
+      $provide.value('NodeService', mockNodeService);
+      $provide.value('SetService', mockSetService);
+    });
+
+    var NodeModalController, scope, filter, modalInstance;
 
 
 

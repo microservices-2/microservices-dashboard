@@ -1,11 +1,7 @@
 (function () {
     'use strict';
 
-    angular
-        .module('microServicesGui')
-        .controller('NodeModalController', NodeModalController);
-
-  function NodeModalController($scope, $filter, $window, GraphService, NodeService, $modalInstance, SetService, $q, currentLane) {
+    function NodeModalController($scope, $filter, $window, GraphService, NodeService, $modalInstance, SetService, $q, currentLane) {
 
     $scope.states = [];
     $scope.types = [];
@@ -36,6 +32,26 @@
 
     function deleteNode(id) {
       NodeService.deleteNode(id);
+    }
+    function saveNode() {
+      $scope.newNode.linkedNodes = $scope.linkedNodes;
+    }
+
+    function setAvaliableNodes(availableLanes) {
+      nodes.forEach(function (node, i) {
+        node.index = i;
+        if (availableLanes.indexOf(node.lane) > -1) {
+          $scope.availableNodes.push(node);
+          links.forEach(function (d) {
+            if (d.source === node.index) {
+              d.source = node;
+            }
+            if (d.target === node.index) {
+              d.target = node;
+            }
+          });
+        }
+      });
     }
 
     function searchLinkableNodes() {
@@ -113,7 +129,13 @@
       searchLinkedNodes();
     });
 
-    $scope.ok = function () {
+    function nameExists(name,nodes){
+        var equalNodeNamesCount = nodes.filter(function(node){return node.id === name}).length;
+        return equalNodeNamesCount > 0;
+      }
+
+
+      $scope.ok = function () {
       saveNode();
       var id = $scope.newNode.details.name;
       if(!nameExists(id,nodes)){
@@ -180,38 +202,16 @@
 
     }
 
-    function nameExists(name,nodes){
-      var equalNodeNamesCount = nodes.filter(function(node){return node.id === name}).length;
-      return equalNodeNamesCount > 0;
-    }
-
-
-
-    function saveNode() {
-      $scope.newNode.linkedNodes = $scope.linkedNodes;
-    }
-
-    function setAvaliableNodes(availableLanes) {
-      nodes.forEach(function (node, i) {
-        node.index = i;
-        if (availableLanes.indexOf(node.lane) > -1) {
-          $scope.availableNodes.push(node);
-          links.forEach(function (d) {
-            if (d.source === node.index) {
-              d.source = node;
-            }
-            if (d.target === node.index) {
-              d.target = node;
-            }
-          });
-        }
-      });
-    }
 
 
 
 
   }
+
+    angular
+        .module('microServicesGui')
+        .controller('NodeModalController', NodeModalController);
+
 
   NodeModalController.$inject = ['$scope', '$filter', '$window', 'GraphService', 'NodeService', '$modalInstance', 'SetService', '$q', 'currentLane'];
 
