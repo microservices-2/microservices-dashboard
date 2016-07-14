@@ -63,4 +63,4 @@
     GraphService.$inject = ['$http', '$q', 'BASE_URL'];
 
 
-})();
+}());

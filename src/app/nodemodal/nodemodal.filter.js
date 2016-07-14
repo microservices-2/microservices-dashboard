@@ -13,4 +13,4 @@
                 return foundNodes;
             };
         });
-})();
+}());

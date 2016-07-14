@@ -26,4 +26,4 @@
         .module('microServicesGui')
         .factory('SetService', SetService);
 
-})();
+}());

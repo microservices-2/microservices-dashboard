@@ -91,4 +91,4 @@
       expect(modalInstance.dismiss).toHaveBeenCalledWith('cancel');
     });
   });
-})();
+}());

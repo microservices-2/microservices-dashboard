@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  describe("NodeModalFilter", function() {
+  describe('NodeModalFilter', function() {
 
     beforeEach(module('microServicesGui'));
 

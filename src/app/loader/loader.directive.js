@@ -10,4 +10,4 @@
                 templateUrl: 'app/loader/loader.directive.html'
             };
         });
-})();
+}());
