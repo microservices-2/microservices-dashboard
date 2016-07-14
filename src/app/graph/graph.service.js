@@ -1,4 +1,4 @@
-/*global angular, $inject*/
+/*global angular*/
 
 (function () {
     'use strict';
