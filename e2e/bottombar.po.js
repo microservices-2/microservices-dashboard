@@ -1,3 +1,5 @@
+/* globals angular */
+
 'use strict';
 
 var BottomBar = function() {
