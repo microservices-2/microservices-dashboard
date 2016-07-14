@@ -1,6 +1,6 @@
 (function () {
 
-    "use strict";
+    'use strict';
 
     function LegendCtrl(NodecolorService, GraphService) {
     var legend = this;

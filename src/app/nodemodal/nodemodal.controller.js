@@ -39,8 +39,8 @@
     $scope.types = [];
     $scope.groups = [];
     $scope.nodesList = {
-      placeholder: "node-placeholder",
-      connectWith: ".links-container"
+      placeholder: 'node-placeholder',
+      connectWith: '.links-container'
     };
     $scope.availableNodes = [];
     $scope.linkedNodes = [];

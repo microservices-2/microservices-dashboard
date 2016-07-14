@@ -43,4 +43,4 @@
         .module('microServicesGui')
         .factory('NodeService', NodeService);
 
-})();
+}());
