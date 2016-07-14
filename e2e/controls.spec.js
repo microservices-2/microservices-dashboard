@@ -1,4 +1,4 @@
-/*global browser, element*/
+/*global browser, element, element, element*/
 
 'use strict';
 

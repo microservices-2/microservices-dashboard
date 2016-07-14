@@ -1,4 +1,4 @@
-/*global element*/
+/*global element, element*/
 
 'use strict';
 
