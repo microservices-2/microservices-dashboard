@@ -1,3 +1,5 @@
+/*global onLinkMouseDown, formatClassName*/
+
 (function () {
     'use strict';
 
