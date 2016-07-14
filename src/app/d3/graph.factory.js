@@ -7,4 +7,4 @@
             /* We could declare locals or other D3.js specific configurations here. */
             return d3;
         });
-})();
+}());
