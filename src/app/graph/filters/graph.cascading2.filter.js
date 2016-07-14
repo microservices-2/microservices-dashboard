@@ -101,12 +101,14 @@
                     prevCount = 0,
                     tempNodes = [];
 
+                  function concatTempNode(tempNode) {
+                    whileLinks = whileLinks.concat(getAllLinksWithSource(n));
+                  }
+
                   if (node.lane !== 0) {
                     do {
                       tempNodes = getSourceNodes(tempLinks);
-                      tempNodes.forEach(function (n) {
-                        whileLinks = whileLinks.concat(getAllLinksWithTarget(n));
-                      });
+                      tempNodes.forEach(concatTempNode);
                       prevCount = finalLinks.count;
                       finalLinks = finalLinks.concat(tempLinks);
                       tempLinks = whileLinks;
@@ -119,9 +121,7 @@
 
                     do {
                       tempNodes = getTargetNodes(tempLinks);
-                      tempNodes.forEach(function (n) {
-                        whileLinks = whileLinks.concat(getAllLinksWithSource(n));
-                      });
+                      tempNodes.forEach(concatTempNode);
                       prevCount = finalLinks.count;
                       finalLinks = finalLinks.concat(tempLinks);
                       tempLinks = whileLinks;
@@ -132,9 +132,11 @@
                   return finalLinks;
                 }
 
-                filteredNodes.forEach(function (n) {
-                    filteredLinks = merge(getLinksForNode(n), filteredLinks);
-                });
+                function mergeFilteredLink(filteredNode) {
+                  filteredLinks = merge(getLinksForNode(filteredNode), filteredLinks);
+                }
+
+                filteredNodes.forEach(mergeFilteredLink);
 
                 filteredNodes = getNodesFromLinks(filteredLinks,filteredNodes);
 
