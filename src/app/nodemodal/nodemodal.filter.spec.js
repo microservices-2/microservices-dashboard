@@ -24,4 +24,4 @@
         expect(nodes[0]).toEqual(node2);
       }));
   });
-})();
+}());

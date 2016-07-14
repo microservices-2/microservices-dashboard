@@ -37,4 +37,4 @@
 
     NodeColorService.$inject = [];
 
-})();
+}());

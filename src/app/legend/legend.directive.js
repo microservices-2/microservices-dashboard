@@ -38,4 +38,4 @@
     LegendCtrl.$inject = ['NodecolorService', 'GraphService'];
 
 
-})();
+}());

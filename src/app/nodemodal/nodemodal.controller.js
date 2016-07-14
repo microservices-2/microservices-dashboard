@@ -209,4 +209,4 @@
   NodeModalController.$inject = ['$scope', '$filter', '$window', 'GraphService', 'NodeService', '$modalInstance', 'SetService', '$q', 'currentLane'];
 
 
-})();
+}());

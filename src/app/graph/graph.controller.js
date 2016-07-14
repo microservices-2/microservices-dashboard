@@ -1,6 +1,6 @@
 (function () {
 
-    "use strict";
+    'use strict';
 
   function GraphController($scope, $rootScope, $filter, $q, GraphService, NodecolorService) {
 
@@ -18,7 +18,7 @@
       return data;
     }
     function isUndefinedEmptyOrNull(obj) {
-      return (typeof obj === "undefined" || obj === null || obj === "");
+      return (typeof obj === 'undefined' || obj === null || obj === '');
     }
     function init(withFilter) {
       $rootScope.dataLoading = true;
@@ -61,7 +61,7 @@
       }
     }, true);
 
-    $rootScope.$on("nodesChanged", function(){
+    $rootScope.$on('nodesChanged', function(){
       init(true);
     });
 
