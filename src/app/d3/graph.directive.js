@@ -77,6 +77,23 @@
       }
     }
 
+    function render(element) {
+
+      height = getGraphHeight(data);
+
+      d3.select('svg').remove();
+      graph = d3.select(element).append('svg')
+        .attr('width', width + margin.right + margin.left)
+        .attr('height', height)
+        .append('g');
+
+      layout = d3.layout.force()
+        .size([width, height]);
+
+      determineFontSize();
+      renderGraph(data);
+    }
+
     function resize() {
       width = $window.innerWidth - margin.right - margin.left;
       height = $window.innerHeight;
@@ -343,24 +360,6 @@
 
     }
 
-    function render(element) {
-
-      height = getGraphHeight(data);
-
-      d3.select('svg').remove();
-      graph = d3.select(element).append('svg')
-        .attr('width', width + margin.right + margin.left)
-        .attr('height', height)
-        .append('g');
-
-      layout = d3.layout.force()
-        .size([width, height]);
-
-      d3.select($window).on('resize', resize); //Adds or removes an event listener to each element in the current selection, for the specified type.
-      determineFontSize();
-      renderGraph(data);
-    }
-
 
     function getPointsArray(l){
       var sourceNode = data.nodes.filter(function (d, i) {
@@ -502,48 +501,6 @@
       }
     }
 
-
-
-    //function formatLinkNameByIndex(prefix, object) {
-    //    return prefix + '-' + object.source + '-' + object.target;
-    //}
-
-    //function formatLinkNameByObject(prefix, object) {
-    //    return prefix + '-' + object.source.index + '-' + object.target.index;
-    //}
-
-
-
-    //function findElementByLink(prefix, link) {
-    //    var selector = '#' + formatLinkNameByObject(prefix, link);
-    //    return graph.select(selector);
-    //}
-
-    //function isConnected(a, b) {
-    //    //return linkedByIndex[a.index + ',' + b.index]
-    //    // || linkedByIndex[b.index + ',' + a.index]
-    //    // || a.index === b.index;
-    //    if (a.index === b.index) {
-    //        return true;
-    //    }
-    //    var connected = false;
-    //    data.links.forEach(function (d) {
-    //        if ((d.source === a && d.target === b) || (d.source === b && d.target === a)) {
-    //            connected = true;
-    //        }
-    //    });
-    //    return connected;
-    //}
-
-
-
-
-
-
-
-
-
-
     return {
       restrict: 'E',
       scope: {
@@ -560,6 +517,8 @@
             render(element);
           }
         }, true);
+
+        d3.select($window).on('resize', resize); //Adds or removes an event listener to each element in the current selection, for the specified type.
       }
     };
   }
