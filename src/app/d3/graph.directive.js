@@ -224,25 +224,25 @@
       } else {
         if (sourceNode.lane === targetNode.lane) {
           var target = {
-            "x": targetNode.x +nodeR,
-            "y": targetNode.y
+            'x': targetNode.x +nodeR,
+            'y': targetNode.y
           };
 
           var curve = {
-            "x": targetNode.x + 100,
-            "y": (targetNode.y + sourceNode.y) / 2
+            'x': targetNode.x + 100,
+            'y': (targetNode.y + sourceNode.y) / 2
           };
           return [sourceNode, curve, target];
         }else if (sourceNode.lane < targetNode.lane) {
           var target = {
-            "x": targetNode.x - (targetNode.lane === 1 ? nodeWidth : nodeR),
-            "y": targetNode.y
+            'x': targetNode.x - (targetNode.lane === 1 ? nodeWidth : nodeR),
+            'y': targetNode.y
           };
           return [sourceNode ,target];
         } else {
           var target = {
-            "x": targetNode.x + (targetNode.lane === 1 ? 0 : nodeR),
-            "y": targetNode.y
+            'x': targetNode.x + (targetNode.lane === 1 ? 0 : nodeR),
+            'y': targetNode.y
           };
           return [sourceNode ,target];
         }
@@ -312,7 +312,7 @@
       // Build linked index
       data.links
         .forEach(function (d) {
-          linkedByIndex[d.source.index + "," + d.target.index] = 1;
+          linkedByIndex[d.source.index + ',' + d.target.index] = 1;
         });
 
       // Markers
@@ -363,7 +363,7 @@
         })
         .attr('pointer-events', 'stroke')
         .on('mouseover', function (d) {
-          tooltip.text(d.source.id + " - " + d.target.id);
+          tooltip.text(d.source.id + ' - ' + d.target.id);
           return tooltip.style('opacity', '1');
         })
         .on('mousemove', function () {

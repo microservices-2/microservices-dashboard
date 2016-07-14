@@ -4,10 +4,10 @@ var url = require('url');
 var proxyMiddleware = require('proxy-middleware');
 
 // Use node-red:
-var proxyOptions_loc = url.parse('http://localhost:8383/dependencies');
-proxyOptions_loc.route = '/dependencies';
+var proxyOptionsLoc = url.parse('http://localhost:8383/dependencies');
+proxyOptionsLoc.route = '/dependencies';
 
-var mwLoc = proxyMiddleware(proxyOptions_loc);
+var mwLoc = proxyMiddleware(proxyOptionsLoc);
 
 module.exports = {
   loc: mwLoc
