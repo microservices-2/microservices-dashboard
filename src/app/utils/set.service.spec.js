@@ -17,4 +17,4 @@
       expect(SetService.has(node, nodeSet)).toBe(true);
     });
   });
-})();
+}());

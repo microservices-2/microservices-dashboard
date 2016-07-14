@@ -41,18 +41,17 @@
           {key: 'SOAP', value: 'SOAP'},
           {key: 'REST', value: 'REST'},
           {key: 'JMS', value: 'JMS'},
-          {key: 'UI', value: 'UI'},
+          {key: 'UI', value: 'UI'}
         ]);
       });
     }
 
-    var factory = {
+    return {
       getGraph,
       getStates,
       getTypes,
       getGroups
     };
-    return factory;
 
   }
 

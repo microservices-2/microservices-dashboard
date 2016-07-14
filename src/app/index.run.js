@@ -8,4 +8,4 @@
     .module('microServicesGui')
     .run(runBlock);
 
-})();
+}());
