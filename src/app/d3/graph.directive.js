@@ -156,26 +156,6 @@
         fadeUnrelatedNodes(d, 1, nodes, links);
       }
 
-      function showTheDetails(node) {
-        NodeService.setNode(node);
-        var modalInstance = $modal.open({
-          templateUrl: 'app/nodemodal/nodemodal.html',
-          controller: 'NodeModalController',
-          resolve: {
-            currentLane: function () {
-              return node.lane;
-            }
-          }
-        });
-
-        modalInstance.result.then(function (node) {
-          NodeService.pushNode(node);
-          render(element);
-        }, function () {
-          render(element);
-        });
-      }
-
       function onNodeMouseDown(d) {
         d.fixed = true;
         d3.select(this).classed('sticky', true);
@@ -484,6 +464,26 @@
 
       determineFontSize();
       renderGraph(data);
+    }
+
+    function showTheDetails(node) {
+      NodeService.setNode(node);
+      var modalInstance = $modal.open({
+        templateUrl: 'app/nodemodal/nodemodal.html',
+        controller: 'NodeModalController',
+        resolve: {
+          currentLane: function () {
+            return node.lane;
+          }
+        }
+      });
+
+      modalInstance.result.then(function (node) {
+        NodeService.pushNode(node);
+        render(element);
+      }, function () {
+        render(element);
+      });
     }
 
     function resize() {
