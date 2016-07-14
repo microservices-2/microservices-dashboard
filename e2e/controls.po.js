@@ -1,3 +1,5 @@
+/*global element, by*/
+
 'use strict';
 
 var Controls = function() {

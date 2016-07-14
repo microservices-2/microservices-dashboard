@@ -1,3 +1,5 @@
+/*global inject*/
+
 (function () {
   'use strict';
 

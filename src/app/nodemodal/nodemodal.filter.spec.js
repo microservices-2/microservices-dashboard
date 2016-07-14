@@ -1,3 +1,5 @@
+/*global inject, $inject*/
+
 (function() {
   'use strict';
 

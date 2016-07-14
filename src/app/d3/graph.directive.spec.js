@@ -1,3 +1,5 @@
+/*global inject, angular*/
+
 (function() {
   'use strict';
 

@@ -1,4 +1,4 @@
-/*global onLinkMouseDown, formatClassName*/
+/*global onLinkMouseDown, formatClassName, angular*/
 
 (function () {
     'use strict';

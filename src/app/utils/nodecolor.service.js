@@ -1,6 +1,4 @@
-/**
- * Created by yave on 21/03/16.
- */
+/*global angular*/
 (function () {
     'use strict';
 
