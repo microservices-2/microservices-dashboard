@@ -3,8 +3,6 @@
  * https://docs.google.com/presentation/d/1B6manhG0zEXkC-H-tPo2vwU06JhL8w9-XCF9oehXzAQ
  */
 
-/*global angular*/
-
 'use strict';
 
 var MainPage = function() {
