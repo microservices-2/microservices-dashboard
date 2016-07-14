@@ -1,4 +1,4 @@
-/*global by*/
+/*global by, element*/
 
 'use strict';
 
