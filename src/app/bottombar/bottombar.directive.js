@@ -35,5 +35,4 @@
     BottomBarDirective.$inject = [];
 
     BottomBarController.$inject = ['$scope', '$modal', 'NodeService'];
-})
-();
+}());

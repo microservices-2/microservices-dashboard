@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-describe("Test graph link filter", function() {
+describe('Test graph link filter', function() {
 
   beforeEach(module('microServicesGui'));
 
@@ -56,4 +56,4 @@ describe("Test graph link filter", function() {
   }));
 
 });
-})();
+}());

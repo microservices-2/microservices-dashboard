@@ -14,7 +14,7 @@
                     return true;
                   }
                   function isUndefinedOrNull(obj) {
-                    return (typeof obj === 'undefined' || obj === null || obj === "");
+                    return (typeof obj === 'undefined' || obj === null || obj === '');
                   }
 
                   function validateId(node) {
