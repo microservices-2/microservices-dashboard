@@ -1,4 +1,4 @@
-/*global angular*/
+/*global browser, element*/
 
 'use strict';
 
