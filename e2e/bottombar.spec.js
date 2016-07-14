@@ -1,3 +1,5 @@
+/*global browser*/
+
 'use strict';
 
 describe('The bottom bar', function () {

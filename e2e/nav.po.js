@@ -1,3 +1,5 @@
+/*global by*/
+
 'use strict';
 
 var NavBar = function() {
