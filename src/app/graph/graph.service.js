@@ -49,10 +49,10 @@
     }
 
     return {
-      getGraph,
-      getStates,
-      getTypes,
-      getGroups
+      getGraph: getGraph,
+      getStates: getStates,
+      getTypes: getTypes,
+      getGroups: getGroups
     };
 
   }
