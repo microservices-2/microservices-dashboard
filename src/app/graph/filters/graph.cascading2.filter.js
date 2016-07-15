@@ -1,5 +1,4 @@
-/*global angular*/
-
+/*global angular, n*/
 (function () {
     'use strict';
 
