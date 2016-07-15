@@ -17,8 +17,8 @@
     }
 
     var factory = {
-      add,
-      has
+      add: add,
+      has: has
     };
     return factory;
 

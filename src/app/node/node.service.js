@@ -31,10 +31,10 @@
       }
 
       var factory = {
-        pushNode,
-        getNode,
-        setNode,
-        deleteNode
+        pushNode: pushNode,
+        getNode: getNode,
+        setNode: setNode,
+        deleteNode: deleteNode
       };
       return factory;
 
