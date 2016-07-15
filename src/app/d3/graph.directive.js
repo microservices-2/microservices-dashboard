@@ -3,6 +3,9 @@
 (function () {
     'use strict';
 
+  angular.module('msgGraph')
+    .directive('msgD3Graph', MsgD3Graph);
+
 // graph module
   function MsgD3Graph(d3, $modal, $window, NodeService, NodecolorService, $log) {
 
@@ -530,6 +533,5 @@
 
   MsgD3Graph.$inject = ['d3', '$modal', '$window', 'NodeService', 'NodecolorService', '$log'];
 
-    angular.module('msgGraph')
-    .directive('msgD3Graph', MsgD3Graph);
+
 }());
