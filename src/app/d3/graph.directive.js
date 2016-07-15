@@ -1,10 +1,12 @@
-/*global onLinkMouseDown, formatClassName, angular*/
-
 (function () {
-    'use strict';
+  "use strict";
 
 // graph module
-  function MsgD3Graph(d3, $modal, $window, NodeService, NodecolorService, $log) {
+  angular.module('msgGraph')
+    .directive('msgD3Graph', MsgD3Graph);
+
+  MsgD3Graph.$inject = ['d3', '$modal', '$window', 'NodeService', 'NodecolorService'];
+  function MsgD3Graph(d3, $modal, $window, NodeService, NodecolorService) {
 
     var margin = {top: 20, right: 0, bottom: 20, left: 0},
       width = $window.innerWidth - margin.right - margin.left - 16,
@@ -43,14 +45,14 @@
         biggestLane = 0,
         numberOfNodesByLane = countNodesByLane(data.nodes);
 
-      numberOfNodesByLane.forEach(function (count, lane) {
-        if(lane === 1){
-          count = Math.ceil(count*(verticalNodeSpaceRect/verticalNodeSpace));
-        }
+      numberOfNodesByLane.forEach(function (count, index) {
         count++;
+        if(index === 1){
+          count = Math.round(count*(verticalNodeSpaceRect/verticalNodeSpace));
+        }
         if (count > numberOfNodes) {
           numberOfNodes = count;
-          biggestLane = lane;
+          biggestLane = index;
         }
       });
 
@@ -62,142 +64,22 @@
       }
     }
 
-    function determineFontSize() {
-      switch (true) {
-        case (0 <= width && width < 480):
-          titleFontSize = 12;
-          textFontSize = 6;
-          break;
-        case (480 <= width && width < 640):
-          titleFontSize = 18;
-          textFontSize = 8;
-          break;
-        case (640 < width):
-          titleFontSize = 22;
-          textFontSize = 10;
-          break;
-      }
-    }
+    function render(element) {
 
-    function getPointsArray(l){
-      var sourceNode = data.nodes.filter(function (d, i) {
-        return i === l.source.index;
-      })[0];
-      var targetNode = data.nodes.filter(function (d, i) {
-        return i === l.target.index;
-      })[0];
+      height = getGraphHeight(data);
 
-      // Helpers
-      function formatClassName(prefix, object) {
-        return prefix + '-' + object.id.replace(/(\.|\/|:)/gi, '-');
-      }
+      d3.select("svg").remove();
+      graph = d3.select(element).append("svg")
+        .attr("width", width + margin.right + margin.left)
+        .attr("height", height)
+        .append("g");
 
-      function findElementByNode(prefix, node) {
-        var selector = '.' + formatClassName(prefix, node);
-        return graph.select(selector);
-      }
+      layout = d3.layout.force()
+        .size([width, height]);
 
-      function fillColor(o) {
-
-        if (o.details !== undefined) {
-          return NodecolorService.getColorFor(o.details.type);
-        }
-
-      }
-
-      function findConnectedNodes(currentNode) {
-        var connectedNodes = [currentNode];
-        data.links.forEach(function (link) {
-          if (link.source.id === currentNode.id) {
-            connectedNodes.push(link.target);
-          } else if (link.target.id === currentNode.id) {
-            connectedNodes.push(link.source);
-          }
-        });
-        return connectedNodes;
-      }
-
-      function fadeUnrelatedNodes(d, opacity, nodes, links) {
-        var connectedNodes = findConnectedNodes(d);
-        nodes.style('stroke-opacity', function (node) {
-          if (connectedNodes.indexOf(node) > -1) {
-            return 1;
-          } else {
-            return opacity;
-          }
-        });
-
-        links.style('opacity', function (link) {
-          if (link.source.id === connectedNodes[0].id && connectedNodes.indexOf(link.target)) {
-            return 1;
-          } else if (link.target.id === connectedNodes[0].id && connectedNodes.indexOf(link.source)) {
-            return 1;
-          } else {
-            return opacity;
-          }
-        });
-      }
-
-      /*
-       Mouse events
-       */
-
-      function onNodeMouseOver(nodes, links, d) {
-
-        var elm = findElementByNode('circle', d);
-        elm.style('fill', fillColor(d));
-
-        fadeUnrelatedNodes(d, 0.2, nodes, links);
-      }
-
-      function onNodeMouseOut(nodes, links, d) {
-
-        var elm = findElementByNode('circle', d);
-        elm.style('fill', null);
-
-        fadeUnrelatedNodes(d, 1, nodes, links);
-      }
-      function onLinkMouseDown() {}
-
-      function onNodeMouseDown(d) {
-        d.fixed = true;
-        d3.select(this).classed('sticky', true);
-        showTheDetails(d);
-      }
-      //TODO: should be removed cause they always evaluate false, if evaluate true it results in a console error which is not desirable imho.
-      // return empty array when sourceNode or targetNode is undefined to prevent issue #34
-      if (_.isUndefined(sourceNode)) {
-        $log.error('sourceNode is undefined. link: ' + JSON.stringify(l));
-        return [];
-      } else if (_.isUndefined(targetNode)) {
-        $log.error('targetNode is undefined. link: ' + JSON.stringify(l) + ', sourceNode: ' + JSON.stringify(sourceNode));
-        return [];
-      } else {
-        if (sourceNode.lane === targetNode.lane) {
-          var target = {
-            'x': targetNode.x +nodeR,
-            'y': targetNode.y
-          };
-
-          var curve = {
-            'x': targetNode.x + 100,
-            'y': (targetNode.y + sourceNode.y) / 2
-          };
-          return [sourceNode, curve, target];
-        }else if (sourceNode.lane < targetNode.lane) {
-          var target = {
-            'x': targetNode.x - (targetNode.lane === 1 ? nodeWidth : nodeR),
-            'y': targetNode.y
-          };
-          return [sourceNode ,target];
-        } else {
-          var target = {
-            'x': targetNode.x + (targetNode.lane === 1 ? 0 : nodeR),
-            'y': targetNode.y
-          };
-          return [sourceNode ,target];
-        }
-      }
+      d3.select($window).on("resize", resize); //Adds or removes an event listener to each element in the current selection, for the specified type.
+      determineFontSize();
+      renderGraph(data);
     }
 
     function renderGraph(data) {
@@ -239,46 +121,35 @@
       }
 
       //Labels
-      graph.append('svg:g')
-        .selectAll('.label')
+      graph.append("svg:g")
+        .selectAll(".label")
         .data(data.lanes)
         .enter()
-        .append('svg:text')
+        .append("svg:text")
         .text(function (d) {
           return d.type;
         })
-        .attr('x', function (d, i) {
+        .attr("x", function (d, i) {
           return x1(i + 0.5);
         })
-        .attr('y', 30)
-        .attr('text-anchor', 'middle')
-        .attr('class', 'lane-title')
-        .style('font-size', titleFontSize);
-
-      // tooltip
-      var tooltip = graph
-        .append('svg:text')
-        .attr('class', 'svgtooltip');
-
-      // Build linked index
-      data.links
-        .forEach(function (d) {
-          linkedByIndex[d.source.index + ',' + d.target.index] = 1;
-        });
+        .attr("y", 30)
+        .attr("text-anchor", "middle")
+        .attr("class", "lane-title")
+        .style("font-size", titleFontSize);
 
       // Markers
-      arrowheads = graph.append('svg:defs')
-        .append('svg:marker')
-        .attr('id', 'arrow')
-        .attr('viewBox', '0 -5 10 10')
-        .attr('refX', nodeR - 5)
-        .attr('refY', 0.0)
-        .attr('markerWidth', 6)
-        .attr('markerHeight', 6)
-        .attr('class', 'link')
-        .attr('orient', 'auto')
-        .append('svg:path')
-        .attr('d', 'M0,-5L10,0L0,5');
+      arrowheads = graph.append("svg:defs")
+        .append("svg:marker")
+        .attr("id", "arrow")
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", nodeR + 9)
+        .attr("refY", 0.0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("class", "link")
+        .attr("orient", "auto")
+        .append("svg:path")
+        .attr("d", "M0,-5L10,0L0,5");
 
       var lineFunction = d3.svg.line()
         .x(function (d) {
@@ -287,58 +158,82 @@
         .y(function (d) {
           return d.y;
         })
-        .interpolate('basis');
+        .interpolate("basis");
 
       links = graph.append('svg:g')
-        .selectAll('line')
+        .selectAll("line")
         .data(data.links)
         .enter()
-        .append('path')
-        .on('click', onLinkMouseDown)
-        .attr('class', 'link')
-        .attr('d', function (l) {
-          return lineFunction(getPointsArray(l));
+        .append("path")
+        .on("click", onLinkMouseDown)
+        .attr("class", "link")
+        .attr("d", function (l) {
+          var sourceNode = data.nodes.filter(function (d, i) {
+            return i === l.source.index;
+          })[0];
+          var targetNode = data.nodes.filter(function (d, i) {
+            return i === l.target.index;
+          })[0];
+          if (sourceNode.lane === targetNode.lane) {
+            var curve = {
+              "x": targetNode.x + 100,
+              "y": (targetNode.y + sourceNode.y) / 2
+            };
+            return lineFunction([sourceNode, curve, targetNode]);
+          }
+          return lineFunction([sourceNode, targetNode]);
         })
-        .attr('pointer-events', 'none')
-        .attr('marker-end', 'url(#arrow)');
+        .attr("pointer-events", "none")
+        .attr("marker-end", "url(#arrow)");
 
       clickableLinks = graph.append('svg:g')
-        .selectAll('line')
+        .selectAll("line")
         .data(data.links)
         .enter()
-        .append('path')
-        .on('click', onLinkMouseDown)
-        .attr('class', 'clickablelink')
-        .attr('d', function (l) {
-          return lineFunction(getPointsArray(l));
+        .append("path")
+        .on("click", onLinkMouseDown)
+        .attr("class", "clickablelink")
+        .attr("d", function (l) {
+          var sourceNode = data.nodes.filter(function (d, i) {
+            return i === l.source.index;
+          })[0];
+          var targetNode = data.nodes.filter(function (d, i) {
+            return i === l.target.index;
+          })[0];
+          if (sourceNode.lane === targetNode.lane) {
+            var curve = {
+              "x": targetNode.x + 100,
+              "y": (targetNode.y + sourceNode.y) / 2
+            };
+            return lineFunction([sourceNode, curve, targetNode]);
+          }
+          return lineFunction([sourceNode, targetNode]);
         })
-        .attr('pointer-events', 'stroke')
-        .on('mouseover', function (d) {
-          tooltip.text(d.source.id + ' - ' + d.target.id);
-          return tooltip.style('opacity', '1');
+        .attr("pointer-events", "stroke")
+        .on("mouseover", function (d) {
+          tooltip.text(d.source.id + " - " + d.target.id);
+          return tooltip.style("opacity", "1");
         })
-        .on('mousemove', function () {
+        .on("mousemove", function () {
           var coordinates = d3.mouse(this);
           var x = coordinates[0];
           var y = coordinates[1];
-          return tooltip
-            .attr('x', (x + 15) + 'px')
-            .attr('y', (y + 20) + 'px');
+          return tooltip.attr("x", (x + 15) + "px").attr("y", (y + 20) + "px");
         })
-        .on('mouseout', function () {
-          return tooltip.style('opacity', '0');
+        .on("mouseout", function () {
+          return tooltip.style("opacity", "0");
         });
 
       // Nodes
       nodes = graph.append('svg:g')
-        .selectAll('node')
+        .selectAll("node")
         .data(data.nodes)
         .enter()
-        .append('svg:g')
-        .attr('class', 'node')
+        .append("svg:g")
+        .attr("class", "node")
         .call(layout.drag)
-        .on('mousedown', onNodeMouseDown)
-        .attr('id', function (d) {
+        .on("mousedown", onNodeMouseDown)
+        .attr("id", function (d) {
           return formatClassName('node', d);
         });
 
@@ -346,58 +241,58 @@
       nodes.filter(function (d) {
           return d.lane !== 1;
         })
-        .append('svg:circle')
-        .attr('class', function (d) {
+        .append("svg:circle")
+        .attr("class", function (d) {
           return formatClassName('circle', d);
         })
-        .attr('r', nodeR)
-        .attr('cx', function (d) {
+        .attr("r", nodeR)
+        .attr("cx", function (d) {
           return d.x;
         })
-        .attr('cy', function (d) {
+        .attr("cy", function (d) {
           return d.y;
         })
-        .on('mouseover', _.bind(onNodeMouseOver, this, nodes, links))
-        .on('mouseout', _.bind(onNodeMouseOut, this, nodes, links))
-        .style('stroke', function (o) {
+        .on("mouseover", _.bind(onNodeMouseOver, this, nodes, links))
+        .on("mouseout", _.bind(onNodeMouseOut, this, nodes, links))
+        .style("stroke", function (o) {
           return fillColor(o);
         });
-      //.style('stroke-width', 5)
-      //.style('fill', '#ffffff');
+      //.style("stroke-width", 5)
+      //.style("fill", '#ffffff');
 
       // Rectangles
       nodes.filter(function (d) {
           return d.lane === 1;
         })
-        .append('svg:rect')
-        .attr('class', function (d) {
+        .append("svg:rect")
+        .attr("class", function (d) {
           return formatClassName('circle', d);
         })
-        //.attr('r', nodeR)
-        .attr('x', function (d) {
+        //.attr("r", nodeR)
+        .attr("x", function (d) {
           return d.x - nodeWidth;
         })
-        .attr('y', function (d) {
+        .attr("y", function (d) {
           return d.y - (nodeHeight / 2);
         })
-        .attr('width', nodeWidth)
-        .attr('height', nodeHeight)
-        .on('mouseover', _.bind(onNodeMouseOver, this, nodes, links))
-        .on('mouseout', _.bind(onNodeMouseOut, this, nodes, links))
-        .style('stroke', function (o) {
+        .attr("width", nodeWidth)
+        .attr("height", nodeHeight)
+        .on("mouseover", _.bind(onNodeMouseOver, this, nodes, links))
+        .on("mouseout", _.bind(onNodeMouseOut, this, nodes, links))
+        .style("stroke", function (o) {
           return fillColor(o);
         });
 
 
       // A copy of the text with a thick white stroke for legibility.
-      nodes.append('svg:text')
-        .attr('x', function (d) {
+      nodes.append("svg:text")
+        .attr("x", function (d) {
           return x1(d.lane + 0.5);
         })
-        .attr('y', function (d) {
+        .attr("y", function (d) {
           return d.y + (d.lane !== 1 ? 25 : 4);
         })
-        .attr('class', function (d) {
+        .attr("class", function (d) {
           return 'shadow ' + formatClassName('text', d);
         }).text(function (d) {
           var name = d.details.name ? d.details.name : d.id;
@@ -406,17 +301,17 @@
           }
           return name;
         })
-        .attr('text-anchor', 'middle')
-        .style('font-size', textFontSize);
+        .attr("text-anchor", "middle")
+        .style("font-size", textFontSize);
 
-      nodes.append('svg:text')
-        .attr('class', function (d) {
+      nodes.append("svg:text")
+        .attr("class", function (d) {
           return formatClassName('text', d);
         })
-        .attr('x', function (d) {
+        .attr("x", function (d) {
           return x1(d.lane + 0.5);
         })
-        .attr('y', function (d) {
+        .attr("y", function (d) {
           return d.y + (d.lane !== 1 ? 25 : 4);
         })
         .text(function (d) {
@@ -426,47 +321,150 @@
           }
           return name;
         })
-        .attr('text-anchor', 'middle')
-        .style('font-size', textFontSize);
+        .attr("text-anchor", "middle")
+        .style("font-size", textFontSize);
 
 
       //Lanes
-      graph.append('svg:g')
-        .selectAll('.lane')
+      graph.append("svg:g")
+        .selectAll(".lane")
         .data(data.lanes)
         .enter()
-        .append('svg:line')
-        .attr('class', 'lane')
-        .attr('x1', function (d) {
+        .append("svg:line")
+        .attr("class", "lane")
+        .attr("x1", function (d) {
           return x1(d.lane);
         })
-        .attr('x2', function (d) {
+        .attr("x2", function (d) {
           return x1(d.lane);
         })
-        .attr('y1', 0)
-        .attr('y2', height)
-        .style('visibility', function (d, i) {
-          return i === 0 ? null : 'visible';
+        .attr("y1", 0)
+        .attr("y2", height)
+        .style("visibility", function (d, i) {
+          return i === 0 ? null : "visible";
         });
 
+      // tooltip
+      var tooltip = graph
+        .append("svg:text")
+        .attr("class", "svgtooltip");
 
+      // Build linked index
+      data.links
+        .forEach(function (d) {
+          linkedByIndex[d.source.index + "," + d.target.index] = 1;
+        });
     }
 
-    function render(element) {
+    function resize() {
+      width = $window.innerWidth - margin.right - margin.left;
+      height = $window.innerHeight;
 
-      height = getGraphHeight(data);
+      graph.attr("width", width).attr("height", height);
 
-      d3.select('svg').remove();
-      graph = d3.select(element).append('svg')
-        .attr('width', width + margin.right + margin.left)
-        .attr('height', height)
-        .append('g');
 
-      layout = d3.layout.force()
-        .size([width, height]);
+      d3.select("svg")
+        .attr("width", width + margin.right + margin.left)
+        .attr("height", height);
 
-      determineFontSize();
-      renderGraph(data);
+      render(element);
+    }
+
+    function determineFontSize() {
+      switch (true) {
+        case (0 <= width && width < 480):
+          titleFontSize = 12;
+          textFontSize = 6;
+          break;
+        case (480 <= width && width < 640):
+          titleFontSize = 18;
+          textFontSize = 8;
+          break;
+        case (640 < width):
+          titleFontSize = 22;
+          textFontSize = 10;
+          break;
+      }
+    }
+
+    // Helpers
+    function formatClassName(prefix, object) {
+      return prefix + '-' + object.id.replace(/(\.|\/|:)/gi, '-');
+    }
+
+    //function formatLinkNameByIndex(prefix, object) {
+    //    return prefix + '-' + object.source + '-' + object.target;
+    //}
+
+    //function formatLinkNameByObject(prefix, object) {
+    //    return prefix + '-' + object.source.index + '-' + object.target.index;
+    //}
+
+    function findElementByNode(prefix, node) {
+      var selector = '.' + formatClassName(prefix, node);
+      return graph.select(selector);
+    }
+
+    //function findElementByLink(prefix, link) {
+    //    var selector = '#' + formatLinkNameByObject(prefix, link);
+    //    return graph.select(selector);
+    //}
+
+    //function isConnected(a, b) {
+    //    //return linkedByIndex[a.index + "," + b.index]
+    //    // || linkedByIndex[b.index + "," + a.index]
+    //    // || a.index === b.index;
+    //    if (a.index === b.index) {
+    //        return true;
+    //    }
+    //    var connected = false;
+    //    data.links.forEach(function (d) {
+    //        if ((d.source === a && d.target === b) || (d.source === b && d.target === a)) {
+    //            connected = true;
+    //        }
+    //    });
+    //    return connected;
+    //}
+
+    function findConnectedNodes(currentNode) {
+      var connectedNodes = [currentNode];
+      data.links.forEach(function (link) {
+        if (link.source.id === currentNode.id) {
+          connectedNodes.push(link.target);
+        } else if (link.target.id === currentNode.id) {
+          connectedNodes.push(link.source);
+        }
+      });
+      return connectedNodes;
+    }
+
+    function fadeUnrelatedNodes(d, opacity, nodes, links) {
+      var connectedNodes = findConnectedNodes(d);
+      nodes.style("stroke-opacity", function (node) {
+        if (connectedNodes.indexOf(node) > -1) {
+          return 1;
+        } else {
+          return opacity;
+        }
+      });
+
+      links.style("opacity", function (link) {
+        if (link.source.id === connectedNodes[0].id && connectedNodes.indexOf(link.target)) {
+          return 1;
+        } else if (link.target.id === connectedNodes[0].id && connectedNodes.indexOf(link.source)) {
+          return 1;
+        } else {
+          return opacity;
+        }
+      });
+    }
+
+    function fillColor(o) {
+
+      if (o.details !== undefined) {
+        return NodecolorService.getColorFor(o.details.type);
+      }
+
     }
 
     function showTheDetails(node) {
@@ -489,22 +487,35 @@
       });
     }
 
-    function resize() {
-      width = $window.innerWidth - margin.right - margin.left;
-      height = $window.innerHeight;
+    /*
+     Mouse events
+     */
 
-      graph.attr('width', width).attr('height', height);
+    function onNodeMouseOver(nodes, links, d) {
 
+      var elm = findElementByNode('circle', d);
+      elm.style("fill", fillColor(d));
 
-      d3.select('svg')
-        .attr('width', width + margin.right + margin.left)
-        .attr('height', height);
-
-      render(element);
+      fadeUnrelatedNodes(d, 0.2, nodes, links);
     }
 
+    function onNodeMouseOut(nodes, links, d) {
 
+      var elm = findElementByNode('circle', d);
+      elm.style("fill", null);
 
+      fadeUnrelatedNodes(d, 1, nodes, links);
+    }
+
+    function onLinkMouseDown() {
+
+    }
+
+    function onNodeMouseDown(d) {
+      d.fixed = true;
+      d3.select(this).classed("sticky", true);
+      showTheDetails(d);
+    }
 
 
     return {
@@ -523,14 +534,7 @@
             render(element);
           }
         }, true);
-
-        d3.select($window).on('resize', resize); //Adds or removes an event listener to each element in the current selection, for the specified type.
       }
     };
   }
-
-  MsgD3Graph.$inject = ['d3', '$modal', '$window', 'NodeService', 'NodecolorService', '$log'];
-
-    angular.module('msgGraph')
-    .directive('msgD3Graph', MsgD3Graph);
-}());
+})();
