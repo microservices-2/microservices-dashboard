@@ -157,6 +157,7 @@
 
         fadeUnrelatedNodes(d, 1, nodes, links);
       }
+      function onLinkMouseDown() {}
 
       function onNodeMouseDown(d) {
         d.fixed = true;
