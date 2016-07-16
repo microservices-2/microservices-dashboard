@@ -1,13 +1,15 @@
-/* global angular n */
+/**
+ * Created by yave on 30/03/16.
+ */
 (function() {
-  'use strict';
+  "use strict";
 
   angular
     .module('microServicesGui')
     .filter('cascadingFilter2', function() {
       return function(links, allnodes, nodes) {
-        var filteredNodes = nodes;
-        var filteredLinks = [];
+        var filteredNodes = nodes,
+          filteredLinks = [];
 
         function getAllLinksWithSource(node) {
           var linked = [];
@@ -27,16 +29,6 @@
             }
           });
           return linked;
-        }
-
-        function containsNode(nodelist, node) {
-          var count = nodelist.length;
-          for (var i = 0; i < count; i++) {
-            if (nodelist[i].id === node.id) {
-              return true;
-            }
-          }
-          return false;
         }
 
         function getTargetNodes(arrLinks) {
@@ -59,7 +51,15 @@
           return arrNodes;
         }
 
-
+        function containsNode(nodelist, node) {
+          var count = nodelist.length;
+          for (var i = 0; i < count; i++) {
+            if (nodelist[i].id === node.id) {
+              return true;
+            }
+          }
+          return false;
+        }
 
         function containsLink(linklist, link) {
           var count = linklist.length;
@@ -93,20 +93,18 @@
         }
 
         function getLinksForNode(node) {
-          var finalLinks = [];
-          var tempLinks = getAllLinksWithTarget(node);
-          var whileLinks = [];
-          var prevCount = 0;
-          var tempNodes = [];
+          var finalLinks = [],
+            tempLinks = getAllLinksWithTarget(node),
+            whileLinks = [],
+            prevCount = 0,
+            tempNodes = [];
 
-          function concatTempNode(tempNode) {
-            whileLinks = whileLinks.concat(getAllLinksWithSource(n));
-          }
-
-          if (node.lane !== 0) {
+          if (node.lane != 0) {
             do {
               tempNodes = getSourceNodes(tempLinks);
-              tempNodes.forEach(concatTempNode);
+              tempNodes.forEach(function(n) {
+                whileLinks = whileLinks.concat(getAllLinksWithTarget(n));
+              });
               prevCount = finalLinks.count;
               finalLinks = finalLinks.concat(tempLinks);
               tempLinks = whileLinks;
@@ -114,12 +112,14 @@
             } while (tempLinks.length !== 0);
           }
 
-          if (node.lane !== 3) {
+          if (node.lane != 3) {
             tempLinks = getAllLinksWithSource(node);
 
             do {
               tempNodes = getTargetNodes(tempLinks);
-              tempNodes.forEach(concatTempNode);
+              tempNodes.forEach(function(n) {
+                whileLinks = whileLinks.concat(getAllLinksWithSource(n));
+              });
               prevCount = finalLinks.count;
               finalLinks = finalLinks.concat(tempLinks);
               tempLinks = whileLinks;
@@ -130,11 +130,9 @@
           return finalLinks;
         }
 
-        function mergeFilteredLink(filteredNode) {
-          filteredLinks = merge(getLinksForNode(filteredNode), filteredLinks);
-        }
-
-        filteredNodes.forEach(mergeFilteredLink);
+        filteredNodes.forEach(function(n) {
+          filteredLinks = merge(getLinksForNode(n), filteredLinks);
+        });
 
         filteredNodes = getNodesFromLinks(filteredLinks, filteredNodes);
 
