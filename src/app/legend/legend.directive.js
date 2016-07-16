@@ -1,22 +1,21 @@
-/*global angular*/
+/* global angular*/
+(function() {
+  'use strict';
 
-(function () {
-
-    'use strict';
-
-    function LegendCtrl(NodecolorService, GraphService) {
+  LegendCtrl.$inject = ['NodecolorService', 'GraphService'];
+  function LegendCtrl(NodecolorService, GraphService) {
     var legend = this;
 
-    GraphService.getTypes().then(function(data){
+    GraphService.getTypes().then(function(data) {
       legend.types = data;
     });
 
-    legend.getColor = function (node) {
-      return {'border-color': '' + NodecolorService.getColorFor(node)};
+    legend.getColor = function(node) {
+      return { 'border-color': String(NodecolorService.getColorFor(node)) };
     };
   }
 
-    function LegendDirective() {
+  function LegendDirective() {
     return {
       restrict: 'A',
       templateUrl: 'app/legend/legend.html',
@@ -31,13 +30,7 @@
     };
   }
 
-    angular
-        .module('microServicesGui')
-        .directive('legend', LegendDirective);
-
-
-
-    LegendCtrl.$inject = ['NodecolorService', 'GraphService'];
-
-
-}());
+  angular
+    .module('microServicesGui')
+    .directive('legend', LegendDirective);
+})();

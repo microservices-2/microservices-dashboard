@@ -1,4 +1,4 @@
-//(function () {
+// (function () {
 //
 //    "use strict";
 //
@@ -19,4 +19,4 @@
 //            return {'border-color': '' + NodecolorService.getColorFor(node)};
 //        };
 //    }
-//})();
+// })();

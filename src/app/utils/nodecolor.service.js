@@ -1,8 +1,8 @@
-/*global angular*/
-(function () {
-    'use strict';
+/* global angular*/
+(function() {
+  'use strict';
 
-    function NodeColorService() {
+  function NodeColorService() {
     var types = [],
       COLORS = [
         '#f2c319', '#004182', '#a10000', '#674ea7', '#a25203',
@@ -18,9 +18,8 @@
 
       if (index > -1) {
         return COLORS[index];
-      } else {
-        types.push(type);
       }
+      types.push(type);
       return color;
     }
 
@@ -29,10 +28,7 @@
     };
   }
 
-    angular
-        .module('microServicesGui')
-        .factory('NodecolorService', NodeColorService);
-
-    NodeColorService.$inject = [];
-
-}());
+  angular
+    .module('microServicesGui')
+    .factory('NodecolorService', NodeColorService);
+})();

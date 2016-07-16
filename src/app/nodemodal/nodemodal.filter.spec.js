@@ -1,5 +1,4 @@
-/*global inject, $inject*/
-
+/* global it expect inject $inject beforeEach describe */
 (function() {
   'use strict';
 
@@ -14,11 +13,11 @@
     it('should have a node filter that produces an array of nodes',
       $inject(function($filter) {
 
-        var node1 = {id:'node1'};
-        var node2 = {id:'node2'};
-        var node3 = {id:'node3'};
+        var node1 = { id: 'node1' };
+        var node2 = { id: 'node2' };
+        var node3 = { id: 'node3' };
         var nodesList = [node1, node2, node3];
-        var linkedNode = {id: 'node2'};
+        var linkedNode = { id: 'node2' };
 
         var nodes = $filter('nodeModalFilter')(nodesList, linkedNode);
 
@@ -26,4 +25,4 @@
         expect(nodes[0]).toEqual(node2);
       }));
   });
-}());
+})();
