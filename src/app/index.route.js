@@ -1,10 +1,9 @@
-/*global angular*/
+/* global angular*/
 
 (function() {
   'use strict';
   /** @ngInject */
   function routeConfig($stateProvider, $urlRouterProvider) {
-
     $stateProvider
       .state('home', {
         url: '/',
@@ -18,7 +17,4 @@
   angular
     .module('microServicesGui')
     .config(routeConfig);
-
-
-
-}());
+})();
