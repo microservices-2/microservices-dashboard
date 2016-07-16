@@ -13,7 +13,7 @@
     var linksData;
     var resultData;
 
-    $scope.showLegend = { height: '0' };
+    $scope.showLegend = {height: '0'};
     $scope.beFilter = {};
 
     function applyFilters(data) {
@@ -75,7 +75,7 @@
     init();
 
     $scope.getColor = function(node) {
-      return { 'background-color': String(NodecolorService.getColorFor(node)) };
+      return {'background-color': String(NodecolorService.getColorFor(node))};
     };
   }
 
