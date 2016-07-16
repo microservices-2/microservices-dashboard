@@ -1,12 +1,15 @@
-(function () {
+/* global it expect inject beforeEach describe */
+(function() {
   'use strict';
 
-  describe('GraphService', function () {
-
-    var $httpBackend, graph, result, GraphService;
+  describe('GraphService', function() {
+    var $httpBackend;
+    var graph;
+    var result;
+    var GraphService;
     beforeEach(module('microServicesGui'));
 
-    beforeEach(inject(function (_$httpBackend_, _GraphService_) {
+    beforeEach(inject(function(_$httpBackend_, _GraphService_) {
       $httpBackend = _$httpBackend_;
       GraphService = _GraphService_;
     }));
@@ -18,9 +21,9 @@
       }];
     }
     function whenGetGraphCalled() {
-      result = GraphService.getGraph().then(function (value) {
+      result = GraphService.getGraph().then(function(value) {
         result = value;
-      }, function (error) {
+      }, function(error) {
         result = error;
       });
       $httpBackend.flush();
@@ -28,7 +31,7 @@
     function givenBackendReturnsError() {
       $httpBackend
         .expectGET('/dependencies/graph')
-        .respond(function () {
+        .respond(function() {
           return [404];
         });
     }
@@ -43,23 +46,23 @@
     function givenBackendReturnsGraph() {
       $httpBackend
         .expectGET('/dependencies/graph')
-        .respond(function () {
+        .respond(function() {
           return [200, graph];
         });
     }
 
-    it('Should call graph rest service', function () {
+    it('Should call graph rest service', function() {
       givenGraph();
       givenBackendReturnsGraph();
       whenGetGraphCalled();
       thenExpectResultToBeGraph();
     });
 
-    it('Should not call graph rest service', function () {
+    it('Should not call graph rest service', function() {
       givenGraph();
       givenBackendReturnsError();
       whenGetGraphCalled();
       thenExpectResultToBeEmpty();
     });
   });
-}());
+})();
