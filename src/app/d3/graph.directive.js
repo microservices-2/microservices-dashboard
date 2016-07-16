@@ -1,71 +1,65 @@
-(function () {
+/* global angular */
+/* global _ */
+(function() {
   "use strict";
 
-// graph module
+  // graph module
   angular.module('msgGraph')
     .directive('msgD3Graph', MsgD3Graph);
 
   MsgD3Graph.$inject = ['d3', '$modal', '$window', 'NodeService', 'NodecolorService'];
   function MsgD3Graph(d3, $modal, $window, NodeService, NodecolorService) {
-
-    var margin = {top: 20, right: 0, bottom: 20, left: 0},
-      width = $window.innerWidth - margin.right - margin.left - 16,
-      height = $window.innerHeight,
-      minheight = $window.innerHeight,
-      linkedByIndex = {},
-      data,
-      graph,
-      layout,
-      links,
-      clickableLinks,
-      nodes,
-      arrowheads,
-      element,
-      titleFontSize,
-      textFontSize,
-      verticalNodeSpace = 75,
-      verticalNodeSpaceRect = 25,
-      paddingAfterTitles = 10,
-    //for circles
-      nodeR = 16,
-    //for rects
-      nodeWidth = 140,
-      nodeHeight = 20;
+    var margin = {top: 20, right: 0, bottom: 20, left: 0};
+    var width = $window.innerWidth - margin.right - margin.left - 16;
+    var height = $window.innerHeight;
+    var minheight = $window.innerHeight;
+    var linkedByIndex = {};
+    var data;
+    var graph;
+    var layout;
+    var links;
+    var nodes;
+    var element;
+    var titleFontSize;
+    var textFontSize;
+    var verticalNodeSpace = 75;
+    var verticalNodeSpaceRect = 25;
+    var paddingAfterTitles = 10;
+    // for circles
+    var nodeR = 16;
+    // for rects
+    var nodeWidth = 140;
+    var nodeHeight = 20;
 
     function countNodesByLane(nodes) {
       var counts = [0, 0, 0, 0];
-      nodes.forEach(function (n) {
+      nodes.forEach(function(n) {
         counts[n.lane]++;
       });
       return counts;
     }
 
     function getGraphHeight(data) {
-      var numberOfNodes = 0,
-        biggestLane = 0,
-        numberOfNodesByLane = countNodesByLane(data.nodes);
+      var numberOfNodes = 0;
+      var numberOfNodesByLane = countNodesByLane(data.nodes);
 
-      numberOfNodesByLane.forEach(function (count, index) {
+      numberOfNodesByLane.forEach(function(count, index) {
         count++;
-        if(index === 1){
-          count = Math.round(count*(verticalNodeSpaceRect/verticalNodeSpace));
+        if (index === 1) {
+          count = Math.round(count * (verticalNodeSpaceRect / verticalNodeSpace));
         }
         if (count > numberOfNodes) {
           numberOfNodes = count;
-          biggestLane = index;
         }
       });
 
-
       if (numberOfNodes * verticalNodeSpace > minheight) {
         return numberOfNodes * verticalNodeSpace;
-      } else {
-        return minheight;
       }
+      return minheight;
     }
 
     function render(element) {
-
       height = getGraphHeight(data);
 
       d3.select("svg").remove();
@@ -77,13 +71,17 @@
       layout = d3.layout.force()
         .size([width, height]);
 
-      d3.select($window).on("resize", resize); //Adds or removes an event listener to each element in the current selection, for the specified type.
+      d3.select($window).on("resize", resize); // Adds or removes an event listener to each element in the current selection, for the specified type.
       determineFontSize();
       renderGraph(data);
     }
 
     function renderGraph(data) {
       var laneLength = data.lanes.length;
+      // tooltip
+      var tooltip = graph
+        .append("svg:text")
+        .attr("class", "svgtooltip");
 
       var uiCounter = 0;
       var epCounter = 0;
@@ -94,7 +92,7 @@
         .domain([0, laneLength])
         .range([margin.left, width]);
 
-      //Update data
+      // Update data
       for (var i = 0; i < data.nodes.length; i++) {
         var node = data.nodes[i];
         node.index = i;
@@ -117,19 +115,21 @@
             dbCounter++;
             node.y = verticalNodeSpace * dbCounter + paddingAfterTitles;
             break;
+          default:
+            break;
         }
       }
 
-      //Labels
+      // Labels
       graph.append("svg:g")
         .selectAll(".label")
         .data(data.lanes)
         .enter()
         .append("svg:text")
-        .text(function (d) {
+        .text(function(d) {
           return d.type;
         })
-        .attr("x", function (d, i) {
+        .attr("x", function(d, i) {
           return x1(i + 0.5);
         })
         .attr("y", 30)
@@ -138,7 +138,7 @@
         .style("font-size", titleFontSize);
 
       // Markers
-      arrowheads = graph.append("svg:defs")
+      graph.append("svg:defs")
         .append("svg:marker")
         .attr("id", "arrow")
         .attr("viewBox", "0 -5 10 10")
@@ -152,10 +152,10 @@
         .attr("d", "M0,-5L10,0L0,5");
 
       var lineFunction = d3.svg.line()
-        .x(function (d) {
+        .x(function(d) {
           return d.x;
         })
-        .y(function (d) {
+        .y(function(d) {
           return d.y;
         })
         .interpolate("basis");
@@ -167,17 +167,17 @@
         .append("path")
         .on("click", onLinkMouseDown)
         .attr("class", "link")
-        .attr("d", function (l) {
-          var sourceNode = data.nodes.filter(function (d, i) {
+        .attr("d", function(l) {
+          var sourceNode = data.nodes.filter(function(d, i) {
             return i === l.source.index;
           })[0];
-          var targetNode = data.nodes.filter(function (d, i) {
+          var targetNode = data.nodes.filter(function(d, i) {
             return i === l.target.index;
           })[0];
           if (sourceNode.lane === targetNode.lane) {
             var curve = {
-              "x": targetNode.x + 100,
-              "y": (targetNode.y + sourceNode.y) / 2
+              x: targetNode.x + 100,
+              y: (targetNode.y + sourceNode.y) / 2
             };
             return lineFunction([sourceNode, curve, targetNode]);
           }
@@ -186,41 +186,41 @@
         .attr("pointer-events", "none")
         .attr("marker-end", "url(#arrow)");
 
-      clickableLinks = graph.append('svg:g')
+      graph.append('svg:g')
         .selectAll("line")
         .data(data.links)
         .enter()
         .append("path")
         .on("click", onLinkMouseDown)
         .attr("class", "clickablelink")
-        .attr("d", function (l) {
-          var sourceNode = data.nodes.filter(function (d, i) {
+        .attr("d", function(l) {
+          var sourceNode = data.nodes.filter(function(d, i) {
             return i === l.source.index;
           })[0];
-          var targetNode = data.nodes.filter(function (d, i) {
+          var targetNode = data.nodes.filter(function(d, i) {
             return i === l.target.index;
           })[0];
           if (sourceNode.lane === targetNode.lane) {
             var curve = {
-              "x": targetNode.x + 100,
-              "y": (targetNode.y + sourceNode.y) / 2
+              x: targetNode.x + 100,
+              y: (targetNode.y + sourceNode.y) / 2
             };
             return lineFunction([sourceNode, curve, targetNode]);
           }
           return lineFunction([sourceNode, targetNode]);
         })
         .attr("pointer-events", "stroke")
-        .on("mouseover", function (d) {
+        .on("mouseover", function(d) {
           tooltip.text(d.source.id + " - " + d.target.id);
           return tooltip.style("opacity", "1");
         })
-        .on("mousemove", function () {
+        .on("mousemove", function() {
           var coordinates = d3.mouse(this);
           var x = coordinates[0];
           var y = coordinates[1];
           return tooltip.attr("x", (x + 15) + "px").attr("y", (y + 20) + "px");
         })
-        .on("mouseout", function () {
+        .on("mouseout", function() {
           return tooltip.style("opacity", "0");
         });
 
@@ -233,68 +233,67 @@
         .attr("class", "node")
         .call(layout.drag)
         .on("mousedown", onNodeMouseDown)
-        .attr("id", function (d) {
+        .attr("id", function(d) {
           return formatClassName('node', d);
         });
 
       // Circles
-      nodes.filter(function (d) {
-          return d.lane !== 1;
-        })
+      nodes.filter(function(d) {
+        return d.lane !== 1;
+      })
         .append("svg:circle")
-        .attr("class", function (d) {
+        .attr("class", function(d) {
           return formatClassName('circle', d);
         })
         .attr("r", nodeR)
-        .attr("cx", function (d) {
+        .attr("cx", function(d) {
           return d.x;
         })
-        .attr("cy", function (d) {
+        .attr("cy", function(d) {
           return d.y;
         })
         .on("mouseover", _.bind(onNodeMouseOver, this, nodes, links))
         .on("mouseout", _.bind(onNodeMouseOut, this, nodes, links))
-        .style("stroke", function (o) {
+        .style("stroke", function(o) {
           return fillColor(o);
         });
-      //.style("stroke-width", 5)
-      //.style("fill", '#ffffff');
+      // .style("stroke-width", 5)
+      // .style("fill", '#ffffff');
 
       // Rectangles
-      nodes.filter(function (d) {
-          return d.lane === 1;
-        })
+      nodes.filter(function(d) {
+        return d.lane === 1;
+      })
         .append("svg:rect")
-        .attr("class", function (d) {
+        .attr("class", function(d) {
           return formatClassName('circle', d);
         })
-        //.attr("r", nodeR)
-        .attr("x", function (d) {
+        // .attr("r", nodeR)
+        .attr("x", function(d) {
           return d.x - nodeWidth;
         })
-        .attr("y", function (d) {
+        .attr("y", function(d) {
           return d.y - (nodeHeight / 2);
         })
         .attr("width", nodeWidth)
         .attr("height", nodeHeight)
         .on("mouseover", _.bind(onNodeMouseOver, this, nodes, links))
         .on("mouseout", _.bind(onNodeMouseOut, this, nodes, links))
-        .style("stroke", function (o) {
+        .style("stroke", function(o) {
           return fillColor(o);
         });
 
-
       // A copy of the text with a thick white stroke for legibility.
       nodes.append("svg:text")
-        .attr("x", function (d) {
+        .attr("x", function(d) {
           return x1(d.lane + 0.5);
         })
-        .attr("y", function (d) {
-          return d.y + (d.lane !== 1 ? 25 : 4);
+        .attr("y", function(d) {
+          return d.y + (d.lane === 1 ? 4 : 25);
         })
-        .attr("class", function (d) {
+        .attr("class", function(d) {
           return 'shadow ' + formatClassName('text', d);
-        }).text(function (d) {
+        }).text(function(d) {
           var name = d.details.name ? d.details.name : d.id;
           if (d.details.virtual === true) {
             name = d.details.name + ' (virtual)';
@@ -305,16 +304,16 @@
         .style("font-size", textFontSize);
 
       nodes.append("svg:text")
-        .attr("class", function (d) {
+        .attr("class", function(d) {
           return formatClassName('text', d);
         })
-        .attr("x", function (d) {
+        .attr("x", function(d) {
           return x1(d.lane + 0.5);
         })
-        .attr("y", function (d) {
-          return d.y + (d.lane !== 1 ? 25 : 4);
+        .attr("y", function(d) {
+          return d.y + (d.lane === 1 ? 4 : 25);
         })
-        .text(function (d) {
+        .text(function(d) {
           var name = d.details.name ? d.details.name : d.id;
           if (d.details.virtual === true) {
             name = d.details.name + ' (virtual)';
@@ -324,34 +323,29 @@
         .attr("text-anchor", "middle")
         .style("font-size", textFontSize);
 
-
-      //Lanes
+      // Lanes
       graph.append("svg:g")
         .selectAll(".lane")
         .data(data.lanes)
         .enter()
         .append("svg:line")
         .attr("class", "lane")
-        .attr("x1", function (d) {
+        .attr("x1", function(d) {
           return x1(d.lane);
         })
-        .attr("x2", function (d) {
+        .attr("x2", function(d) {
           return x1(d.lane);
         })
         .attr("y1", 0)
         .attr("y2", height)
-        .style("visibility", function (d, i) {
+        .style("visibility", function(d, i) {
           return i === 0 ? null : "visible";
         });
 
-      // tooltip
-      var tooltip = graph
-        .append("svg:text")
-        .attr("class", "svgtooltip");
 
       // Build linked index
       data.links
-        .forEach(function (d) {
+        .forEach(function(d) {
           linkedByIndex[d.source.index + "," + d.target.index] = 1;
         });
     }
@@ -362,7 +356,6 @@
 
       graph.attr("width", width).attr("height", height);
 
-
       d3.select("svg")
         .attr("width", width + margin.right + margin.left)
         .attr("height", height);
@@ -372,17 +365,19 @@
 
     function determineFontSize() {
       switch (true) {
-        case (0 <= width && width < 480):
+        case (width >= 0 && width < 480):
           titleFontSize = 12;
           textFontSize = 6;
           break;
-        case (480 <= width && width < 640):
+        case (width >= 480 && width < 640):
           titleFontSize = 18;
           textFontSize = 8;
           break;
-        case (640 < width):
-          titleFontSize = 22;
-          textFontSize = 10;
+        // case (width > width):
+        //   titleFontSize = 22;
+        //   textFontSize = 10;
+        //   break;
+        default:
           break;
       }
     }
@@ -392,25 +387,25 @@
       return prefix + '-' + object.id.replace(/(\.|\/|:)/gi, '-');
     }
 
-    //function formatLinkNameByIndex(prefix, object) {
+    // function formatLinkNameByIndex(prefix, object) {
     //    return prefix + '-' + object.source + '-' + object.target;
-    //}
+    // }
 
-    //function formatLinkNameByObject(prefix, object) {
+    // function formatLinkNameByObject(prefix, object) {
     //    return prefix + '-' + object.source.index + '-' + object.target.index;
-    //}
+    // }
 
     function findElementByNode(prefix, node) {
       var selector = '.' + formatClassName(prefix, node);
       return graph.select(selector);
     }
 
-    //function findElementByLink(prefix, link) {
+    // function findElementByLink(prefix, link) {
     //    var selector = '#' + formatLinkNameByObject(prefix, link);
     //    return graph.select(selector);
-    //}
+    // }
 
-    //function isConnected(a, b) {
+    // function isConnected(a, b) {
     //    //return linkedByIndex[a.index + "," + b.index]
     //    // || linkedByIndex[b.index + "," + a.index]
     //    // || a.index === b.index;
@@ -424,11 +419,11 @@
     //        }
     //    });
     //    return connected;
-    //}
+    // }
 
     function findConnectedNodes(currentNode) {
       var connectedNodes = [currentNode];
-      data.links.forEach(function (link) {
+      data.links.forEach(function(link) {
         if (link.source.id === currentNode.id) {
           connectedNodes.push(link.target);
         } else if (link.target.id === currentNode.id) {
@@ -440,31 +435,27 @@
 
     function fadeUnrelatedNodes(d, opacity, nodes, links) {
       var connectedNodes = findConnectedNodes(d);
-      nodes.style("stroke-opacity", function (node) {
+      nodes.style("stroke-opacity", function(node) {
         if (connectedNodes.indexOf(node) > -1) {
           return 1;
-        } else {
-          return opacity;
         }
+        return opacity;
       });
 
-      links.style("opacity", function (link) {
+      links.style("opacity", function(link) {
         if (link.source.id === connectedNodes[0].id && connectedNodes.indexOf(link.target)) {
           return 1;
         } else if (link.target.id === connectedNodes[0].id && connectedNodes.indexOf(link.source)) {
           return 1;
-        } else {
-          return opacity;
         }
+        return opacity;
       });
     }
 
     function fillColor(o) {
-
       if (o.details !== undefined) {
         return NodecolorService.getColorFor(o.details.type);
       }
-
     }
 
     function showTheDetails(node) {
@@ -473,16 +464,16 @@
         templateUrl: 'app/nodemodal/nodemodal.html',
         controller: 'NodeModalController',
         resolve: {
-          currentLane: function () {
+          currentLane: function() {
             return node.lane;
           }
         }
       });
 
-      modalInstance.result.then(function (node) {
+      modalInstance.result.then(function(node) {
         NodeService.pushNode(node);
         render(element);
-      }, function () {
+      }, function() {
         render(element);
       });
     }
@@ -492,7 +483,6 @@
      */
 
     function onNodeMouseOver(nodes, links, d) {
-
       var elm = findElementByNode('circle', d);
       elm.style("fill", fillColor(d));
 
@@ -500,7 +490,6 @@
     }
 
     function onNodeMouseOut(nodes, links, d) {
-
       var elm = findElementByNode('circle', d);
       elm.style("fill", null);
 
@@ -517,18 +506,16 @@
       showTheDetails(d);
     }
 
-
     return {
       restrict: 'E',
       scope: {
         graphData: '='
       },
       controller: 'GraphController',
-      link: function (scope, elem) {
-
+      link: function(scope, elem) {
         element = elem[0];
 
-        scope.$watch('graphData', function (newVal) {
+        scope.$watch('graphData', function(newVal) {
           if (newVal) {
             data = newVal;
             render(element);
