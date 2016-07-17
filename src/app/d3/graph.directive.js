@@ -3,13 +3,9 @@
 (function() {
   "use strict";
 
-  // graph module
-  angular.module('msgGraph')
-    .directive('msgD3Graph', MsgD3Graph);
-
-  MsgD3Graph.$inject = ['d3', '$modal', '$window', 'NodeService', 'NodecolorService'];
+  /** @ngInject */
   function MsgD3Graph(d3, $modal, $window, NodeService, NodecolorService) {
-    var margin = {top: 20, right: 0, bottom: 20, left: 0};
+    var margin = { top: 20, right: 0, bottom: 20, left: 0 };
     var width = $window.innerWidth - margin.right - margin.left - 16;
     var height = $window.innerHeight;
     var minheight = $window.innerHeight;
@@ -30,6 +26,94 @@
     // for rects
     var nodeWidth = 140;
     var nodeHeight = 20;
+
+    function findConnectedNodes(currentNode) {
+      var connectedNodes = [currentNode];
+      data.links.forEach(function(link) {
+        if (link.source.id === currentNode.id) {
+          connectedNodes.push(link.target);
+        } else if (link.target.id === currentNode.id) {
+          connectedNodes.push(link.source);
+        }
+      });
+      return connectedNodes;
+    }
+
+    function fadeUnrelatedNodes(d, opacity, nodes, links) {
+      var connectedNodes = findConnectedNodes(d);
+      nodes.style("stroke-opacity", function(node) {
+        if (connectedNodes.indexOf(node) > -1) {
+          return 1;
+        }
+        return opacity;
+      });
+
+      links.style("opacity", function(link) {
+        if (link.source.id === connectedNodes[0].id && connectedNodes.indexOf(link.target)) {
+          return 1;
+        } else if (link.target.id === connectedNodes[0].id && connectedNodes.indexOf(link.source)) {
+          return 1;
+        }
+        return opacity;
+      });
+    }
+
+    function fillColor(o) {
+      if (o.details !== undefined) {
+        return NodecolorService.getColorFor(o.details.type);
+      }
+    }
+
+    // Helpers
+    function formatClassName(prefix, object) {
+      return prefix + '-' + object.id.replace(/(\.|\/|:)/gi, '-');
+    }
+
+    function findElementByNode(prefix, node) {
+      var selector = '.' + formatClassName(prefix, node);
+      return graph.select(selector);
+    }
+
+    /*
+     Mouse events
+     */
+
+    function onNodeMouseOver(nodes, links, d) {
+      var elm = findElementByNode('circle', d);
+      elm.style("fill", fillColor(d));
+
+      fadeUnrelatedNodes(d, 0.2, nodes, links);
+    }
+
+    function onNodeMouseOut(nodes, links, d) {
+      var elm = findElementByNode('circle', d);
+      elm.style("fill", null);
+
+      fadeUnrelatedNodes(d, 1, nodes, links);
+    }
+
+    function onLinkMouseDown() {
+
+    }
+
+    function determineFontSize() {
+      switch (true) {
+        case (width >= 0 && width < 480):
+          titleFontSize = 12;
+          textFontSize = 6;
+          break;
+        case (width >= 480 && width < 640):
+          titleFontSize = 18;
+          textFontSize = 8;
+          break;
+        // case (width > width):
+        //   titleFontSize = 22;
+        //   textFontSize = 10;
+        //   break;
+        default:
+          break;
+      }
+    }
 
     function countNodesByLane(nodes) {
       var counts = [0, 0, 0, 0];
@@ -57,23 +141,6 @@
         return numberOfNodes * verticalNodeSpace;
       }
       return minheight;
-    }
-
-    function render(element) {
-      height = getGraphHeight(data);
-
-      d3.select("svg").remove();
-      graph = d3.select(element).append("svg")
-        .attr("width", width + margin.right + margin.left)
-        .attr("height", height)
-        .append("g");
-
-      layout = d3.layout.force()
-        .size([width, height]);
-
-      d3.select($window).on("resize", resize); // Adds or removes an event listener to each element in the current selection, for the specified type.
-      determineFontSize();
-      renderGraph(data);
     }
 
     function renderGraph(data) {
@@ -350,112 +417,20 @@
         });
     }
 
-    function resize() {
-      width = $window.innerWidth - margin.right - margin.left;
-      height = $window.innerHeight;
+    function render(element) {
+      height = getGraphHeight(data);
 
-      graph.attr("width", width).attr("height", height);
-
-      d3.select("svg")
+      d3.select("svg").remove();
+      graph = d3.select(element).append("svg")
         .attr("width", width + margin.right + margin.left)
-        .attr("height", height);
+        .attr("height", height)
+        .append("g");
 
-      render(element);
-    }
+      layout = d3.layout.force()
+        .size([width, height]);
 
-    function determineFontSize() {
-      switch (true) {
-        case (width >= 0 && width < 480):
-          titleFontSize = 12;
-          textFontSize = 6;
-          break;
-        case (width >= 480 && width < 640):
-          titleFontSize = 18;
-          textFontSize = 8;
-          break;
-        // case (width > width):
-        //   titleFontSize = 22;
-        //   textFontSize = 10;
-        //   break;
-        default:
-          break;
-      }
-    }
-
-    // Helpers
-    function formatClassName(prefix, object) {
-      return prefix + '-' + object.id.replace(/(\.|\/|:)/gi, '-');
-    }
-
-    // function formatLinkNameByIndex(prefix, object) {
-    //    return prefix + '-' + object.source + '-' + object.target;
-    // }
-
-    // function formatLinkNameByObject(prefix, object) {
-    //    return prefix + '-' + object.source.index + '-' + object.target.index;
-    // }
-
-    function findElementByNode(prefix, node) {
-      var selector = '.' + formatClassName(prefix, node);
-      return graph.select(selector);
-    }
-
-    // function findElementByLink(prefix, link) {
-    //    var selector = '#' + formatLinkNameByObject(prefix, link);
-    //    return graph.select(selector);
-    // }
-
-    // function isConnected(a, b) {
-    //    //return linkedByIndex[a.index + "," + b.index]
-    //    // || linkedByIndex[b.index + "," + a.index]
-    //    // || a.index === b.index;
-    //    if (a.index === b.index) {
-    //        return true;
-    //    }
-    //    var connected = false;
-    //    data.links.forEach(function (d) {
-    //        if ((d.source === a && d.target === b) || (d.source === b && d.target === a)) {
-    //            connected = true;
-    //        }
-    //    });
-    //    return connected;
-    // }
-
-    function findConnectedNodes(currentNode) {
-      var connectedNodes = [currentNode];
-      data.links.forEach(function(link) {
-        if (link.source.id === currentNode.id) {
-          connectedNodes.push(link.target);
-        } else if (link.target.id === currentNode.id) {
-          connectedNodes.push(link.source);
-        }
-      });
-      return connectedNodes;
-    }
-
-    function fadeUnrelatedNodes(d, opacity, nodes, links) {
-      var connectedNodes = findConnectedNodes(d);
-      nodes.style("stroke-opacity", function(node) {
-        if (connectedNodes.indexOf(node) > -1) {
-          return 1;
-        }
-        return opacity;
-      });
-
-      links.style("opacity", function(link) {
-        if (link.source.id === connectedNodes[0].id && connectedNodes.indexOf(link.target)) {
-          return 1;
-        } else if (link.target.id === connectedNodes[0].id && connectedNodes.indexOf(link.source)) {
-          return 1;
-        }
-        return opacity;
-      });
-    }
-
-    function fillColor(o) {
-      if (o.details !== undefined) {
-        return NodecolorService.getColorFor(o.details.type);
-      }
+      determineFontSize();
+      renderGraph(data);
     }
 
     function showTheDetails(node) {
@@ -478,33 +453,53 @@
       });
     }
 
-    /*
-     Mouse events
-     */
-
-    function onNodeMouseOver(nodes, links, d) {
-      var elm = findElementByNode('circle', d);
-      elm.style("fill", fillColor(d));
-
-      fadeUnrelatedNodes(d, 0.2, nodes, links);
-    }
-
-    function onNodeMouseOut(nodes, links, d) {
-      var elm = findElementByNode('circle', d);
-      elm.style("fill", null);
-
-      fadeUnrelatedNodes(d, 1, nodes, links);
-    }
-
-    function onLinkMouseDown() {
-
-    }
-
     function onNodeMouseDown(d) {
       d.fixed = true;
       d3.select(this).classed("sticky", true);
       showTheDetails(d);
     }
+
+    function resize() {
+      width = $window.innerWidth - margin.right - margin.left;
+      height = $window.innerHeight;
+
+      graph.attr("width", width).attr("height", height);
+
+      d3.select("svg")
+        .attr("width", width + margin.right + margin.left)
+        .attr("height", height);
+
+      render(element);
+    }
+
+    // function formatLinkNameByIndex(prefix, object) {
+    //    return prefix + '-' + object.source + '-' + object.target;
+    // }
+
+    // function formatLinkNameByObject(prefix, object) {
+    //    return prefix + '-' + object.source.index + '-' + object.target.index;
+    // }
+
+    // function findElementByLink(prefix, link) {
+    //    var selector = '#' + formatLinkNameByObject(prefix, link);
+    //    return graph.select(selector);
+    // }
+
+    // function isConnected(a, b) {
+    //    //return linkedByIndex[a.index + "," + b.index]
+    //    // || linkedByIndex[b.index + "," + a.index]
+    //    // || a.index === b.index;
+    //    if (a.index === b.index) {
+    //        return true;
+    //    }
+    //    var connected = false;
+    //    data.links.forEach(function (d) {
+    //        if ((d.source === a && d.target === b) || (d.source === b && d.target === a)) {
+    //            connected = true;
+    //        }
+    //    });
+    //    return connected;
+    // }
 
     return {
       restrict: 'E',
@@ -514,7 +509,7 @@
       controller: 'GraphController',
       link: function(scope, elem) {
         element = elem[0];
-
+        d3.select($window).on("resize", resize); // Adds or removes an event listener to each element in the current selection, for the specified type.
         scope.$watch('graphData', function(newVal) {
           if (newVal) {
             data = newVal;
@@ -524,4 +519,6 @@
       }
     };
   }
+  angular.module('msgGraph')
+    .directive('msgD3Graph', MsgD3Graph);
 })();
