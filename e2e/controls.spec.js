@@ -1,11 +1,10 @@
-/*global browser, element, element, element*/
+/* global it expect browser element by beforeEach describe */
+describe('The control bar', function() {
+  'use strict';
 
-'use strict';
-
-describe('The control bar', function () {
   var page;
 
-  beforeEach(function () {
+  beforeEach(function() {
     browser.get('/index.html');
     page = require('./controls.po');
   });
@@ -32,5 +31,4 @@ describe('The control bar', function () {
   it('should have an edit field to filter on text', function() {
     expect(page.searchNode.getAttribute('placeholder')).toBe('Search node');
   });
-
 });
