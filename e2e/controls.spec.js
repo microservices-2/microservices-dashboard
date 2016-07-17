@@ -1,4 +1,6 @@
 /* global it expect browser element by beforeEach describe */
+/* jshint unused:false*/
+
 describe('The control bar', function() {
   'use strict';
 

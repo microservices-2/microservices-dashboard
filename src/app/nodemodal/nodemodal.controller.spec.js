@@ -1,4 +1,5 @@
 /* global jasmine it expect inject angular beforeEach describe */
+/* jshint unused:false*/
 (function() {
   'use strict';
 

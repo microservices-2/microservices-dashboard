@@ -1,4 +1,5 @@
-/* global it expect inject, angular beforeEach describe */
+/* global it inject expect angular beforeEach describe */
+/* jshint unused:false*/
 (function() {
   'use strict';
 

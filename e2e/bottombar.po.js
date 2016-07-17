@@ -1,4 +1,5 @@
 /* global by element */
+/* jshint unused:false*/
 
 var BottomBar = function() {
   'use strict';

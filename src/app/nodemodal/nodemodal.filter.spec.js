@@ -1,4 +1,6 @@
 /* global it expect inject $inject beforeEach describe */
+/* jshint unused:false*/
+
 (function() {
   'use strict';
 
