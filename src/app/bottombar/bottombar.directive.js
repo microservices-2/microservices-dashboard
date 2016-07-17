@@ -3,7 +3,7 @@
 (function() {
   'use strict';
 
-  BottomBarController.$inject = ['$scope', '$modal', 'NodeService'];
+  /** @ngInject */
   function BottomBarController($scope, $modal, NodeService) {
     $scope.open = function(lane) {
       NodeService.setNode(undefined);
