@@ -7,6 +7,6 @@ module.exports = {
     'valid-jsdoc': 'off',
     'require-jsdoc': 'off',
     'quotes': ['error', 'single'],
-    "complexity": ["error", 4],
+    'complexity': ['error', 6],
   }
 };
