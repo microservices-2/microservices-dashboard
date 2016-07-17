@@ -26,7 +26,7 @@
     // for rects
     var nodeWidth = 140;
     var nodeHeight = 20;
-
+    var onNodeMouseDown;
     function findConnectedNodes(currentNode) {
       var connectedNodes = [currentNode];
       data.links.forEach(function(link) {
@@ -452,11 +452,11 @@
       });
     }
 
-    function onNodeMouseDown(d) {
+    onNodeMouseDown = function onNodeMouseDown(d) {
       d.fixed = true;
       d3.select(this).classed('sticky', true);
       showTheDetails(d);
-    }
+    };
 
     function resize() {
       width = $window.innerWidth - margin.right - margin.left;
