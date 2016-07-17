@@ -1,6 +1,8 @@
-(function () {
-    'use strict';
+/* global angular */
+(function() {
+  'use strict';
 
+  /** @ngInject */
   function LanefilterCtrl(GraphService, $q) {
     var vm = this;
 
@@ -8,7 +10,7 @@
       GraphService.getTypes(),
       GraphService.getGroups(),
       GraphService.getStates()
-    ]).then(function (resp) {
+    ]).then(function(resp) {
       vm.types = resp[0];
       vm.groups = resp[1];
       vm.states = resp[2];
@@ -18,14 +20,14 @@
       details: {}
     };
 
-    vm.refresh = function(){
+    vm.refresh = function() {
       vm.filter = {
         details: {}
       };
     };
 
-    if(typeof vm.lane !== 'undefined'){
-      vm.filter.lane = parseInt(vm.lane);
+    if (typeof vm.lane !== 'undefined') {
+      vm.filter.lane = parseInt(vm.lane, 10);
     }
   }
 
@@ -43,11 +45,7 @@
     };
   }
 
-    angular
-        .module('microServicesGui')
-        .directive('lanefilter', LanefilterDirective);
-
-
-    LanefilterCtrl.$inject = ['GraphService', '$q'];
-
-}());
+  angular
+    .module('microServicesGui')
+    .directive('lanefilter', LanefilterDirective);
+})();

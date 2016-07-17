@@ -1,24 +1,17 @@
-/*global angular*/
+/* global angular*/
 
 (function() {
   'use strict';
 
   /** @ngInject */
-  function config($logProvider) {
-
+  function config($logProvider, $httpProvider) {
     // enable log debug
     $logProvider.debugEnabled(true);
-
+    $httpProvider.defaults.useXDomain = true;
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
   }
 
   angular
     .module('microServicesGui')
-    .config(config)
-    .config(['$httpProvider', function($httpProvider) {
-      $httpProvider.defaults.useXDomain = true;
-      delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    }]);
-
-
-
-}());
+    .config(config);
+})();

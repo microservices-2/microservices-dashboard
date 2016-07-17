@@ -1,9 +1,10 @@
-/*global angular*/
+/* global angular*/
 
-(function () {
+(function() {
   'use strict';
 
   angular
-    .module('microServicesGui', ['ui.router', 'mm.foundation', 'ui.sortable', 'msgGraph']);
-
-}());
+    .module('microServicesGui', [
+      'ui.router', 'mm.foundation', 'ui.sortable', 'msgGraph'
+    ]);
+})();

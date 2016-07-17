@@ -1,10 +1,8 @@
-/*global angular*/
+/* global angular*/
 
-(function () {
-    'use strict';
-
+(function() {
+  'use strict';
   function SetService() {
-
     function add(element, array) {
       if (array.indexOf(element) === -1) {
         array.push(element);
@@ -21,11 +19,8 @@
       has: has
     };
     return factory;
-
   }
-
   angular
-        .module('microServicesGui')
-        .factory('SetService', SetService);
-
-}());
+    .module('microServicesGui')
+    .factory('SetService', SetService);
+})();

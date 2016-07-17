@@ -1,14 +1,17 @@
-/*global angular*/
+/* global angular */
 
-(function () {
+(function() {
+  'use strict';
 
-    'use strict';
+  /** @ngInject */
+  function GraphController(
+    $scope, $rootScope, $filter, $q, GraphService, NodecolorService
+  ) {
+    var nodesData;
+    var linksData;
+    var resultData;
 
-  function GraphController($scope, $rootScope, $filter, $q, GraphService, NodecolorService) {
-
-    var nodesData, linksData, resultData;
-
-    $scope.showLegend = {'height': '0'};
+    $scope.showLegend = { height: '0' };
     $scope.beFilter = {};
 
     function applyFilters(data) {
@@ -26,11 +29,11 @@
       $rootScope.dataLoading = true;
       $q.all([
         GraphService.getGraph()
-      ]).then(function (values) {
+      ]).then(function(values) {
         resultData = values[0].data;
-        resultData.nodes.forEach(function (node, index) {
+        resultData.nodes.forEach(function(node, index) {
           node.index = index;
-          resultData.links.forEach(function (d) {
+          resultData.links.forEach(function(d) {
             if (d.source === node.index) {
               d.source = node;
             }
@@ -53,7 +56,7 @@
       });
     }
 
-    $scope.$watch('beFilter', function (value, prev) {
+    $scope.$watch('beFilter', function(value, prev) {
       if (!angular.equals({}, prev)) {
         if (isUndefinedEmptyOrNull(value.details.type) && isUndefinedEmptyOrNull(value.details.group) && isUndefinedEmptyOrNull(value.details.status) && isUndefinedEmptyOrNull(value.id)) {
           init();
@@ -63,25 +66,18 @@
       }
     }, true);
 
-    $rootScope.$on('nodesChanged', function(){
+    $rootScope.$on('nodesChanged', function() {
       init(true);
     });
 
     init();
 
-
-
-    $scope.getColor = function (node) {
-      return {'background-color': '' + NodecolorService.getColorFor(node)};
+    $scope.getColor = function(node) {
+      return { 'background-color': String(NodecolorService.getColorFor(node)) };
     };
-
-
   }
 
   angular
-        .module('microServicesGui')
-        .controller('GraphController', GraphController);
-
-    GraphController.$inject = ['$scope', '$rootScope', '$filter', '$q', 'GraphService', 'NodecolorService'];
-
-}());
+    .module('microServicesGui')
+    .controller('GraphController', GraphController);
+})();

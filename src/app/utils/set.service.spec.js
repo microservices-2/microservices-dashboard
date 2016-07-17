@@ -1,22 +1,22 @@
-/*global $inject*/
+/* global $inject it expect beforeEach describe */
+/* jshint unused:false*/
 
-(function () {
+(function() {
   'use strict';
 
-  describe('SetService', function () {
-
+  describe('SetService', function() {
     var SetService;
     beforeEach(module('microServicesGui'));
 
-    beforeEach($inject(function (_SetService_) {
+    beforeEach($inject(function(_SetService_) {
       SetService = _SetService_;
     }));
 
-    it('should add the node to the set', function () {
+    it('should add the node to the set', function() {
       var node = {};
       var nodeSet = [];
       SetService.add(node, nodeSet);
       expect(SetService.has(node, nodeSet)).toBe(true);
     });
   });
-}());
+})();

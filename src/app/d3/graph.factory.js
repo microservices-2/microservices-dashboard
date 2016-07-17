@@ -1,12 +1,11 @@
-/*global angular, d3*/
+/* global angular, d3*/
+(function() {
+  'use strict';
 
-(function () {
-    'use strict';
+  angular.module('msgGraph', [])
 
-    angular.module('msgGraph', [])
-
-        .factory('d3', function () {
-            /* We could declare locals or other D3.js specific configurations here. */
-            return d3;
-        });
-}());
+    .factory('d3', function() {
+      /* We could declare locals or other D3.js specific configurations here. */
+      return d3;
+    });
+})();

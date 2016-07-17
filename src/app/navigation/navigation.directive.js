@@ -1,6 +1,5 @@
-/*global angular*/
-
-(function () {
+/* global angular*/
+(function() {
   'use strict';
 
   /** @ngInject */
@@ -13,7 +12,4 @@
   angular
     .module('microServicesGui')
     .directive('msgNavigation', NavigationDirective);
-
-
-
-}());
+})();

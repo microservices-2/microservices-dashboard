@@ -1,10 +1,9 @@
-/*global inject, angular*/
-
+/* global jasmine it expect inject angular beforeEach describe */
+/* jshint unused:false*/
 (function() {
   'use strict';
 
-  describe('NodeModalController', function(){
-
+  describe('NodeModalController', function() {
     var mockSetService = {
       add: function() {
 
@@ -26,16 +25,16 @@
       }
     };
     var mockGraphService = {
-      getGraph: function () {
+      getGraph: function() {
         return [];
       },
-      getStates: function () {
+      getStates: function() {
         return ['State1', 'State2', 'State3'];
       },
-      getTypes: function () {
+      getTypes: function() {
         return [];
       },
-      getGroups: function () {
+      getGroups: function() {
         return [];
       }
     };
@@ -47,10 +46,6 @@
     });
 
     var NodeModalController, scope, filter, modalInstance;
-
-
-
-
     beforeEach(inject(function($rootScope, $controller, _$filter_) {
       scope = $rootScope.$new();
       filter = _$filter_;
@@ -66,6 +61,7 @@
         $filter: filter,
         $modalInstance: modalInstance
       });
+      expect(NodeModalController).toBeDefined();
     }));
 
     it('should have a newNode instance', function() {
@@ -93,4 +89,4 @@
       expect(modalInstance.dismiss).toHaveBeenCalledWith('cancel');
     });
   });
-}());
+})();

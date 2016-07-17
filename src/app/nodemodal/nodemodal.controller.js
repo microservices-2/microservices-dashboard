@@ -1,41 +1,38 @@
-/*global angular, angular*/
+/* global angular, angular*/
 
-(function () {
-    'use strict';
+(function() {
+  'use strict';
 
-    function NodeModalController($scope, $filter, $window, GraphService, NodeService, $modalInstance, SetService, $q, currentLane) {
-
-    function configureNode(){
-        $scope.isNewNode = angular.isUndefined($scope.newNode);
-        function setNodeType(){
-          if(currentLane === 0){
-            $scope.isFixedLane = true;
-            return 'UI';
-          } else if(currentLane === 1){
-            $scope.isFixedLane = true;
-            return 'RESOURCE';
-          } else if(currentLane === 2){
-            $scope.isFixedLane = true;
-            return 'MICROSERVICE';
-          }else {
-            return '';
-          }
+  /** @ngInject */
+  function NodeModalController($scope, $filter, $window, GraphService, NodeService, $modalInstance, SetService, $q, currentLane) {
+    function configureNode() {
+      $scope.isNewNode = angular.isUndefined($scope.newNode);
+      function setNodeType() {
+        if (currentLane === 0) {
+          $scope.isFixedLane = true;
+          return 'UI';
+        } else if (currentLane === 1) {
+          $scope.isFixedLane = true;
+          return 'RESOURCE';
+        } else if (currentLane === 2) {
+          $scope.isFixedLane = true;
+          return 'MICROSERVICE';
         }
-
-        if ($scope.isNewNode) {
-          $scope.newNode = {
-            details: {
-              status: 'VIRTUAL',
-              type: setNodeType(),
-              custom: []
-            },
-            lane: currentLane
-          };
-        }
-        $scope.isVirtualNode = $scope.newNode.details.status === 'VIRTUAL';
-
-
+        return '';
       }
+
+      if ($scope.isNewNode) {
+        $scope.newNode = {
+          details: {
+            status: 'VIRTUAL',
+            type: setNodeType(),
+            custom: []
+          },
+          lane: currentLane
+        };
+      }
+      $scope.isVirtualNode = $scope.newNode.details.status === 'VIRTUAL';
+    }
 
     $scope.states = [];
     $scope.types = [];
@@ -50,14 +47,13 @@
     $scope.newNode = NodeService.getNode();
     configureNode();
 
-
     var nodes = [],
       links = [];
 
-    function getFreeIdFromNodes(){
+    function getFreeIdFromNodes() {
       var previd = 0;
-      nodes.forEach(function (n) {
-        if(isNaN(parseInt(n.id))){
+      nodes.forEach(function(n) {
+        if (isNaN(parseInt(n.id, 10))) {
           previd = n.id;
         }
       });
@@ -72,11 +68,11 @@
     }
 
     function setAvaliableNodes(availableLanes) {
-      nodes.forEach(function (node, i) {
+      nodes.forEach(function(node, i) {
         node.index = i;
         if (availableLanes.indexOf(node.lane) > -1) {
           $scope.availableNodes.push(node);
-          links.forEach(function (d) {
+          links.forEach(function(d) {
             if (d.source === node.index) {
               d.source = node;
             }
@@ -94,28 +90,27 @@
         LANE_MS = 2,
         LANE_BE = 3;
       switch ($scope.newNode.lane) {
-        case LANE_UI :
+        case LANE_UI:
           setAvaliableNodes([LANE_EP]);
           break;
-        case LANE_EP :
+        case LANE_EP:
           setAvaliableNodes([LANE_MS]);
           break;
-        case LANE_MS :
+        case LANE_MS:
           setAvaliableNodes([LANE_EP, LANE_MS, LANE_BE]);
           break;
-        case LANE_BE :
+        case LANE_BE:
           setAvaliableNodes([LANE_MS]);
           break;
-        default :
+        default:
       }
-      $scope.availableNodes.sort(function (a, b) {
+      $scope.availableNodes.sort(function(a, b) {
         if (a.id < b.id) {
           return -1;
-        }else if (a.id > b.id) {
+        } else if (a.id > b.id) {
           return 1;
-        }else {
-          return 0;
         }
+        return 0;
       });
     }
     function addLinkedNode(node) {
@@ -127,20 +122,19 @@
 
     function searchLinkedNodes() {
       if (!$scope.isNewNode) {
-        links.forEach(function (link) {
+        links.forEach(function(link) {
           if (link.source.id === $scope.newNode.id) {
             addLinkedNode($filter('nodeModalFilter')(nodes, link.target)[0]);
           }
         });
       }
-      $scope.linkedNodes.sort(function (a, b) {
+      $scope.linkedNodes.sort(function(a, b) {
         if (a.id < b.id) {
           return -1;
-        }else if (a.id > b.id) {
+        } else if (a.id > b.id) {
           return 1;
-        }else {
-          return 0;
         }
+        return 0;
       });
     }
 
@@ -149,53 +143,53 @@
       GraphService.getTypes(),
       GraphService.getGroups(),
       GraphService.getGraph()
-    ]).then(function (values) {
+    ]).then(function(values) {
       $scope.states = values[0];
       $scope.types = values[1];
       $scope.groups = values[2];
       nodes = values[3].data.nodes;
       links = values[3].data.links;
-      if($scope.isNewNode){
+      if ($scope.isNewNode) {
         $scope.newNode.id = getFreeIdFromNodes();
       }
-    }).finally(function () {
+    }).finally(function() {
       searchLinkableNodes();
       searchLinkedNodes();
     });
 
-    function nameExists(name,nodes){
-        var equalNodeNamesCount = nodes.filter(function(node){return node.id === name}).length;
-        return equalNodeNamesCount > 0;
-      }
+    function nameExists(name, nodes) {
+      var equalNodeNamesCount = nodes.filter(function(node) {
+        return node.id === name;
+      }).length;
+      return equalNodeNamesCount > 0;
+    }
 
-
-      $scope.ok = function () {
+    $scope.ok = function() {
       saveNode();
       var id = $scope.newNode.details.name;
-      if(!nameExists(id,nodes)){
+      if (nameExists(id, nodes)) {
+        // todo generate unique id?
+      } else {
         $scope.newNode.id = id;
-      }else{
-        //todo generate unique id?
-
       }
       $modalInstance.close($scope.newNode);
     };
 
-    $scope.cancel = function () {
+    $scope.cancel = function() {
       $modalInstance.dismiss('delete');
     };
 
-    $scope.delete = function () {
+    $scope.delete = function() {
       deleteNode($scope.newNode.id);
       $modalInstance.dismiss('cancel');
     };
 
-    $scope.addCustomValue = function () {
-      $scope.newNode.details.custom.push({key:'',value:'',isNew:true});
+    $scope.addCustomValue = function() {
+      $scope.newNode.details.custom.push({ key: '', value: '', isNew: true });
     };
 
-    $scope.checkFilledIn = function (custom) {
-      if (custom.key !== '' && custom.value !== ''){
+    $scope.checkFilledIn = function(custom) {
+      if (custom.key !== '' && custom.value !== '') {
         delete custom.isNew;
         return custom;
       }
@@ -203,12 +197,7 @@
     };
   }
 
-    angular
-        .module('microServicesGui')
-        .controller('NodeModalController', NodeModalController);
-
-
-  NodeModalController.$inject = ['$scope', '$filter', '$window', 'GraphService', 'NodeService', '$modalInstance', 'SetService', '$q', 'currentLane'];
-
-
-}());
+  angular
+    .module('microServicesGui')
+    .controller('NodeModalController', NodeModalController);
+})();

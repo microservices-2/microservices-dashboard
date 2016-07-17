@@ -1,16 +1,15 @@
-/*global inject*/
+/* global it expect inject beforeEach describe */
+/* jshint unused:false*/
 
-(function () {
+(function() {
   'use strict';
 
-  describe('NodeService', function () {
-
-    var NodeService, $httpBackend, rootScope, newNode;
+  describe('NodeService', function() {
+    var NodeService, $httpBackend, newNode;
     beforeEach(module('microServicesGui'));
 
-    beforeEach(inject(function (_$httpBackend_, $rootScope, _NodeService_) {
+    beforeEach(inject(function(_$httpBackend_, _NodeService_) {
       $httpBackend = _$httpBackend_;
-      rootScope = $rootScope;
       NodeService = _NodeService_;
       newNode = {
         id: 'testNode',
@@ -28,7 +27,7 @@
       };
     }));
 
-    it('should set the newNode', function () {
+    it('should set the newNode', function() {
       NodeService.setNode(newNode);
       expect(NodeService.getNode()).toEqual(newNode);
     });
@@ -39,4 +38,4 @@
       $httpBackend.flush();
     });
   });
-}());
+})();
