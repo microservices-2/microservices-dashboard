@@ -3,9 +3,7 @@
 (function() {
   'use strict';
 
-  GraphController.$inject = [
-    '$scope', '$rootScope', '$filter', '$q', 'GraphService', 'NodecolorService'
-  ];
+    /** @ngInject */
   function GraphController(
     $scope, $rootScope, $filter, $q, GraphService, NodecolorService
   ) {

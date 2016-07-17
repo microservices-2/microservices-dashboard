@@ -5,5 +5,6 @@ module.exports = {
     "one-var": "off",
     "no-use-before-define": ["error", { "functions": true, "classes": true }],
     "valid-jsdoc": "off",
+    "require-jsdoc": "off",
   }
 };
