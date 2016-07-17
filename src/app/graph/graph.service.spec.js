@@ -32,7 +32,7 @@
     }
     function givenBackendReturnsError() {
       $httpBackend
-        .expectGET('/dependencies/graph')
+        .expectGET('http://localhost:8080/graph')
         .respond(function() {
           return [404];
         });
@@ -47,7 +47,7 @@
     }
     function givenBackendReturnsGraph() {
       $httpBackend
-        .expectGET('/dependencies/graph')
+        .expectGET('http://localhost:8080/graph')
         .respond(function() {
           return [200, graph];
         });
