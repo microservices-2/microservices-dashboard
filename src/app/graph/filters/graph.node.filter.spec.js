@@ -19,31 +19,36 @@
             type: 'DB'
           },
           lane: 3
-        }, node2 = {
+        };
+        var node2 = {
           details: {
             status: 'DOWN',
             type: 'DB'
           },
           lane: 3
-        }, node3 = {
+        };
+        var node3 = {
           details: {
             status: 'UP',
             type: 'SOAP'
           },
           lane: 3
-        }, node4 = {
+        };
+        var node4 = {
           details: {
             status: 'DOWN',
             type: 'SOAP'
           },
           lane: 3
-        }, node5 = {
+        };
+        var node5 = {
           details: {
             status: 'UP',
             type: 'MICROSERVICE'
           },
           lane: 2
-        }, node6 = {
+        };
+        var node6 = {
           details: {
             status: 'UP',
             type: 'MICROSERVICE'

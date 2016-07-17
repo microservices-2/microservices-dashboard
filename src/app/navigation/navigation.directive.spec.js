@@ -19,6 +19,7 @@
     function whenDirectiveUsed() {
       element = $compile(template)($scope);
       $scope.$digest();
+      expect(element).toBeDefined();
     }
 
     function thenScopeIsDefined() {

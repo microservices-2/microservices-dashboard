@@ -3,7 +3,7 @@
 (function() {
   'use strict';
 
-  NodeModalController.$inject = ['$scope', '$filter', '$window', 'GraphService', 'NodeService', '$modalInstance', 'SetService', '$q', 'currentLane'];
+  /** @ngInject */
   function NodeModalController($scope, $filter, $window, GraphService, NodeService, $modalInstance, SetService, $q, currentLane) {
     function configureNode() {
       $scope.isNewNode = angular.isUndefined($scope.newNode);
@@ -46,7 +46,6 @@
 
     $scope.newNode = NodeService.getNode();
     configureNode();
-
 
     var nodes = [],
       links = [];
@@ -164,7 +163,6 @@
       }).length;
       return equalNodeNamesCount > 0;
     }
-
 
     $scope.ok = function() {
       saveNode();

@@ -60,6 +60,7 @@
         $filter: filter,
         $modalInstance: modalInstance
       });
+      expect(NodeModalController).toBeDefined();
     }));
 
     it('should have a newNode instance', function() {

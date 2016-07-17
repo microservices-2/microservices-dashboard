@@ -2,7 +2,7 @@
 (function() {
   'use strict';
 
-  LegendCtrl.$inject = ['NodecolorService', 'GraphService'];
+  /** @ngInject */
   function LegendCtrl(NodecolorService, GraphService) {
     var legend = this;
 

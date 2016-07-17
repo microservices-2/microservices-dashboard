@@ -1,38 +1,36 @@
-/*global inject*/
+/* global it expect inject beforeEach describe */
 
 (function() {
   'use strict';
 
-  describe('BottomBarDirective', function(){
-
-    var $scope,$compile,element,template;
+  describe('BottomBarDirective', function() {
+    var $scope, $compile, element, template;
 
     beforeEach(module('microServicesGui'));
 
-    beforeEach(inject(function($rootScope,_$compile_){
+    beforeEach(inject(function($rootScope, _$compile_) {
       $scope = $rootScope.$new();
       $compile = _$compile_;
     }));
 
-
-    function givenTemplate(){
-      template='<div data-msg-bottombar></div>';
+    function givenTemplate() {
+      template = '<div data-msg-bottombar></div>';
     }
 
-    function whenDirectiveUsed(){
+    function whenDirectiveUsed() {
       element = $compile(template)($scope);
       $scope.$digest();
+      expect(element).toBeDefined();
     }
 
-    function thenScopeIsDefined(){
+    function thenScopeIsDefined() {
       expect($scope).toBeDefined();
     }
 
-    it('Should initialize the scope for the bottombar directive',function() {
+    it('Should initialize the scope for the bottombar directive', function() {
       givenTemplate();
       whenDirectiveUsed();
       thenScopeIsDefined();
     });
-
   });
-}());
+})();

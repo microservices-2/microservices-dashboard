@@ -3,7 +3,7 @@
 (function() {
   'use strict';
 
-  GraphService.$inject = ['$http', '$q', 'BASE_URL'];
+  /** @ngInject */
   function GraphService($http, $q, BASE_URL) {
     function getGraph() {
       return $http.get(BASE_URL + 'graph');

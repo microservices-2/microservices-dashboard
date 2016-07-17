@@ -2,7 +2,7 @@
 (function() {
   'use strict';
 
-  LanefilterCtrl.$inject = ['GraphService', '$q'];
+  /** @ngInject */
   function LanefilterCtrl(GraphService, $q) {
     var vm = this;
 

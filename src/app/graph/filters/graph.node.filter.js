@@ -24,7 +24,6 @@
           return true;
         }
 
-
         function validateType(node) {
           if (!isUndefinedOrNull(nodeSearch.details.type)) {
             return node.details.type === nodeSearch.details.type;
