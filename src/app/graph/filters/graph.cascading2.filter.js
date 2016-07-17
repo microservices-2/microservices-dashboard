@@ -3,7 +3,7 @@
  * Created by yave on 30/03/16.
  */
 (function() {
-  "use strict";
+  'use strict';
 
   angular
     .module('microServicesGui')
