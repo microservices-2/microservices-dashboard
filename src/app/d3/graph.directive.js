@@ -384,7 +384,7 @@
         .text(function(d) {
           var name = d.details.name ? d.details.name : d.id;
           if (d.details.virtual === true) {
-            name = d.details.name + ' (virtual)';
+            name += ' (virtual)';
           }
           return name;
         })
