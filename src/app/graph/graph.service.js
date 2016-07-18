@@ -50,7 +50,7 @@
           { key: 'SOAP', value: 'SOAP' },
           { key: 'REST', value: 'REST' },
           { key: 'JMS', value: 'JMS' },
-          { key: 'UI', value: 'UI' }
+          { key: 'UI_COMPONENT', value: 'UI_COMPONENT' }
         ]);
       });
     }
