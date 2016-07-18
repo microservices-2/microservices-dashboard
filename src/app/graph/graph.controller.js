@@ -3,10 +3,15 @@
 (function() {
   'use strict';
 
+  angular
+    .module('microServicesGui')
+    .controller('GraphController', GraphController);
+
   /** @ngInject */
   function GraphController(
     $scope, $rootScope, $filter, $q, GraphService, NodecolorService
   ) {
+    var vm = this;
     var nodesData;
     var linksData;
     var resultData;
@@ -74,8 +79,4 @@
       return { 'background-color': String(NodecolorService.getColorFor(node)) };
     };
   }
-
-  angular
-    .module('microServicesGui')
-    .controller('GraphController', GraphController);
 })();
