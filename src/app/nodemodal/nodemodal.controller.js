@@ -101,13 +101,15 @@
         return 0;
       });
     }
+    function toId(node) {
+      return node.id;
+    }
     function addLinkedNode(node) {
       $scope.linkedNodes.push(node);
       if ($scope.availableNodes.indexOf(node) > -1) {
         $scope.availableNodes.splice($scope.availableNodes.indexOf(node), 1);
       }
     }
-
     function toIdTarget(link) {
       return link.target.id;
     }
@@ -116,21 +118,22 @@
     }
 
     function getLinkedNodes(linkList, currentNode) {
-      var targets = linkList
-        .filter(function(link) {
-          return link.source.id === currentNode.id;
-        })
-        .map(toIdTarget);
+      if (currentNode.id) {
+        var targets = linkList
+          .filter(function(link) {
+            return link.source.id === currentNode.id;
+          })
+          .map(toIdTarget);
 
-      var sources = linkList
-        .filter(function(link) {
-          return link.target.id === currentNode.id;
-        }).map(toIdSource);
-
-      return {
-        linkedFromNodeIds: sources,
-        linkedToNodeIds: targets
-      };
+        var sources = linkList
+          .filter(function(link) {
+            return link.target.id === currentNode.id;
+          }).map(toIdSource);
+        return {
+          linkedFromNodeIds: sources,
+          linkedToNodeIds: targets
+        };
+      }
     }
 
     function searchLinkedNodes() {
@@ -153,7 +156,11 @@
     function setSourcesAndTargets() {
       var nodeSourcesAndTargets = getLinkedNodes(links, $scope.newNode);
       $scope.newNode.linkedFromNodeIds = nodeSourcesAndTargets.linkedFromNodeIds;
-      $scope.newNode.linkedToNodeIds = nodeSourcesAndTargets.linkedToNodeIds;
+      if ($scope.linkedNodes.length > 0) {
+        $scope.newNode.linkedToNodeIds = $scope.linkedNodes.map(toId);
+      } else {
+        $scope.newNode.linkedToNodeIds = nodeSourcesAndTargets.linkedToNodeIds;
+      }
     }
     $q.all([
       GraphService.getStates(),
@@ -190,7 +197,7 @@
           $scope.newNode.id = id;
         }
       }
-      getLinkedNodes(links, $scope.newNode);
+      setSourcesAndTargets();
       $modalInstance.close($scope.newNode);
     };
 
