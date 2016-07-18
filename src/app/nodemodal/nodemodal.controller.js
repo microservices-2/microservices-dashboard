@@ -32,7 +32,6 @@
       }
       $scope.isVirtualNode = $scope.newNode.details.status === 'VIRTUAL';
     }
-
     $scope.states = [];
     $scope.types = [];
     $scope.groups = [];
@@ -109,6 +108,31 @@
       }
     }
 
+    function toIdTarget(link) {
+      return link.target.id;
+    }
+    function toIdSource(link) {
+      return link.source.id;
+    }
+
+    function getLinkedNodes(linkList, currentNode) {
+      var targets = linkList
+        .filter(function(link) {
+          return link.source.id === currentNode.id;
+        })
+        .map(toIdTarget);
+
+      var sources = linkList
+        .filter(function(link) {
+          return link.target.id === currentNode.id;
+        }).map(toIdSource);
+
+      return {
+        linkedFromNodeIds: sources,
+        linkedToNodeIds: targets
+      };
+    }
+
     function searchLinkedNodes() {
       if (!$scope.isNewNode) {
         links.forEach(function(link) {
@@ -126,7 +150,11 @@
         return 0;
       });
     }
-
+    function setSourcesAndTargets() {
+      var nodeSourcesAndTargets = getLinkedNodes(links, $scope.newNode);
+      $scope.newNode.linkedFromNodeIds = nodeSourcesAndTargets.linkedFromNodeIds;
+      $scope.newNode.linkedToNodeIds = nodeSourcesAndTargets.linkedToNodeIds;
+    }
     $q.all([
       GraphService.getStates(),
       GraphService.getTypes(),
@@ -141,6 +169,7 @@
     }).finally(function() {
       searchLinkableNodes();
       searchLinkedNodes();
+      setSourcesAndTargets();
     });
 
     function nameExists(name, nodes) {
@@ -161,6 +190,7 @@
           $scope.newNode.id = id;
         }
       }
+      getLinkedNodes(links, $scope.newNode);
       $modalInstance.close($scope.newNode);
     };
 
