@@ -1,5 +1,4 @@
 /* global angular, angular*/
-
 (function() {
   'use strict';
 
@@ -49,16 +48,6 @@
 
     var nodes = [],
       links = [];
-
-    function getFreeIdFromNodes() {
-      var previd = 0;
-      nodes.forEach(function(n) {
-        if (isNaN(parseInt(n.id, 10))) {
-          previd = n.id;
-        }
-      });
-      return ++previd;
-    }
 
     function deleteNode(id) {
       NodeService.deleteNode(id);
@@ -149,9 +138,6 @@
       $scope.groups = values[2];
       nodes = values[3].data.nodes;
       links = values[3].data.links;
-      if ($scope.isNewNode) {
-        $scope.newNode.id = getFreeIdFromNodes();
-      }
     }).finally(function() {
       searchLinkableNodes();
       searchLinkedNodes();
@@ -166,11 +152,14 @@
 
     $scope.ok = function() {
       saveNode();
-      var id = $scope.newNode.details.name;
-      if (nameExists(id, nodes)) {
-        // todo generate unique id?
-      } else {
-        $scope.newNode.id = id;
+      if (typeof $scope.newNode.id === 'undefined') {
+        var id = $scope.newNode.details.name;
+        if (nameExists(id, nodes) || angular.isUndefined(id)) {
+          // todo use true id generator
+          $scope.newNode.id = String(new Date().getTime());
+        } else {
+          $scope.newNode.id = id;
+        }
       }
       $modalInstance.close($scope.newNode);
     };

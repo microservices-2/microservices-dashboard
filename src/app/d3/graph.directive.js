@@ -38,7 +38,6 @@
       });
       return connectedNodes;
     }
-
     function fadeUnrelatedNodes(d, opacity, nodes, links) {
       var connectedNodes = findConnectedNodes(d);
       nodes.style('stroke-opacity', function(node) {
@@ -66,7 +65,9 @@
 
     // Helpers
     function formatClassName(prefix, object) {
-      return prefix + '-' + object.id.replace(/(\.|\/|:)/gi, '-');
+      if (object.id) {
+        return prefix + '-' + object.id.replace(/(\.|\/|:)/gi, '-');
+      }
     }
 
     function findElementByNode(prefix, node) {
