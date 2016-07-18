@@ -155,6 +155,7 @@
       if (typeof $scope.newNode.id === 'undefined') {
         var id = $scope.newNode.details.name;
         if (nameExists(id, nodes) || angular.isUndefined(id)) {
+          // todo use true id generator
           $scope.newNode.id = String(new Date().getTime());
         } else {
           $scope.newNode.id = id;
