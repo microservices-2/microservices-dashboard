@@ -9,7 +9,7 @@
       function setNodeType() {
         if (currentLane === 0) {
           $scope.isFixedLane = true;
-          return 'UI';
+          return 'UI_COMPONENT';
         } else if (currentLane === 1) {
           $scope.isFixedLane = true;
           return 'RESOURCE';
