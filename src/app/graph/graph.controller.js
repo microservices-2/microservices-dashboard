@@ -27,10 +27,8 @@
     }
     function init(withFilter) {
       $rootScope.dataLoading = true;
-      $q.all([
-        GraphService.getGraph()
-      ]).then(function(values) {
-        resultData = values[0].data;
+      GraphService.getGraph().then(function(values) {
+        resultData = values.data;
         resultData.nodes.forEach(function(node, index) {
           node.index = index;
           resultData.links.forEach(function(d) {
