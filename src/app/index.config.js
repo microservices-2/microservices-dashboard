@@ -13,5 +13,6 @@
 
   angular
     .module('microServicesGui')
+    .constant('BASE_URL', 'http://localhost:8080/')
     .config(config);
 })();
