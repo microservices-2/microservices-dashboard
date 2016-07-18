@@ -6,8 +6,19 @@
   function NodeService($http, $rootScope, BASE_URL) {
     var nodeToOpen;
 
+    function stripUnneededProperties(node) {
+      var payload = {};
+      payload.details = node.details;
+      payload.id = node.id;
+      payload.lane = node.lane;
+      payload.linkedFromNodeIds = node.linkedFromNodeIds;
+      payload.linkedToNodeIds = node.linkedToNodeIds;
+      return payload;
+    }
+
     function pushNode(node) {
-      $http.post(BASE_URL + 'node', node)
+      var preparedNode = stripUnneededProperties(node);
+      $http.post(BASE_URL + 'node', preparedNode)
         .then(function() {
           $rootScope.$broadcast('nodesChanged', 'Refresh nodes');
         }, function() {
