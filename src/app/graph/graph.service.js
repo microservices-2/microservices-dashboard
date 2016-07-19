@@ -1,4 +1,4 @@
-/* global angular*/
+/* global angular, _ */
 
 (function() {
   'use strict';
@@ -9,12 +9,31 @@
     $rootScope, $http, $q,
 
     // constants
-    BASE_URL, REQUEST_GRAPH_DATA_SUCCESS
+    BASE_URL, REQUEST_GRAPH_DATA_SUCCESS, EVENT_NODES_CHANGED
   ) {
     var graph = {};
 
     function getGraphData() {
       return graph;
+    }
+
+    function setGraphData(graph) {
+      graph = _.assign({}, graph);
+    }
+
+    function addNewNode(node) {
+      graph.nodes.push(node);
+    }
+
+    function updateNode(updatedNode) {
+      graph.nodes[updatedNode.index] = updatedNode;
+      updatedNode.linkedToNodeIndices.forEach(function(targetIndex) {
+        var link = {
+          source: updatedNode.index,
+          target: targetIndex
+        };
+        graph.links.push(link);
+      });
     }
 
     function requestGraph() {
@@ -23,7 +42,7 @@
       return $http
         .get(BASE_URL + 'graph')
         .then(function(graphData) {
-          graph = graphData.data;
+          graph = _.assign({}, graphData.data);
           $rootScope.dataLoading = false;
           $rootScope.$broadcast(REQUEST_GRAPH_DATA_SUCCESS);
           return graphData;
@@ -76,6 +95,9 @@
     }
 
     return {
+      setGraphData: setGraphData,
+      addNewNode: addNewNode,
+      updateNode: updateNode,
       getGraph: getGraphData,
       requestGraph: requestGraph,
       getStates: getStates,

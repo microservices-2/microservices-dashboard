@@ -13,7 +13,7 @@
     $scope, $rootScope, $filter, $q, GraphService,
 
     // constants
-    REQUEST_GRAPH_DATA_SUCCESS
+    REQUEST_GRAPH_DATA_SUCCESS, EVENT_NODES_CHANGED
   ) {
     // view model
     var vm = this;
@@ -111,7 +111,7 @@
     }
 
     function addOnNodeChangesListener() {
-      return $rootScope.$on('nodesChanged', function() {
+      return $rootScope.$on(EVENT_NODES_CHANGED, function() {
         withFilter = true;
         parseGraph(GraphService.getGraph());
       });

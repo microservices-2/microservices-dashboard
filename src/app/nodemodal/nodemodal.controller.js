@@ -126,22 +126,29 @@
     function toIdSource(link) {
       return link.source.id;
     }
+    function toIndexTarget(link) {
+      return link.target.index;
+    }
+    function toIndexSource(link) {
+      return link.source.index;
+    }
 
     function getLinkedNodes(linkList, currentNode) {
       if (currentNode.id) {
         var targets = linkList
           .filter(function(link) {
             return link.source.id === currentNode.id;
-          })
-          .map(toIdTarget);
+          });
 
         var sources = linkList
           .filter(function(link) {
             return link.target.id === currentNode.id;
-          }).map(toIdSource);
+          });
         return {
-          linkedFromNodeIds: sources,
-          linkedToNodeIds: targets
+          linkedFromNodeIndices: sources.map(toIndexSource),
+          linkedFromNodeIds: sources.map(toIdSource),
+          linkedToNodeIndices: targets.map(toIndexTarget),
+          linkedToNodeIds: targets.map(toIdTarget)
         };
       }
     }
@@ -163,8 +170,11 @@
         return 0;
       });
     }
+
     function setSourcesAndTargets() {
       var nodeSourcesAndTargets = getLinkedNodes(links, vm.newNode);
+      vm.newNode.linkedFromNodeIndices = nodeSourcesAndTargets.linkedFromNodeIndices;
+      vm.newNode.linkedToNodeIndices = nodeSourcesAndTargets.linkedToNodeIndices;
       vm.newNode.linkedFromNodeIds = nodeSourcesAndTargets.linkedFromNodeIds;
       if (vm.linkedNodes.length > 0) {
         vm.newNode.linkedToNodeIds = vm.linkedNodes.map(toId);
@@ -186,8 +196,10 @@
         var id = vm.newNode.details.name;
         if (nameExists(id, nodes) || angular.isUndefined(id)) {
           // todo use true id generator
+          debugger;
           vm.newNode.id = String(new Date().getTime());
         } else {
+          debugger;
           vm.newNode.id = id;
         }
       }
@@ -200,7 +212,7 @@
     }
 
     function deleteNode() {
-      NodeService.deleteNode(vm.newNode.id);
+      NodeService.deleteNode(vm.newNode);
       $modalInstance.dismiss('delete');
     }
 

@@ -14,6 +14,7 @@
   angular
     .module('microServicesGui')
     .constant('BASE_URL', 'http://localhost:8080/')
+    .constant('EVENT_NODES_CHANGED', 'nodesChanged')
     .constant('REQUEST_GRAPH_DATA_SUCCESS', 'New:graph:data')
     .config(config);
 })();

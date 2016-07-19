@@ -1,9 +1,9 @@
-/* global angular*/
+/* global angular, _ */
 (function() {
   'use strict';
 
   /** @ngInject */
-  function NodeService($http, $rootScope, BASE_URL) {
+  function NodeService($http, $rootScope, BASE_URL, GraphService, EVENT_NODES_CHANGED) {
     var nodeToOpen;
 
     function stripUnneededProperties(node) {
@@ -20,15 +20,19 @@
       var preparedNode = stripUnneededProperties(node);
       $http.post(BASE_URL + 'node', preparedNode)
         .then(function() {
-          $rootScope.$broadcast('nodesChanged', 'Refresh nodes');
+          GraphService.addNewNode(node);
+          $rootScope.$broadcast(EVENT_NODES_CHANGED);
         }, function() {
 
         });
     }
 
-    function deleteNode(nodeId) {
-      if (typeof nodeId !== 'undefined') {
-        $http.delete(BASE_URL + 'node/' + nodeId);
+    function deleteNode(node) {
+      if (typeof node.id !== 'undefined') {
+        return $http.delete(BASE_URL + 'node/' + node.id).then(function() {
+          GraphService.getGraph().nodes.splice(node.index, 1);
+          $rootScope.$broadcast(EVENT_NODES_CHANGED);
+        });
       }
     }
 

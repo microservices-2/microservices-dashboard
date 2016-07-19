@@ -147,13 +147,13 @@
             <div class="small-6 columns">
                 <label>Nodes available</label>
                 <ul id="fromList" class="links-container" ui-sortable="vm.nodesList" ng-model="vm.availableNodes">
-                    <li class="node-placeholder" ng-repeat='node in vm.availableNodes'>{{node.details.name?node.details.name:node.id}}</li>
+                    <li class="node-placeholder" ng-repeat='node in vm.availableNodes track by $index'>{{node.details.name?node.details.name:node.id}}</li>
                 </ul>
             </div>
             <div class="small-6 columns">
                 <label>Nodes to link</label>
                 <ul id="toList" class="links-container right" ui-sortable="vm.nodesList" ng-model="vm.linkedNodes">
-                    <li class="node-placeholder" ng-repeat='node in vm.linkedNodes'>{{node.details.name?node.details.name:node.id}}</li>
+                    <li class="node-placeholder" ng-repeat='node in vm.linkedNodes track by $index'>{{node.details.name?node.details.name:node.id}}</li>
                 </ul>
             </div>
         </div>
