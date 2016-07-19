@@ -1,36 +1,38 @@
 /* global angular*/
 (function() {
   'use strict';
+  angular
+    .module('microServicesGui')
+    .directive('msdLegend', LegendDirective);
 
   /** @ngInject */
   function LegendCtrl(NodecolorService, GraphService) {
     var legend = this;
 
-    GraphService.getTypes().then(function(data) {
-      legend.types = data;
-    });
+    legend.types = undefined;
+    legend.getColor = getColor;
 
-    legend.getColor = function(node) {
+    activate();
+
+    function activate() {
+      GraphService.getTypes().then(function(data) {
+        legend.types = data;
+      });
+    }
+
+    function getColor(node) {
       return { 'border-color': String(NodecolorService.getColorFor(node)) };
-    };
+    }
   }
 
   function LegendDirective() {
     return {
-      restrict: 'A',
+      restrict: 'E',
       templateUrl: 'app/legend/legend.html',
-      scope: {
-        lane: '@',
-        filter: '='
-      },
+      scope: {},
       controllerAs: 'legend',
       bindToController: true,
-      replace: true,
       controller: LegendCtrl
     };
   }
-
-  angular
-    .module('microServicesGui')
-    .directive('legend', LegendDirective);
 })();

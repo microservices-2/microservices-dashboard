@@ -4,10 +4,30 @@
   'use strict';
 
   /** @ngInject */
-  function GraphService($http, $q, BASE_URL) {
-    function getGraph() {
-      return $http.get(BASE_URL + 'graph');
-      // return $http.get('graphdata.json');
+  function GraphService(
+    // services
+    $rootScope, $http, $q,
+
+    // constants
+    BASE_URL, REQUEST_GRAPH_DATA_SUCCESS
+  ) {
+    var graph = {};
+
+    function getGraphData() {
+      return graph;
+    }
+
+    function requestGraph() {
+      $rootScope.dataLoading = true;
+
+      return $http
+        .get(BASE_URL + 'graph')
+        .then(function(graphData) {
+          graph = graphData.data;
+          $rootScope.dataLoading = false;
+          $rootScope.$broadcast(REQUEST_GRAPH_DATA_SUCCESS);
+          return graphData;
+        });
     }
 
     function getGroups() {
@@ -50,13 +70,14 @@
           { key: 'SOAP', value: 'SOAP' },
           { key: 'REST', value: 'REST' },
           { key: 'JMS', value: 'JMS' },
-          { key: 'UI', value: 'UI' }
+          { key: 'UI', value: 'UI_COMPONENT' }
         ]);
       });
     }
 
     return {
-      getGraph: getGraph,
+      getGraph: getGraphData,
+      requestGraph: requestGraph,
       getStates: getStates,
       getTypes: getTypes,
       getGroups: getGroups

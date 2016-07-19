@@ -32,6 +32,32 @@
       }
     }
 
+    function getSelectedNode() {
+      return nodeToOpen;
+    }
+
+    function getNodeType(laneNr) {
+      switch (laneNr) {
+        case 0:
+          return 'UI_COMPONENT';
+        case 1:
+          return 'RESOURCE';
+        case 2:
+          return 'MICROSERVICE';
+        default:
+          return 'OTHER';
+      }
+    }
+    function getNewNode(type, laneNr) {
+      return {
+        details: {
+          status: 'VIRTUAL',
+          type: type,
+          custom: []
+        },
+        lane: laneNr
+      };
+    }
     function getNode() {
       return nodeToOpen;
     }
@@ -44,7 +70,10 @@
       pushNode: pushNode,
       getNode: getNode,
       setNode: setNode,
-      deleteNode: deleteNode
+      deleteNode: deleteNode,
+      getSelectedNode: getSelectedNode,
+      getNodeType: getNodeType,
+      getNewNode: getNewNode
     };
     return factory;
   }
