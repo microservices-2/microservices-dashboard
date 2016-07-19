@@ -2,6 +2,10 @@
 (function() {
   'use strict';
 
+  angular
+    .module('microServicesGui')
+    .controller('NodeModalController', NodeModalController);
+
   /** @ngInject */
   function NodeModalController($scope, $filter, $window, GraphService, NodeService, $modalInstance, SetService, $q, currentLane) {
     function configureNode() {
@@ -222,8 +226,4 @@
       return custom;
     };
   }
-
-  angular
-    .module('microServicesGui')
-    .controller('NodeModalController', NodeModalController);
 })();
