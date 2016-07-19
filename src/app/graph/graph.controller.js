@@ -94,12 +94,13 @@
         if (!angular.equals({}, prev) && angular.isDefined(prev)) {
           if (isUndefinedEmptyOrNull(value.details.type) && isUndefinedEmptyOrNull(value.details.group) && isUndefinedEmptyOrNull(value.details.status) && isUndefinedEmptyOrNull(value.id)) {
             withFilter = false;
-            parseGraph(GraphService.getGraph());
           } else {
             withFilter = true;
-            parseGraph(GraphService.getGraph());
           }
+          parseGraph(GraphService.getGraph());
         }
+
+        // TODO: investigate. Is the equality check necessary? might have performance penalty
       }, true);
     }
 
