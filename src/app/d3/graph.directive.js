@@ -206,12 +206,26 @@
         .attr('class', 'lane-title')
         .style('font-size', titleFontSize);
 
-      // Marker Arrows
+      // Circle Marker Arrows
       graph.append('svg:defs')
         .append('svg:marker')
         .attr('id', 'arrow')
         .attr('viewBox', '0 -5 10 10')
-        .attr('refX', nodeR + 9)
+        .attr('refX', nodeR + 9 + 2)
+        .attr('refY', 0.0)
+        .attr('markerWidth', 60)
+        .attr('markerHeight', 6)
+        .attr('class', 'link')
+        .attr('orient', 'auto')
+        .append('svg:path')
+        .attr('d', 'M0,-5L10,0L0,5');
+
+      // Rect marker arrows
+      graph.append('svg:defs')
+        .append('svg:marker')
+        .attr('id', 'arrow-rect')
+        .attr('viewBox', '0 -5 10 10')
+        .attr('refX', 9)
         .attr('refY', 0.0)
         .attr('markerWidth', 60)
         .attr('markerHeight', 6)
@@ -250,10 +264,22 @@
             };
             return lineFunction([sourceNode, curve, targetNode]);
           }
+          if (targetNode.lane === 1) {
+            var position = {
+              x: targetNode.x - nodeWidth - 5,
+              y: targetNode.y
+            };
+            return lineFunction([sourceNode, position]);
+          }
           return lineFunction([sourceNode, targetNode]);
         })
         .attr('pointer-events', 'none')
-        .attr('marker-end', 'url(#arrow)');
+        .attr('marker-end', function(x) {
+          if (x.target.lane === 1) {
+            return 'url(#arrow-rect)';
+          }
+          return 'url(#arrow)';
+        });
 
       graph.append('svg:g')
         .selectAll('line')
