@@ -440,6 +440,7 @@
       var modalInstance = $modal.open({
         templateUrl: 'app/nodemodal/nodemodal.html',
         controller: 'NodeModalController',
+        controllerAs: 'vm',
         resolve: {
           currentLane: function() {
             return node.lane;

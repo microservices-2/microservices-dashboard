@@ -28,6 +28,7 @@
     }
 
     function refresh() {
+      GraphService.requestGraph();
       vm.filter = {
         details: {}
       };

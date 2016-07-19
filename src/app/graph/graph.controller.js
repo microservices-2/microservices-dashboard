@@ -1,4 +1,4 @@
-/* global angular */
+/* global angular, _ */
 
 (function() {
   'use strict';
@@ -9,7 +9,11 @@
 
   /** @ngInject */
   function GraphController(
-    $scope, $rootScope, $filter, $q, GraphService
+    // services
+    $scope, $rootScope, $filter, $q, GraphService,
+
+    // constants
+    REQUEST_GRAPH_DATA_SUCCESS
   ) {
     // view model
     var vm = this;
@@ -19,20 +23,33 @@
     // private controller state
     var nodes;
     var withFilter;
+    var deregisterNodeChange = addOnNodeChangesListener();
+    var deregisterNewGraphData = addOnNewGraphDataListener();
+
+    // == Execution == //
 
     activate();
-    addOnNodeChangesListener();
     addFilterWatch();
 
-    function activate() {
-      $rootScope.dataLoading = true;
+    $scope.$on('$destroy', function() {
+      deregisterNewGraphData();
+      deregisterNodeChange();
+    });
 
-      GraphService.getGraph()
-        .then(parseGraphResponse);
+    // == Methods == //
+
+    function activate() {
+      GraphService.requestGraph()
+        .then(getData)
+        .then(parseGraph);
     }
 
-    function parseGraphResponse(response) {
-      var graphData = response.data;
+    function getData(response) {
+      return response.data;
+    }
+
+    function parseGraph(data) {
+      var graphData = data;
 
       graphData.nodes.forEach(function(node, index) {
         node.index = index;
@@ -59,14 +76,17 @@
     }
 
     function applyFilters(data) {
-      data.links = $filter('linkFilter')(data.links, data.nodes);
-      data.nodes = $filter('nodeFilter')(data.nodes, vm.beFilter);
+      // todo _.assign() might have a performance penalty need to investigate;
+      var filteredData = _.assign({}, data);
 
-      var cf = $filter('cascadingFilter2')(data.links, nodes, data.nodes);
-      data.nodes = cf.nodes;
-      data.links = cf.links;
+      filteredData.links = $filter('linkFilter')(filteredData.links, filteredData.nodes);
+      filteredData.nodes = $filter('nodeFilter')(filteredData.nodes, vm.beFilter);
 
-      return data;
+      var cf = $filter('cascadingFilter2')(filteredData.links, nodes, filteredData.nodes);
+      filteredData.nodes = cf.nodes;
+      filteredData.links = cf.links;
+
+      return filteredData;
     }
 
     function addFilterWatch() {
@@ -74,23 +94,25 @@
         if (!angular.equals({}, prev) && angular.isDefined(prev)) {
           if (isUndefinedEmptyOrNull(value.details.type) && isUndefinedEmptyOrNull(value.details.group) && isUndefinedEmptyOrNull(value.details.status) && isUndefinedEmptyOrNull(value.id)) {
             withFilter = false;
-            activate();
+            parseGraph(GraphService.getGraph());
           } else {
             withFilter = true;
-            activate();
+            parseGraph(GraphService.getGraph());
           }
         }
       }, true);
     }
 
-    function addOnNodeChangesListener() {
-      var deregisterOnNodeChange = $rootScope.$on('nodesChanged', function() {
-        withFilter = true;
-        activate();
+    function addOnNewGraphDataListener() {
+      return $rootScope.$on(REQUEST_GRAPH_DATA_SUCCESS, function() {
+        parseGraph(GraphService.getGraph());
       });
+    }
 
-      $scope.$on('$destroy', function() {
-        deregisterOnNodeChange();
+    function addOnNodeChangesListener() {
+      return $rootScope.$on('nodesChanged', function() {
+        withFilter = true;
+        parseGraph(GraphService.getGraph());
       });
     }
 

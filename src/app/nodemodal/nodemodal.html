@@ -1,22 +1,15 @@
 <div>
-    <h2 id="modalTitle" ng-hide="newNode.id">{{newNode.details.name?newNode.details.name:"Add Node"}}</h2>
+    <h2 id="modalTitle" ng-hide="vm.newNode.id">{{vm.newNode.details.name?vm.newNode.details.name:"Add Node"}}</h2>
 
-    <h2 ng-show="newNode.id">{{newNode.details.name?newNode.details.name:newNode.id}}</h2>
+    <h2 ng-show="vm.newNode.id">{{vm.newNode.details.name?vm.newNode.details.name:vm.newNode.id}}</h2>
 
-    <form name="nodeForm" novalidate ng-submit="nodeForm.$valid && ok()">
+    <form name="nodeForm" novalidate ng-submit="vm.ok()">
         <div class="row">
-            <!--<div class="large-4 columns">-->
-            <!--<label ng-class="{error: (nodeForm.id.$dirty || nodeForm.$submitted) && nodeForm.id.$error.required}">Id-->
-            <!--<input type="text" placeholder="Enter Id" ng-model="newNode.id" name="id" required/>-->
-            <!--<span ng-show="(nodeForm.id.$dirty || nodeForm.$submitted) && nodeForm.id.$error.required"-->
-            <!--class="error">ID is required.</span>-->
-            <!--</label>-->
-            <!--</div>-->
-            <div class="large-4 columns" ng-if="isNewNode || newNode.details.name">
+            <div class="large-4 columns" ng-if="vm.isNewNode || vm.newNode.details.name">
                 <label>Name
                     <input type="text" placeholder="Enter Name"
-                           ng-model="newNode.details.name"
-                           ng-disabled="!isVirtualNode"
+                           ng-model="vm.newNode.details.name"
+                           ng-disabled="!vm.isVirtualNode"
                            name="name"
                     />
                 </label>
@@ -25,10 +18,9 @@
                 <label>Version
                     <input type="text"
                            placeholder="Enter Version"
-                           ng-model="newNode.details.version"
-                           ng-disabled="!isVirtualNode"
+                           ng-model="vm.newNode.details.version"
+                           ng-disabled="!vm.isVirtualNode"
                            name="version"
-                           ng-init="newNode.details.version = newNode.details.version"
                     />
                 </label>
             </div>
@@ -37,81 +29,70 @@
         <div class="row">
             <div class="large-4 columns">
                 <label>Status
-                    <select ng-model="newNode.details.status"
-                            ng-options="state.key as state.value for state in states"
+                    <select ng-model="vm.newNode.details.status"
+                            ng-options="state.key as state.value for state in vm.states"
                             ng-disabled="true">
                     </select>
                 </label>
             </div>
             <div class="large-4 columns">
                 <label>Type
-                    <select ng-model="newNode.details.type"
-                            ng-options="type.key as type.value for type in types"
-                            ng-disabled="(!isVirtualNode || isNewNode && isFixedLane)"
-                    >
+                    <select ng-model="vm.newNode.details.type"
+                            ng-options="type.key as type.value for type in vm.types"
+                            ng-disabled="(!vm.isVirtualNode || vm.isNewNode && vm.isFixedLane)">
                     </select>
                 </label>
             </div>
             <div class="large-4 columns">
                 <label>Group
-                    <select ng-model="newNode.details.group"
-                            ng-options="group.key as group.value for group in groups"
-                            ng-disabled="!isVirtualNode"
-                    >
+                    <select ng-model="vm.newNode.details.group"
+                            ng-options="group.key as group.value for group in vm.groups"
+                            ng-disabled="!vm.isVirtualNode">
                     </select>
                 </label>
             </div>
         </div>
-        <div class="row" ng-if="isVirtualNode">
+        <div class="row" ng-if="vm.isVirtualNode">
             <div class="large-3 columns">
                 <label>Launch date
                     <input type="text"
                            placeholder="Enter expected launch date"
-                           ng-model="newNode.details.launchDate"
-                           name="launchDate"
-                           ng-init="newNode.details.launchDate = newNode.details.launchDate"
-                    />
+                           ng-model="vm.newNode.details.launchDate"
+                           name="launchDate"/>
                 </label>
             </div>
             <div class="large-3 columns">
                 <label>Project
                     <input type="text"
                            placeholder="Enter project name"
-                           ng-model="newNode.details.project"
-                           name="project"
-                           ng-init="newNode.details.project = newNode.details.project"
-                    />
+                           ng-model="vm.newNode.details.project"
+                           name="project"/>
                 </label>
             </div>
             <div class="large-3 columns">
                 <label>Intake
                     <input type="text"
                            placeholder="Enter intake"
-                           ng-model="newNode.details.intake"
-                           name="intake"
-                           ng-init="newNode.details.intake = newNode.details.intake"
-                    />
+                           ng-model="vm.newNode.details.intake"
+                           name="intake"/>
                 </label>
             </div>
             <div class="large-3 columns">
                 <label>Contact
                     <input type="text"
                            placeholder="Enter contact"
-                           ng-model="newNode.details.contact"
-                           name="contact"
-                           ng-init="newNode.details.contact = newNode.details.contact"
-                    />
+                           ng-model="vm.newNode.details.contact"
+                           name="contact" />
                 </label>
             </div>
         </div>
         <div class="row" ng-if="isVirtualNode">
-            <div class="large-4 columns" ng-repeat="custom in newNode.details.custom">
+            <div class="large-4 columns" ng-repeat="custom in vm.newNode.details.custom">
                 <label ng-if="!custom.isNew">{{custom.key}}
                     <input type="text"
                            placeholder="Enter {{custom.key}}"
                            ng-model="custom.value"
-                           name="project"
-                    />
+                           name="project" />
                 </label>
                 <div class="row collapse" ng-if="custom.isNew">
                     <label>new value</label>
@@ -119,34 +100,34 @@
                         <input type="text"
                                placeholder="Enter the key"
                                ng-model="custom.key"
-                               ng-blur="checkFilledIn(custom)"
+                               ng-blur="vm.checkFilledIn(custom)"
                         />
                     </div>
                     <div class="large-8 columns">
                         <input type="text"
                                placeholder="Enter the value"
                                ng-model="custom.value"
-                               ng-blur="checkFilledIn(custom)"
+                               ng-blur="vm.checkFilledIn(custom)"
                         />
                     </div>
                 </div>
             </div>
             <div class="large-4 columns">
                 <label><br>
-                    <button type="button" class="button round" ng-click="addCustomValue()">Add custom field</button>
+                    <button type="button" class="button round" ng-click="vm.addCustomValue()">Add custom field</button>
                 </label>
             </div>
         </div>
-        <div class="row" ng-if="newNode.details.type === 'RESOURCE'">
+        <div class="row" ng-if="vm.newNode.details.type === 'RESOURCE'">
             <div class="large-12 columns">
                 <label>Link to documentation
                     <div class="row collapse">
                         <div class="small-10 columns">
-                            <input ng-model="newNode.details.docs"
-                                   ng-disabled="!isVirtualNode"/>
+                            <input ng-model="vm.newNode.details.docs"
+                                   ng-disabled="!vm.isVirtualNode"/>
                         </div>
                         <div class="small-2 columns">
-                            <a href="{{newNode.details.docs}}" target="_blank" class="button postfix">Go</a>
+                            <a href="{{vm.newNode.details.docs}}" target="_blank" class="button postfix">Go</a>
                         </div>
                     </div>
                 </label>
@@ -155,9 +136,9 @@
         <div class="row">
             <div class="large-12 columns">
                 <label>Description
-                    <textarea ng-model="newNode.details.description"
+                    <textarea ng-model="vm.newNode.details.description"
                               placeholder="Enter Description"
-                              ng-disabled="!isVirtualNode">
+                              ng-disabled="!vm.isVirtualNode">
                     </textarea>
                 </label>
             </div>
@@ -165,14 +146,14 @@
         <div class="row">
             <div class="small-6 columns">
                 <label>Nodes available</label>
-                <ul id="fromList" class="links-container" ui-sortable="nodesList" ng-model="availableNodes">
-                    <li class="node-placeholder" ng-repeat='node in availableNodes'>{{node.details.name?node.details.name:node.id}}</li>
+                <ul id="fromList" class="links-container" ui-sortable="vm.nodesList" ng-model="vm.availableNodes">
+                    <li class="node-placeholder" ng-repeat='node in vm.availableNodes'>{{node.details.name?node.details.name:node.id}}</li>
                 </ul>
             </div>
             <div class="small-6 columns">
                 <label>Nodes to link</label>
-                <ul id="toList" class="links-container right" ui-sortable="nodesList" ng-model="linkedNodes">
-                    <li class="node-placeholder" ng-repeat='node in linkedNodes'>{{node.details.name?node.details.name:node.id}}</li>
+                <ul id="toList" class="links-container right" ui-sortable="vm.nodesList" ng-model="vm.linkedNodes">
+                    <li class="node-placeholder" ng-repeat='node in vm.linkedNodes'>{{node.details.name?node.details.name:node.id}}</li>
                 </ul>
             </div>
         </div>
@@ -181,45 +162,19 @@
             <input type="submit" role="button" aria-label="submit form"
                    class="blue radius button" value="Submit"/>
           </span>
-                <span class="small-3 columns" ng-if="!isNewNode && newNode.details.status==='VIRTUAL'">
+                <span class="small-3 columns" ng-if="!vm.isNewNode && vm.newNode.details.status==='VIRTUAL'">
             <input role="button" aria-label="delete node"
                    class="button radius alert" value="Delete"
-                   ng-click="delete()"/>
+                   ng-click="vm.delete()"/>
           </span>
             <span class="small-3 columns">
                 <input role="button" aria-label="cancel action"
                        class="button radius secondary" value="Cancel"
-                       ng-click="cancel()"/>
-                <!--<a class="button radius custom-close-reveal-modal" ng-click="cancel()">Cancel</a>-->
+                       ng-click="vm.cancel()"/>
           </span>
         </div>
     </form>
 
-    <a class="close-reveal-modal" aria-label="Close" ng-click="cancel()">&#215;</a>
+    <a class="close-reveal-modal" aria-label="Close" ng-click="vm.cancel()">&#215;</a>
 </div>
-<script type="text/javascript">//<![CDATA[
-//$(function () {
-//  $("#fromList li").draggable({
-//    connectToSortable: "#toList",
-//    revert: "invalid",
-//    containment: '#equipCont',
-//    helper: function (e, ui) {
-//      return $(this).clone().css('width', $(this).width());
-//    }
-//  });
-//  $("#toList").droppable({
-//    drop: function (e, ui) {
-//      var dragClone = $(ui.draggable).clone();
-//      $("#toList").append(dragClone);
-//      $("#toList li").eq(0).hide(true);
-//    }
-//  });
-//  $("ul, li").disableSelection();
-//  $(function() {
-//    $( "#fromList, #toList" ).sortable({
-//      connectWith: ".links-container"
-//    }).disableSelection();
-//  });
-//});
-</script>
 

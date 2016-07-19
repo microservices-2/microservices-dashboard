@@ -14,5 +14,6 @@
   angular
     .module('microServicesGui')
     .constant('BASE_URL', 'http://localhost:8080/')
+    .constant('REQUEST_GRAPH_DATA_SUCCESS', 'New:graph:data')
     .config(config);
 })();
