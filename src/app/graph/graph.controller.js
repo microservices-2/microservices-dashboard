@@ -84,9 +84,13 @@
     }
 
     function addOnNodeChangesListener() {
-      $rootScope.$on('nodesChanged', function() {
+      var deregisterOnNodeChange = $rootScope.$on('nodesChanged', function() {
         withFilter = true;
         activate();
+      });
+
+      $scope.$on('$destroy', function() {
+        deregisterOnNodeChange();
       });
     }
 

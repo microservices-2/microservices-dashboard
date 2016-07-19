@@ -1,7 +1,9 @@
-/* global angular */
-/* global _ */
+/* global angular, _ */
 (function() {
   'use strict';
+  angular
+    .module('msgGraph')
+    .directive('msgD3Graph', MsgD3Graph);
 
   /** @ngInject */
   function MsgD3Graph(d3, $modal, $window, NodeService, NodecolorService) {
@@ -56,7 +58,6 @@
         return opacity;
       });
     }
-
     function fillColor(o) {
       if (o.details !== undefined) {
         return NodecolorService.getColorFor(o.details.type);
@@ -188,7 +189,7 @@
         }
       }
 
-      // Labels
+      // Lane Titles
       graph.append('svg:g')
         .selectAll('.label')
         .data(data.lanes)
@@ -205,14 +206,14 @@
         .attr('class', 'lane-title')
         .style('font-size', titleFontSize);
 
-      // Markers
+      // Marker Arrows
       graph.append('svg:defs')
         .append('svg:marker')
         .attr('id', 'arrow')
         .attr('viewBox', '0 -5 10 10')
         .attr('refX', nodeR + 9)
         .attr('refY', 0.0)
-        .attr('markerWidth', 6)
+        .attr('markerWidth', 60)
         .attr('markerHeight', 6)
         .attr('class', 'link')
         .attr('orient', 'auto')
@@ -392,23 +393,23 @@
         .style('font-size', textFontSize);
 
       // Lanes
-      graph.append('svg:g')
-        .selectAll('.lane')
-        .data(data.lanes)
-        .enter()
-        .append('svg:line')
-        .attr('class', 'lane')
-        .attr('x1', function(d) {
-          return x1(d.lane);
-        })
-        .attr('x2', function(d) {
-          return x1(d.lane);
-        })
-        .attr('y1', 0)
-        .attr('y2', height)
-        .style('visibility', function(d, i) {
-          return i === 0 ? null : 'visible';
-        });
+      // graph.append('svg:g')
+      //   .selectAll('.lane')
+      //   .data(data.lanes)
+      //   .enter()
+      //   .append('svg:line')
+      //   .attr('class', 'lane')
+      //   .attr('x1', function(d) {
+      //     return x1(d.lane);
+      //   })
+      //   .attr('x2', function(d) {
+      //     return x1(d.lane);
+      //   })
+      //   .attr('y1', 0)
+      //   .attr('y2', height)
+      //   .style('visibility', function(d, i) {
+      //     return i === 0 ? null : 'visible';
+      //   });
 
       // Build linked index
       data.links
@@ -421,6 +422,7 @@
       height = getGraphHeight(data);
 
       d3.select('svg').remove();
+
       graph = d3.select(element).append('svg')
         .attr('width', width + margin.right + margin.left)
         .attr('height', height)
@@ -463,7 +465,9 @@
       width = $window.innerWidth - margin.right - margin.left;
       height = $window.innerHeight;
 
-      graph.attr('width', width).attr('height', height);
+      graph
+        .attr('width', width)
+        .attr('height', height);
 
       d3.select('svg')
         .attr('width', width + margin.right + margin.left)
@@ -502,15 +506,15 @@
     // }
 
     return {
-      restrict: 'E',
+      restrict: 'A',
       scope: {
         graphData: '='
       },
-      controller: 'GraphController',
       link: function(scope, elem) {
         element = elem[0];
         d3.select($window).on('resize', resize); // Adds or removes an event listener to each element in the current selection, for the specified type.
         scope.$watch('graphData', function(newVal) {
+          // todo do an object equality check with lodash or keep $watch eqaulity check?
           if (newVal) {
             data = newVal;
             render(element);
@@ -519,6 +523,4 @@
       }
     };
   }
-  angular.module('msgGraph')
-    .directive('msgD3Graph', MsgD3Graph);
 })();
