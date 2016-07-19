@@ -447,12 +447,14 @@
         }
       });
 
-      modalInstance.result.then(function(node) {
-        NodeService.pushNode(node);
-        render(element);
-      }, function() {
-        render(element);
-      });
+      modalInstance
+        .result
+        .then(function(node) {
+          NodeService.pushNode(node);
+          render(element);
+        }, function() {
+          render(element);
+        });
     }
 
     onNodeMouseDown = function onNodeMouseDown(d) {
