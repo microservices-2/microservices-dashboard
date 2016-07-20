@@ -80,7 +80,7 @@
         expect(links.length).toBe(linkCount);
       });
 
-      fit('should remove all links related to a particular node', function() {
+      it('should remove all links related to a particular node', function() {
         expect(links.length).toBe(linkCount);
         var newLinks = GraphService.addLink(links, newLink);
         expect(newLinks.length).toBe(linkCount + 1);
