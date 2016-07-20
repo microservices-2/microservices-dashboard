@@ -58,10 +58,12 @@
     function addNewNode(node) {
       var nodes = graph.nodes;
 
-      if (node && (!_.isEmpty(node))) {
-        if (node.id) {
-          if (isUnqiue(nodes, node.id)) {
-            nodes.push(node);
+      if (!_.isEmpty(nodes)) {
+        if (node && (!_.isEmpty(node))) {
+          if (node.id) {
+            if (isUnqiue(nodes, node.id)) {
+              nodes.push(node);
+            }
           }
         }
       }
