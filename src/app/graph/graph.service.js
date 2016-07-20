@@ -35,6 +35,26 @@
       return -1;
     }
 
+
+    /**
+     * Removes all links related to a particular node
+     * Call this method when you delete a node
+     * @param {array} links an array of links, items can be of type
+     * {source: number, target:number}
+     * or
+     * { source: Node, target: Node }
+     * @param {number} nodeIndex the array index of the node inside the graph
+     * @returns a new array with all the links related to a particular node removed.
+     */
+    function removeLinkByNodeIndex(links, nodeIndex) {
+      return links.filter(function(link) {
+        if (isDefaultLinkType(link)) {
+          return link.source === nodeIndex;
+        }
+        return link.source.index !== nodeIndex && link.target.index !== nodeIndex;
+      });
+    }
+
     function addNewNode(node) {
       var nodes = graph.nodes;
 
@@ -48,20 +68,27 @@
     }
 
     function addLink(links, link) {
+      var newLinks = links;
       if (links && link) {
-        var newLinks = links;
         if (linkExists(newLinks, link.source, link.target) === false) {
           newLinks.push(link);
         }
-        return newLinks;
       }
+      return newLinks;
     }
 
     function linkExists(links, sourceIndex, targetIndex) {
       var result = _.find(links, function(l) {
-        return (l.target.index === targetIndex) && (l.source.index === sourceIndex);
+        if (!isDefaultLinkType(l)) {
+          return (l.target.index === targetIndex) && (l.source.index === sourceIndex);
+        }
+        return (l.target === targetIndex) && (l.source === sourceIndex);
       });
       return result !== undefined;
+    }
+
+    function isDefaultLinkType(l) {
+      return _.isNumber(l.source) && _.isNumber(l.target);
     }
 
     function isUnqiue(nodes, id) {
@@ -147,6 +174,7 @@
     }
 
     return {
+      removeLinkByNodeIndex: removeLinkByNodeIndex,
       addLink: addLink,
       linkExists: linkExists,
       findNodeIndex: findIndex,

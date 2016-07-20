@@ -1,4 +1,4 @@
-/* global it expect inject beforeEach describe _ */
+/* global it fit expect inject beforeEach describe _ */
 /* jshint unused:false*/
 /* jshint strict:false*/
 (function() {
@@ -78,6 +78,16 @@
         existingLink.source.index = 97;
         existingLink.target.index = 3;
         expect(links.length).toBe(linkCount);
+      });
+
+      fit('should remove all links related to a particular node', function() {
+        expect(links.length).toBe(linkCount);
+        var newLinks = GraphService.addLink(links, newLink);
+        expect(newLinks.length).toBe(linkCount + 1);
+        expect(GraphService.linkExists(newLinks, newLink.source, newLink.target)).toBeTruthy();
+
+        var filteredLinks = GraphService.removeLinkByNodeIndex(newLinks, newLink.target);
+        expect(filteredLinks.length).toBe(114);
       });
     });
   });
