@@ -114,6 +114,9 @@
     function toId(node) {
       return node.id;
     }
+    function toIndex(node) {
+      return node.index;
+    }
     function addLinkedNode(node) {
       vm.linkedNodes.push(node);
       if (vm.availableNodes.indexOf(node) > -1) {
@@ -178,8 +181,10 @@
       vm.newNode.linkedFromNodeIds = nodeSourcesAndTargets.linkedFromNodeIds;
       if (vm.linkedNodes.length > 0) {
         vm.newNode.linkedToNodeIds = vm.linkedNodes.map(toId);
+        vm.newNode.linkedToNodeIndices = vm.linkedNodes.map(toIndex);
       } else {
         vm.newNode.linkedToNodeIds = nodeSourcesAndTargets.linkedToNodeIds;
+        vm.newNode.linkedToNodeIndices = nodeSourcesAndTargets.linkedToNodeIndices;
       }
     }
 
@@ -196,10 +201,8 @@
         var id = vm.newNode.details.name;
         if (nameExists(id, nodes) || angular.isUndefined(id)) {
           // todo use true id generator
-          debugger;
           vm.newNode.id = String(new Date().getTime());
         } else {
-          debugger;
           vm.newNode.id = id;
         }
       }

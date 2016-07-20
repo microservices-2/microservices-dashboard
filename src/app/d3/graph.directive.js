@@ -477,7 +477,7 @@
       modalInstance
         .result
         .then(function(node) {
-          NodeService.pushNode(node);
+          NodeService.updateNode(node);
           render(element);
         }, function() {
           render(element);
