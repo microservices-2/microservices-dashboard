@@ -16,6 +16,14 @@
   angular
     .module('microServicesGui')
     .constant('BASE_URL', 'http://localhost:8080/')
+
+    // lane numbers
+    .constant('UI_LANE', 0)
+    .constant('RESOURCE_LANE', 1)
+    .constant('MS_LANE', 2)
+    .constant('BE_LANE', 3)
+
+    // events
     .constant('EVENT_NODES_CHANGED', 'nodesChanged')
     .constant('REQUEST_GRAPH_DATA_SUCCESS', 'New:graph:data')
     .config(config);
