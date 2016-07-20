@@ -3,13 +3,17 @@
 (function() {
   'use strict';
 
+  angular
+    .module('microServicesGui')
+    .factory('GraphService', GraphService);
+
   /** @ngInject */
   function GraphService(
     // services
     $rootScope, $http, $q,
 
     // constants
-    BASE_URL, REQUEST_GRAPH_DATA_SUCCESS, EVENT_NODES_CHANGED
+    BASE_URL, REQUEST_GRAPH_DATA_SUCCESS
   ) {
     var graph = {};
 
@@ -17,23 +21,54 @@
       return graph;
     }
 
-    function setGraphData(graph) {
-      graph = _.assign({}, graph);
+    function setGraphData(data) {
+      _.assign(graph, {}, data);
+    }
+
+    // TODO: optimize performance, centralize index state somewhere
+    function findIndex(id) {
+      for (var i = 0; i < graph.nodes.length; i++) {
+        if (graph.nodes[i].id === id) {
+          return i;
+        }
+      }
+      return -1;
     }
 
     function addNewNode(node) {
-      graph.nodes.push(node);
+      var nodes = graph.nodes;
+
+      if (node && (!_.isEmpty(node))) {
+        if (node.id) {
+          if (isUnqiue(nodes, node.id)) {
+            nodes.push(node);
+          }
+        }
+      }
     }
 
-    function updateNode(updatedNode) {
-      graph.nodes[updatedNode.index] = updatedNode;
-      updatedNode.linkedToNodeIndices.forEach(function(targetIndex) {
-        var link = {
-          source: updatedNode.index,
-          target: targetIndex
-        };
-        graph.links.push(link);
+    function addLink(links, link) {
+      if (links && link) {
+        var newLinks = links;
+        if (linkExists(newLinks, link.source, link.target) === false) {
+          newLinks.push(link);
+        }
+        return newLinks;
+      }
+    }
+
+    function linkExists(links, sourceIndex, targetIndex) {
+      var result = _.find(links, function(l) {
+        return (l.target.index === targetIndex) && (l.source.index === sourceIndex);
       });
+      return result !== undefined;
+    }
+
+    function isUnqiue(nodes, id) {
+      var result = _.find(nodes, function(n) {
+        return n.id === id;
+      });
+      return result === undefined;
     }
 
     function requestGraph() {
@@ -41,12 +76,29 @@
 
       return $http
         .get(BASE_URL + 'graph')
-        .then(function(graphData) {
-          graph = _.assign({}, graphData.data);
+        .then(function(response) {
+          var graphData = response.data;
+          graphData.links = assignNodeToLinks(graphData.nodes, graphData.links);
+          _.assign(graph, {}, graphData);
           $rootScope.dataLoading = false;
           $rootScope.$broadcast(REQUEST_GRAPH_DATA_SUCCESS);
           return graphData;
         });
+    }
+
+    function assignNodeToLinks(nodes, links) {
+      var linksWithNodes = [];
+      nodes.forEach(function(node, nodeIndex) {
+        linksWithNodes = links.map(function(link) {
+          if (link.source === nodeIndex) {
+            link.source = node;
+          } else if (link.target === nodeIndex) {
+            link.target = node;
+          }
+          return link;
+        });
+      });
+      return linksWithNodes;
     }
 
     function getGroups() {
@@ -95,9 +147,11 @@
     }
 
     return {
+      addLink: addLink,
+      linkExists: linkExists,
+      findNodeIndex: findIndex,
       setGraphData: setGraphData,
       addNewNode: addNewNode,
-      updateNode: updateNode,
       getGraph: getGraphData,
       requestGraph: requestGraph,
       getStates: getStates,
@@ -105,8 +159,4 @@
       getGroups: getGroups
     };
   }
-
-  angular
-    .module('microServicesGui')
-    .factory('GraphService', GraphService);
 })();
