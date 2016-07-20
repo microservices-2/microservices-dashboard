@@ -48,21 +48,7 @@
       return response.data;
     }
 
-    function parseGraph(data) {
-      var graphData = data;
-
-      graphData.nodes.forEach(function(node, index) {
-        node.index = index;
-        graphData.links.forEach(function(link) {
-          if (link.source === node.index) {
-            link.source = node;
-          }
-          if (link.target === node.index) {
-            link.target = node;
-          }
-        });
-      });
-
+    function parseGraph(graphData) {
       nodes = graphData.nodes;
 
       if (withFilter) {
@@ -71,8 +57,6 @@
         graphData.links = $filter('linkFilter')(graphData.links, graphData.nodes);
         vm.graphData = graphData;
       }
-
-      $rootScope.dataLoading = false;
     }
 
     function applyFilters(data) {
@@ -92,7 +76,7 @@
     function addFilterWatch() {
       $scope.$watch('vm.beFilter', function(value, prev) {
         if (!angular.equals({}, prev) && angular.isDefined(prev)) {
-          if (isUndefinedEmptyOrNull(value.details.type) && isUndefinedEmptyOrNull(value.details.group) && isUndefinedEmptyOrNull(value.details.status) && isUndefinedEmptyOrNull(value.id)) {
+          if (_.isEmpty(value.details.type) && _.isEmpty(value.details.group) && _.isEmpty(value.details.status) && _.isEmpty(value.id)) {
             withFilter = false;
           } else {
             withFilter = true;
@@ -115,10 +99,6 @@
         withFilter = true;
         parseGraph(GraphService.getGraph());
       });
-    }
-
-    function isUndefinedEmptyOrNull(obj) {
-      return (typeof obj === 'undefined' || obj === null || obj === '');
     }
   }
 })();
