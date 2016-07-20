@@ -30,8 +30,6 @@ module.exports = function(config) {
 
     autoWatch: false,
 
-    logLevel: config.LOG_DEBUG,
-
     frameworks: ['jasmine', 'angular-filesort'],
 
     angularFilesort: {
