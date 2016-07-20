@@ -9,13 +9,29 @@
 
   /** @ngInject */
   function GraphService(
+
     // services
     $rootScope, $http, $q,
 
     // constants
     BASE_URL, REQUEST_GRAPH_DATA_SUCCESS
+
   ) {
     var graph = {};
+
+    var factory = {
+      getGraph: getGraphData,
+      requestGraph: requestGraph,
+      removeLinkByNodeIndex: removeLinkByNodeIndex,
+      addLink: addLink,
+      linkExists: linkExists,
+      findNodeIndex: findIndex,
+      setGraphData: setGraphData,
+      addNewNode: addNewNode,
+      getStates: getStates,
+      getTypes: getTypes,
+      getGroups: getGroups
+    };
 
     function getGraphData() {
       return graph;
@@ -174,19 +190,6 @@
         ]);
       });
     }
-
-    return {
-      removeLinkByNodeIndex: removeLinkByNodeIndex,
-      addLink: addLink,
-      linkExists: linkExists,
-      findNodeIndex: findIndex,
-      setGraphData: setGraphData,
-      addNewNode: addNewNode,
-      getGraph: getGraphData,
-      requestGraph: requestGraph,
-      getStates: getStates,
-      getTypes: getTypes,
-      getGroups: getGroups
-    };
+    return factory;
   }
 })();

@@ -2,8 +2,12 @@
 (function() {
   'use strict';
 
+  angular
+    .module('microServicesGui')
+    .controller('NodeModalController', NodeModalControllerVersion2);
+
   /** @ngInject */
-  function NodeModalController(
+  function NodeModalControllerVersion2(
     // service
     $scope, $filter, $window, GraphService, NodeService, $modalInstance, SetService, $q,
 
@@ -12,7 +16,8 @@
   ) {
     // View model, variabled used inside the template
     var vm = this;
-    vm.isNewNode = undefined;
+    vm.isNewNode = false;
+    vm.x = false;
     vm.isFixedLane = undefined;
     vm.isVirtualNode = undefined;
     vm.states = [];
@@ -39,7 +44,11 @@
       vm.isFixedLane = true;
       vm.newNode = NodeService.getSelectedNode();
       vm.isNewNode = angular.isUndefined(vm.newNode);
+      vm.x = angular.isUndefined(vm.newNode);
+        debugger;
+
       if (vm.isNewNode) {
+        debugger;
         var nodeType = NodeService.getNodeType(currentLane);
         vm.newNode = NodeService.getNewNode(nodeType, currentLane);
       }

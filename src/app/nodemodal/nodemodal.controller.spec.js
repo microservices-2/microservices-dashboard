@@ -17,6 +17,9 @@
       pushNode: function() {
 
       },
+      getSelectedNode: function() {
+        return JSON.parse(ms);
+      },
       getNode: function() {
         return {};
       },
@@ -70,6 +73,7 @@
       expect(ctrl.newNode).toBeDefined();
     });
 
+
     // it('should have 3 states', function() {
     //   expect(angular.isArray(scope.states)).toBeTruthy();
     //   expect(scope.states.length === 3).toBeTruthy();
@@ -90,5 +94,11 @@
       ctrl.cancel();
       expect(modalInstance.dismiss).toHaveBeenCalledWith('cancel');
     });
+
+    fit('should set isNewNode to false', function() {
+      expect(angular.isUndefined(ctrl.newNode)).toBeFalsy();
+      expect(ctrl.x).toBe(1);
+    });
   });
+  var ms = '{"details":{"type":"MICROSERVICE","status":"UP"},"id":"customer-group","lane":2,"index":4,"x":468.125,"y":160}';
 })();
