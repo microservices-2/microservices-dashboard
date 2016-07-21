@@ -44,7 +44,6 @@
 
     function parseGraph(graphData) {
       nodes = graphData.nodes;
-
       if (withFilter) {
         vm.graphData = applyFilters(graphData);
       } else {
