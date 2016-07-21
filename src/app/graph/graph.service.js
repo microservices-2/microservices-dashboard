@@ -38,8 +38,8 @@
       return graph;
     }
 
-    function setGraphData(data) {
-      _.assign(graph, {}, data);
+    function setGraphData(graphData) {
+      graph = graphData;
     }
 
     // TODO: optimize performance, centralize index state somewhere
@@ -178,7 +178,7 @@
         .then(function(response) {
           var graphData = response.data;
           graphData.links = assignNodeToLinks(graphData.nodes, graphData.links);
-          _.assign(graph, {}, graphData);
+          graph = graphData;
           $rootScope.dataLoading = false;
           $rootScope.$broadcast(REQUEST_GRAPH_DATA_SUCCESS);
           return graphData;

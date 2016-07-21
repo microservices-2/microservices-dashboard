@@ -6,7 +6,7 @@
   /** @ngInject */
   function BottomBarController($scope, $modal, NodeService) {
     $scope.open = function(lane) {
-      NodeService.setNode(undefined);
+      NodeService.setSelectedNode(undefined);
       var modalInstance = $modal.open({
         templateUrl: 'app/nodemodal/nodemodal.html',
         controller: 'NodeModalController',
@@ -19,7 +19,7 @@
       });
 
       modalInstance.result.then(function(node) {
-        NodeService.pushNode(node);
+        // NodeService.pushNode(node);
       });
     };
   }
