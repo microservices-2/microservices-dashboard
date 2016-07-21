@@ -304,6 +304,13 @@
             };
             return lineFunction([sourceNode, curve, targetNode]);
           }
+          if (targetNode.lane === 1) {
+            var position = {
+              x: targetNode.x - nodeWidth - 5,
+              y: targetNode.y
+            };
+            return lineFunction([sourceNode, position]);
+          }
           return lineFunction([sourceNode, targetNode]);
         })
         .attr('pointer-events', 'stroke')
