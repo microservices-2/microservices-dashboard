@@ -22,10 +22,23 @@
       getSelectedNode: getSelectedNode,
       getAvailableNodes: getAvailableNodes,
       updateNode: updateNode,
+      addNewNode: addNewNode,
       deleteNode: deleteNode,
       getNodeType: getNodeType,
       getNewNode: getNewNode
     };
+
+    function addNewNode(node) {
+      // TODO: add unique check
+      debugger;
+      if (node.id) {
+        $http
+          .post(BASE_URL + 'node', node)
+          .then(function(response) {
+            GraphService.addNewNode(node);
+          });
+      }
+    }
 
     function getFromLinksByNodeId(nodeIndex) {
       var links = GraphService.getGraph().links;
@@ -42,7 +55,7 @@
     }
 
     function setSelectedNode(node) {
-      _selectedNode = _.assign({}, node);
+      _selectedNode = node;
     }
 
     function getAvailableNodes(selectedNode, nodes, links) {

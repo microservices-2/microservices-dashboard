@@ -24,10 +24,7 @@
     vm.groups = [];
     vm.availableToNodes = [];
     vm.toOptions = {
-      connectWith: '.links-container',
-      update: function(e, ui) {
-
-      }
+      connectWith: '.links-container'
     };
     vm.linkedToNodes = [];
     vm.nodesList = {
@@ -80,16 +77,21 @@
     }
 
     function ok() {
-      var updates = {
-        toLinks: vm.linkedToNodes.map(function(target) {
-          return {
-            source: vm.newNode,
-            target: target
-          };
-        }),
-        sourceNode: vm.newNode
-      };
-      $modalInstance.close(updates);
+      if (vm.isNewNode) {
+        vm.newNode.id = vm.newNode.details.name;
+        $modalInstance.close(vm.newNode);
+      } else {
+        var updates = {
+          toLinks: vm.linkedToNodes.map(function(target) {
+            return {
+              source: vm.newNode,
+              target: target
+            };
+          }),
+          sourceNode: vm.newNode
+        };
+        $modalInstance.close(updates);
+      }
     }
 
     function cancelModal() {

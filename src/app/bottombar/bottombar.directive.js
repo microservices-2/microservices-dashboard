@@ -19,7 +19,7 @@
       });
 
       modalInstance.result.then(function(node) {
-        // NodeService.pushNode(node);
+        NodeService.addNewNode(node);
       });
     };
   }

@@ -1,4 +1,4 @@
-/* global fit it expect inject beforeEach describe */
+/* global fit fdescribe it expect inject beforeEach describe */
 /* jshint unused:false*/
 
 (function() {
@@ -18,6 +18,24 @@
       graph = JSON.parse(mockData);
       msNode = JSON.parse(ms);
     }));
+
+
+    fdescribe('When adding a new node', function() {
+      var newNode, nodes, nodeCount;
+      beforeEach(function() {
+        newNode = NodeService.getNewNode();
+        graphService.setGraphData(graph);
+        nodes = graphService.getGraph().nodes;
+        nodeCount = nodes.length;
+      });
+      it('should only make post if it has an id', function() {
+        newNode.id = 'Ryan';
+        $httpBackend.expectPOST('http://localhost:8080/node', newNode).respond(200);
+        NodeService.addNewNode(newNode);
+        $httpBackend.flush();
+      });
+    });
+
 
     it('should set the newNode', function() {
       NodeService.setSelectedNode(newNode);
