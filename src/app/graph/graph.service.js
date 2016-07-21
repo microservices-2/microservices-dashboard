@@ -20,14 +20,14 @@
     var graph = {};
 
     var factory = {
-      updateToLinks: updateToLinks,
       getGraph: getGraphData,
+      setGraphData: setGraphData,
       requestGraph: requestGraph,
+      updateToLinks: updateToLinks,
       removeLinkByNodeIndex: removeLinkByNodeIndex,
       addLink: addLink,
       linkExists: linkExists,
       findNodeIndex: findIndex,
-      setGraphData: setGraphData,
       addNewNode: addNewNode,
       getStates: getStates,
       getTypes: getTypes,
@@ -98,18 +98,28 @@
 
 
     /**
-     * Updates the links where the node is a source
-     * If {updates} contain an existing link, it will not get added
+     * Updates a link list with a particular node as the source
      *
-     * If {list} contains a link that {updates} does not, the link will get removed from {list}
+     * Given a link
+     * When {list} contains the link
+     * When {updates} contains the link     *
+     * then the link will get added to the {list}
      *
-     * If {updates} contains a link that {list} does not contain, it will get added
+     * Given a link
+     * When {list} contains the link
+     * When {updates} does not contain the link
+     * then the link will be removed from the {list}
      *
-     * @param {any} updates an object containing the source node, and a list of links to update
+     * Given a link
+     * When {list} does not contain the link
+     * When {updates} contains the link
+     * then the link will be added to the {list}
+     *
+     * @param {any} updates An object containing the source node, and new list of links
      *
      * var updates = {
      *  sourceNode: node,
-     *  toLinks: []
+     *  toLinks: node[]
      * }
      *
      * @returns a new array of link objects
@@ -119,16 +129,16 @@
       if (updates) {
         var newLinks = updates.toLinks;
         var sourceNodeIndex = updates.sourceNode.index;
-        // if link not in updates, delete it
         newList = list
           .filter(function(link) {
-            if (link.source.index !== sourceNodeIndex && link.target.index !== sourceNodeIndex) return true;
+            if (link.source.index !== sourceNodeIndex && link.target.index !== sourceNodeIndex) {
+              return true;
+            }
             var result = newLinks.filter(function(newLink) {
               return (newLink.source.index === link.source.index && newLink.target.index === link.target.index);
             });
             return result.length > 0;
           });
-        // if link not in list add it
         var linksToAdd = newLinks.filter(function(newLink) {
           return _.find(list, function(oldLink) {
             return (newLink.source.index === oldLink.source.index && newLink.target.index === oldLink.target.index);
