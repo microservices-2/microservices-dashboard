@@ -39,13 +39,7 @@
     // == Methods == //
 
     function activate() {
-      GraphService.requestGraph()
-        .then(getData)
-        .then(parseGraph);
-    }
-
-    function getData(response) {
-      return response.data;
+      GraphService.requestGraph();
     }
 
     function parseGraph(graphData) {
