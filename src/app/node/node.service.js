@@ -14,7 +14,7 @@
 
     // events
     EVENT_NODES_CHANGED) {
-    var nodeToOpen;
+    var _selectedNode;
     var factory = {
       getToLinksByNodeId: getToLinksByNodeId,
       getFromLinksByNodeId: getFromLinksByNodeId,
@@ -22,10 +22,7 @@
       getSelectedNode: getSelectedNode,
       getAvailableNodes: getAvailableNodes,
       updateNode: updateNode,
-      pushNode: pushNode,
       deleteNode: deleteNode,
-      getNode: getNode,
-      setNode: setNode,
       getNodeType: getNodeType,
       getNewNode: getNewNode
     };
@@ -38,12 +35,14 @@
 
     function getToLinksByNodeId(nodeIndex) {
       var links = GraphService.getGraph().links;
-      var filterFn = selectSourceNodes(nodeIndex);
-      return links.filter(filterFn);
+      var result = links.filter(function(link) {
+        return link.source.index === nodeIndex;
+      });
+      return result;
     }
 
     function setSelectedNode(node) {
-      nodeToOpen = _.assign({}, node);
+      _selectedNode = _.assign({}, node);
     }
 
     function getAvailableNodes(selectedNode, nodes, links) {
@@ -55,16 +54,11 @@
         case MS_LANE:
           _.assign(
             availableNodes,
-            getResources(selectedNode, nodes, links),
             getBackendNodes(selectedNode, nodes, links),
             getMsNodes(selectedNode, nodes, links)
           );
           break;
         case BE_LANE:
-          _.assign(
-            availableNodes,
-            getMsNodes(selectedNode, nodes, links)
-          );
           break;
         case RESOURCE_LANE:
           _.assign(
@@ -79,37 +73,21 @@
       return availableNodes;
     }
 
-    function getNode() {
-      return nodeToOpen;
-    }
-
-    function setNode(n) {
-      nodeToOpen = n;
-    }
-
-    function updateNode(node) {
-      var preparedNode = stripUnneededProperties(node);
+    function updateNode(updates) {
+      var preparedNode = stripUnneededProperties(updates.sourceNode);
+      preparedNode.linkedToNodeIds = getTargetIndices(updates.toLinks);
       $http.post(BASE_URL + 'node', preparedNode)
         .then(function() {
-          var nodes = GraphService.getGraph().nodes;
-          var links = GraphService.getGraph().links;
-          var index = GraphService.findNodeIndex(node.id);
-          nodes[index] = node;
-          GraphService.getGraph().links = updateLinks(links, index, node.linkedToNodeIndices);
+          var oldLinks = GraphService.getGraph().links;
+          GraphService.getGraph().links = GraphService.updateToLinks(oldLinks, updates);
           $rootScope.$broadcast(EVENT_NODES_CHANGED);
         });
     }
 
-
-    function pushNode(node) {
-      var preparedNode = stripUnneededProperties(node);
-      $http.post(BASE_URL + 'node', preparedNode)
-        .then(function() {
-          GraphService.addNewNode(node);
-          $rootScope.$broadcast(EVENT_NODES_CHANGED);
-        }, function() {
-
-        });
+    function getTargetIndices(links) {
+      return links.map(function(link) {
+        return link.target.id;
+      });
     }
 
     function deleteNode(node) {
@@ -124,7 +102,7 @@
     }
 
     function getSelectedNode() {
-      return nodeToOpen;
+      return _selectedNode;
     }
 
     function getNodeType(laneNr) {
@@ -196,23 +174,6 @@
         return (values.indexOf(nodeIndex) > -1) && (values.indexOf(selectedNodeIndex) > -1);
       });
       return _.isEmpty(result);
-    }
-
-    function updateLinks(links, nodeSourceIndex, targets) {
-      var newLinkList = _.assign({}, links);
-      targets.forEach(function(targetIndex) {
-        var newLink = {
-          source: nodeSourceIndex,
-          target: targetIndex
-        };
-        var exisitinLink = (_.find(links, function(link) {
-          return link.source === newLink.source && link.target === newLink.target;
-        }));
-        if (exisitinLink === undefined) {
-          newLinkList.push(newLink);
-        }
-      });
-      return newLinkList;
     }
 
     function stripUnneededProperties(node) {

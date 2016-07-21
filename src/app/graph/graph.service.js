@@ -20,6 +20,7 @@
     var graph = {};
 
     var factory = {
+      updateToLinks: updateToLinks,
       getGraph: getGraphData,
       requestGraph: requestGraph,
       removeLinkByNodeIndex: removeLinkByNodeIndex,
@@ -88,11 +89,54 @@
     function addLink(links, link) {
       var newLinks = links;
       if (links && link) {
-        if (linkExists(newLinks, link.source, link.target) === false) {
+        if (linkExists(newLinks, link.source.index, link.target.index) === false) {
           newLinks.push(link);
         }
       }
       return newLinks;
+    }
+
+
+    /**
+     * Updates the links where the node is a source
+     * If {updates} contain an existing link, it will not get added
+     *
+     * If {list} contains a link that {updates} does not, the link will get removed from {list}
+     *
+     * If {updates} contains a link that {list} does not contain, it will get added
+     *
+     * @param {any} updates an object containing the source node, and a list of links to update
+     *
+     * var updates = {
+     *  sourceNode: node,
+     *  toLinks: []
+     * }
+     *
+     * @returns a new array of link objects
+     */
+    function updateToLinks(list, updates) {
+      var newList = [];
+      if (updates) {
+        var newLinks = updates.toLinks;
+        var sourceNodeIndex = updates.sourceNode.index;
+        // if link not in updates, delete it
+        newList = list
+          .filter(function(link) {
+            if (link.source.index !== sourceNodeIndex && link.target.index !== sourceNodeIndex) return true;
+            var result = newLinks.filter(function(newLink) {
+              return (newLink.source.index === link.source.index && newLink.target.index === link.target.index);
+            });
+            return result.length > 0;
+          });
+        // if link not in list add it
+        var linksToAdd = newLinks.filter(function(newLink) {
+          return _.find(list, function(oldLink) {
+            return (newLink.source.index === oldLink.source.index && newLink.target.index === oldLink.target.index);
+          }) === undefined;
+        });
+        newList = newList.concat(linksToAdd);
+      }
+      return newList;
     }
 
     function linkExists(links, sourceIndex, targetIndex) {

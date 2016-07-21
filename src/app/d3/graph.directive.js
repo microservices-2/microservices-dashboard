@@ -464,16 +464,14 @@
     }
 
     function showTheDetails(node) {
-      NodeService.setNode(node);
+      NodeService.setSelectedNode(node);
       var modalConfig = createModalConfig(node.lane);
       var modalInstance = $modal.open(modalConfig);
 
       modalInstance
         .result
-        .then(function(node) {
-          NodeService.updateNode(node);
-          render(element);
-        }, function() {
+        .then(function(updates) {
+          NodeService.updateNode(updates);
           render(element);
         });
     }

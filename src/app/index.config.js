@@ -34,7 +34,7 @@
 
   function modalConfig(currentLane) {
     var modalConfig = {
-      templateUrl: 'app/nodemodal/v2/nodemodal.html',
+      templateUrl: 'app/nodemodal/nodemodal.html',
       controller: 'NodeModalController',
       controllerAs: 'vm',
       resolve: {
@@ -43,7 +43,6 @@
         }
       }
     };
-
     return modalConfig;
   }
 })();

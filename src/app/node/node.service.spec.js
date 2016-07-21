@@ -20,8 +20,8 @@
     }));
 
     it('should set the newNode', function() {
-      NodeService.setNode(newNode);
-      expect(NodeService.getNode()).toEqual(newNode);
+      NodeService.setSelectedNode(newNode);
+      expect(NodeService.getSelectedNode()).toEqual(newNode);
     });
 
     it('should post the node to the backend', function() {
@@ -31,19 +31,19 @@
     });
 
     it('get available lane nodes', function() {
-      NodeService.setNode(newNode);
+      NodeService.setSelectedNode(newNode);
       // var availableNodes = NodeService.getAvailableNodes(newNode, graph.nodes);
       // expect(availableNodes).toBeUndefined();
     });
 
     it('should get fromLinks', function() {
-      NodeService.setNode(msNode);
+      NodeService.setSelectedNode(msNode);
       graphService.setGraphData(graph);
       var fromNodes = NodeService.getFromLinksByNodeId(msNode.index);
       expect(fromNodes.length).toBe(1);
     });
     it('should get toLinks', function() {
-      NodeService.setNode(msNode);
+      NodeService.setSelectedNode(msNode);
       graphService.setGraphData(graph);
       var toNodes = NodeService.getToLinksByNodeId(msNode.index);
       expect(toNodes.length).toBe(3);

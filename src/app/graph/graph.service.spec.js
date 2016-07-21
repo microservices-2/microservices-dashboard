@@ -1,4 +1,4 @@
-/* global it fit expect inject beforeEach describe _ */
+/* global it fit expect inject beforeEach fdescribe describe _ */
 /* jshint unused:false*/
 /* jshint strict:false*/
 (function() {
@@ -89,8 +89,114 @@
         var filteredLinks = GraphService.removeLinkByNodeIndex(newLinks, newLink.target);
         expect(filteredLinks.length).toBe(114);
       });
+
+
+      fdescribe('updates', function() {
+        it('should remove links when updating to nodes correctly', function() {
+          var expected = [
+            { source: createNode(1), target: createNode(2) }
+          ];
+          expect(GraphService.updateToLinks()).toEqual([]);
+          expect(GraphService.updateToLinks(smallGraph.links)).toEqual([]);
+          expect(GraphService.updateToLinks(smallGraph.links, updates)).toEqual(expected);
+          expect(GraphService.updateToLinks(smallGraph.links, updates)).toEqual(expected);
+          updates.toLinks = [
+            {
+              source: createNode(1),
+              target: createNode(2)
+            },
+            {
+              source: createNode(1),
+              target: createNode(3)
+            }
+          ];
+          expected = [
+            {
+              source: createNode(1),
+              target: createNode(2)
+            },
+            {
+              source: createNode(1),
+              target: createNode(3)
+            }
+          ];
+          expect(GraphService.updateToLinks(smallGraph.links, updates)).toEqual(expected);
+          updates.toLinks = [];
+          expected = [];
+          expect(GraphService.updateToLinks(smallGraph.links, updates)).toEqual(expected);
+        });
+
+
+        fit('should add links when updating to nodes correctly', function() {
+          var expected = [
+            { source: createNode(3), target: createNode(92348) },
+            { source: createNode(1), target: createNode(2) },
+            { source: createNode(1), target: createNode(3) },
+            { source: createNode(1), target: createNode(299) },
+            { source: createNode(1), target: createNode(8) },
+            { source: createNode(1), target: createNode(5) }
+          ];
+          var updates = {};
+          updates.sourceNode = createNode(1);
+          updates.toLinks = [
+            { source: createNode(1), target: createNode(2) },
+            { source: createNode(1), target: createNode(3) },
+            { source: createNode(1), target: createNode(299) },
+            { source: createNode(1), target: createNode(8) },
+            { source: createNode(1), target: createNode(5) }
+          ];
+
+          expect(GraphService.updateToLinks(smallGraph.links, updates).length).toEqual(6);
+          expect(GraphService.updateToLinks(smallGraph.links, updates)).toEqual(expected);
+
+          expected = [
+            { source: createNode(3), target: createNode(92348) },
+            { source: createNode(1), target: createNode(299) },
+            { source: createNode(1), target: createNode(8) },
+            { source: createNode(1), target: createNode(5) }
+          ];
+
+          updates.toLinks = [
+            { source: createNode(1), target: createNode(299) },
+            { source: createNode(1), target: createNode(8) },
+            { source: createNode(1), target: createNode(5) }
+          ];
+
+          expect(GraphService.updateToLinks(smallGraph.links, updates).length).toEqual(4);
+          expect(GraphService.updateToLinks(smallGraph.links, updates)).toEqual(expected);
+        });
+      });
     });
   });
+  var createNode = function(index) {
+    return {
+      index: index
+    };
+  };
+  var updates = {
+    sourceNode: {
+      index: createNode(1)
+    },
+    toLinks: [
+      {
+        source: createNode(1),
+        target: createNode(2)
+      }
+    ]
+  };
+  var smallGraph = {
+    links: [
+      { source: createNode(3), target: createNode(92348) },
+      {
+        source: createNode(1),
+        target: createNode(2)
+      },
+      {
+        source: createNode(1),
+        target: createNode(3)
+      }
+    ]
+  };
 
   var prep = '{"details":{"type":"UI_COMPONENT","url":"http://localhost:8089/pacts/provider/ordering-pets/consumer/pet-store-catalog-view/latest","status":"UP","virtual":true},"id":"pet-store-catalog-view","lane":0,"linkedFromNodeIds":[],"linkedToNodeIds":["pet:domain","pet:pets"]}';
 

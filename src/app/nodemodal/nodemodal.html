@@ -1,11 +1,9 @@
 <div>
-    <h2 id="modalTitle" ng-hide="vm.newNode.id">{{vm.newNode.details.name?vm.newNode.details.name:"Add Node"}}</h2>
-
-    <h2 ng-show="vm.newNode.id">{{vm.newNode.details.name?vm.newNode.details.name:vm.newNode.id}}</h2>
+    <h2>{{vm.isNewNode ? 'Add Node' : vm.newNode.id}}</h2>
 
     <form name="nodeForm" novalidate ng-submit="vm.ok()">
         <div class="row">
-            <div class="large-4 columns" ng-if="vm.isNewNode || vm.newNode.details.name">
+            <div class="large-4 columns">
                 <label>Name
                     <input type="text" placeholder="Enter Name"
                            ng-model="vm.newNode.details.name"
@@ -145,15 +143,27 @@
         </div>
         <div class="row">
             <div class="small-6 columns">
-                <label>Nodes available</label>
-                <ul id="fromList" class="links-container" ui-sortable="vm.nodesList" ng-model="vm.availableNodes">
-                    <li class="node-placeholder" ng-repeat='node in vm.availableNodes track by $index'>{{node.details.name?node.details.name:node.id}}</li>
+                <label>Available <strong>TO</strong> nodes</label>
+                <ul
+                  class="links-container"
+                  ui-sortable="vm.toOptions" ng-model="vm.availableToNodes">
+                    <li
+                      class="node-placeholder"
+                      ng-repeat='node in vm.availableToNodes track by $index'>
+                      {{node.id}}
+                    </li>
                 </ul>
             </div>
             <div class="small-6 columns">
-                <label>Nodes to link</label>
-                <ul id="toList" class="links-container right" ui-sortable="vm.nodesList" ng-model="vm.linkedNodes">
-                    <li class="node-placeholder" ng-repeat='node in vm.linkedNodes track by $index'>{{node.details.name?node.details.name:node.id}}</li>
+                <label>Linked <strong>TO</strong> nodes</label>
+                <ul
+                class="links-container right"
+                ui-sortable="vm.toOptions" ng-model="vm.linkedToNodes">
+                    <li
+                      class="node-placeholder"
+                      ng-repeat='link in vm.linkedToNodes track by $index'>
+                      {{link.id}} ({{link.details.type}})
+                    </li>
                 </ul>
             </div>
         </div>
