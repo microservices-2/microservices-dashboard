@@ -6,7 +6,9 @@
     .directive('msgD3Graph', MsgD3Graph);
 
   /** @ngInject */
-  function MsgD3Graph(d3, $modal, $window, NodeService, NodecolorService) {
+  function MsgD3Graph(
+    d3, $modal, $window, NodeService, NodecolorService, createModalConfig
+  ) {
     var margin = { top: 20, right: 0, bottom: 20, left: 0 };
     var width = $window.innerWidth - margin.right - margin.left - 16;
     var height = $window.innerHeight;
@@ -463,16 +465,8 @@
 
     function showTheDetails(node) {
       NodeService.setNode(node);
-      var modalInstance = $modal.open({
-        templateUrl: 'app/nodemodal/nodemodal.html',
-        controller: 'NodeModalController',
-        controllerAs: 'vm',
-        resolve: {
-          currentLane: function() {
-            return node.lane;
-          }
-        }
-      });
+      var modalConfig = createModalConfig(node.lane);
+      var modalInstance = $modal.open(modalConfig);
 
       modalInstance
         .result

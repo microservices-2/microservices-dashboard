@@ -23,8 +23,27 @@
     .constant('MS_LANE', 2)
     .constant('BE_LANE', 3)
 
+    // modal
+    .constant('createModalConfig', modalConfig)
+
     // events
     .constant('EVENT_NODES_CHANGED', 'nodesChanged')
     .constant('REQUEST_GRAPH_DATA_SUCCESS', 'New:graph:data')
     .config(config);
+
+
+  function modalConfig(currentLane) {
+    var modalConfig = {
+      templateUrl: 'app/nodemodal/v2/nodemodal.html',
+      controller: 'NodeModalController',
+      controllerAs: 'vm',
+      resolve: {
+        currentLane: function() {
+          return currentLane;
+        }
+      }
+    };
+
+    return modalConfig;
+  }
 })();
