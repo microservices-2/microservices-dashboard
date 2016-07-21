@@ -149,7 +149,8 @@
     }
 
     function isNodeInLink(link, node) {
-      return link.source.index !== node.index && link.target.index !== node.index;
+      return (link.source.index !== node.index) &&
+        (link.target.index !== node.index);
     }
 
     function hasEqualLinks(link, links) {
