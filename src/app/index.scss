@@ -153,7 +153,9 @@ input, select{
     }
   }
 }
-
+.node-placeholder{
+  cursor:move;
+}
 .lane {
   fill: none;
   stroke: steelblue;
