@@ -52,7 +52,6 @@
       return -1;
     }
 
-
     /**
      * Removes all links related to a particular node
      * Call this method when you delete a node
@@ -96,7 +95,6 @@
       return newLinks;
     }
 
-
     /**
      * Updates a link list with a particular node as the source
      *
@@ -128,25 +126,61 @@
       var newList = [];
       if (updates) {
         var newLinks = updates.toLinks;
-        var sourceNodeIndex = updates.sourceNode.index;
-        newList = list
+        var sourceNode = updates.sourceNode;
+        var isNewLink = createIsNewLinkFilterFn(list);
+        var listWithRemovedLinks = [];
+        var newLinksToAdd = [];
+
+        listWithRemovedLinks = list
           .filter(function(link) {
-            if (link.source.index !== sourceNodeIndex && link.target.index !== sourceNodeIndex) {
+            if (isNodeInLink(link, sourceNode)) {
               return true;
             }
-            var result = newLinks.filter(function(newLink) {
-              return (newLink.source.index === link.source.index && newLink.target.index === link.target.index);
-            });
-            return result.length > 0;
+            return hasEqualLinks(link, newLinks);
           });
-        var linksToAdd = newLinks.filter(function(newLink) {
-          return _.find(list, function(oldLink) {
-            return (newLink.source.index === oldLink.source.index && newLink.target.index === oldLink.target.index);
-          }) === undefined;
-        });
-        newList = newList.concat(linksToAdd);
+
+        newLinksToAdd = newLinks.filter(isNewLink);
+
+        newList = newList
+          .concat(listWithRemovedLinks)
+          .concat(newLinksToAdd);
       }
       return newList;
+    }
+
+    function isNodeInLink(link, node) {
+      return link.source.index !== node.index && link.target.index !== node.index;
+    }
+
+    function hasEqualLinks(link, links) {
+      var isEqualLink = createIsEqualLinkFilterFn(link);
+      var result = links.filter(isEqualLink);
+      return result.length > 0;
+    }
+
+    function createIsEqualLinkFilterFn(link) {
+      var oldLink = link;
+      return function(newLink) {
+        return isEqualLink(oldLink, newLink);
+      };
+    }
+
+    function createIsNewLinkFilterFn(linkList) {
+      var list = linkList;
+      return function(link) {
+        return listHasLink(list, link);
+      };
+    }
+
+    function listHasLink(list, link) {
+      return _.find(list, function(oldLink) {
+        return isEqualLink(link, oldLink);
+      }) === undefined;
+    }
+
+    function isEqualLink(linkAlpha, linkBeta) {
+      return (linkAlpha.source.index === linkBeta.source.index) &&
+        (linkAlpha.target.index === linkBeta.target.index);
     }
 
     function linkExists(links, sourceIndex, targetIndex) {
