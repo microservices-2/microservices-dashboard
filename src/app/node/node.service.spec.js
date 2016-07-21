@@ -24,11 +24,11 @@
       expect(NodeService.getSelectedNode()).toEqual(newNode);
     });
 
-    it('should post the node to the backend', function() {
-      $httpBackend.expectPOST('http://localhost:8080/node', newNode).respond(200);
-      NodeService.pushNode(newNode);
-      $httpBackend.flush();
-    });
+    // it('should post the node to the backend', function() {
+    //   $httpBackend.expectPOST('http://localhost:8080/node', newNode).respond(200);
+    //   NodeService.pushNode(newNode);
+    //   $httpBackend.flush();
+    // });
 
     it('get available lane nodes', function() {
       NodeService.setSelectedNode(newNode);
@@ -49,11 +49,10 @@
       expect(toNodes.length).toBe(3);
     });
 
-    it('when microservice should get available nodes from resources, backend and ui', function() {
+    it('when microservice should get available nodes from, backend and ui', function() {
       graphService.setGraphData(graph);
       var availableNodes = NodeService.getAvailableNodes(msNode, graphService.getGraph().nodes, graphService.getGraph().links);
       expect(availableNodes.ui).toBeUndefined();
-      expect(availableNodes.resources.length).toBe(56);
       expect(availableNodes.microServices.length).toBe(18);
       expect(availableNodes.backEnd.length).toBe(32);
     });

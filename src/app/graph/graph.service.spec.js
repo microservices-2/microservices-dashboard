@@ -90,12 +90,9 @@
         expect(filteredLinks.length).toBe(114);
       });
 
-
-      fdescribe('updates', function() {
+      describe('updates', function() {
         it('should remove links when updating to nodes correctly', function() {
-          var expected = [
-            { source: createNode(1), target: createNode(2) }
-          ];
+          var expected = smallGraph.links;
           expect(GraphService.updateToLinks()).toEqual([]);
           expect(GraphService.updateToLinks(smallGraph.links)).toEqual([]);
           expect(GraphService.updateToLinks(smallGraph.links, updates)).toEqual(expected);
@@ -111,6 +108,7 @@
             }
           ];
           expected = [
+            { source: createNode(3), target: createNode(92348) },
             {
               source: createNode(1),
               target: createNode(2)
@@ -121,13 +119,13 @@
             }
           ];
           expect(GraphService.updateToLinks(smallGraph.links, updates)).toEqual(expected);
+          updates.sourceNode = createNode(1);
           updates.toLinks = [];
-          expected = [];
-          expect(GraphService.updateToLinks(smallGraph.links, updates)).toEqual(expected);
+          expected = [{ source: createNode(3), target: createNode(92348) }];
+          expect(GraphService.updateToLinks(smallGraph.links, updates).length).toEqual(1);
         });
 
-
-        fit('should add links when updating to nodes correctly', function() {
+        it('should add links when updating to nodes correctly', function() {
           var expected = [
             { source: createNode(3), target: createNode(92348) },
             { source: createNode(1), target: createNode(2) },

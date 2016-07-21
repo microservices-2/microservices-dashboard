@@ -49,7 +49,7 @@
 
     it('should close the modal if the ok function is triggered', function() {
       ctrl.ok();
-      expect(modalInstance.close).toHaveBeenCalledWith(ctrl.newNode);
+      expect(modalInstance.close).toHaveBeenCalled();
     });
 
     it('should dismiss the modal if the cancel function is triggered', function() {
