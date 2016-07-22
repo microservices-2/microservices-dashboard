@@ -18,8 +18,8 @@
         }
       });
 
-      modalInstance.result.then(function(node) {
-        NodeService.addNewNode(node);
+      modalInstance.result.then(function(data) {
+        NodeService.addNewNode(data);
       });
     };
   }
