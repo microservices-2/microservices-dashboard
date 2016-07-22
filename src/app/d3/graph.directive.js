@@ -14,7 +14,6 @@
     var width = $window.innerWidth - margin.right - margin.left - 16;
     var height = $window.innerHeight;
     var minheight = $window.innerHeight;
-    var linkedByIndex = {};
     var data;
     var graph;
     var layout;
@@ -26,41 +25,35 @@
     var verticalNodeSpace = 75;
     var verticalNodeSpaceRect = 25;
     var paddingAfterTitles = 10;
-    // for circles
-    var nodeR = 16;
-    // for rects
+
+    // circles render settings
+    var nodeRadius = 16;
+
+    // rectangle render settings
     var nodeWidth = 140;
     var nodeHeight = 20;
-    var onNodeMouseDown;
-    function findConnectedNodes(currentNode) {
-      var connectedNodes = [currentNode];
-      data.links.forEach(function(link) {
-        if (link.source.id === currentNode.id) {
-          connectedNodes.push(link.target);
-        } else if (link.target.id === currentNode.id) {
-          connectedNodes.push(link.source);
-        }
-      });
-      return connectedNodes;
-    }
-    function fadeUnrelatedNodes(d, opacity, nodes, links) {
-      var connectedNodes = findConnectedNodes(d);
-      nodes.style('stroke-opacity', function(node) {
-        if (connectedNodes.indexOf(node) > -1) {
-          return 1;
-        }
-        return opacity;
-      });
 
-      links.style('opacity', function(link) {
-        if (link.source.id === connectedNodes[0].id && connectedNodes.indexOf(link.target)) {
-          return 1;
-        } else if (link.target.id === connectedNodes[0].id && connectedNodes.indexOf(link.source)) {
-          return 1;
-        }
-        return opacity;
-      });
+    function fadeUnrelatedNodes(d, opacity, nodes, links) {
+      var connectedNodes = NodeService.getConnectedNodes(data.links, d);
+      nodes
+        .style('stroke-opacity', function(node) {
+          if (d.id === node.id) {
+            return 1;
+          }
+          return opacity;
+        });
+
+      links
+        .style('opacity', function(link) {
+          if (link.source.id === d.id && connectedNodes.indexOf(link.target)) {
+            return 1;
+          } else if (link.target.id === d.id && connectedNodes.indexOf(link.source)) {
+            return 1;
+          }
+          return opacity;
+        });
     }
+
     function fillColor(o) {
       if (o.details !== undefined) {
         return NodecolorService.getColorFor(o.details.type);
@@ -224,7 +217,7 @@
         .append('svg:marker')
         .attr('id', 'arrow')
         .attr('viewBox', '0 -5 10 10')
-        .attr('refX', nodeR + 9 + 2)
+        .attr('refX', nodeRadius + 9 + 2)
         .attr('refY', 0.0)
         .attr('markerWidth', 60)
         .attr('markerHeight', 6)
@@ -359,9 +352,9 @@
 
       circles
         .append('svg:circle')
-        .attr('r', nodeR / 1.5)
+        .attr('r', nodeRadius / 1.5)
         .attr('cx', function(d) {
-          return d.x + (nodeR * 1.6);
+          return d.x + (nodeRadius * 1.6);
         })
         .attr('cy', function(d) {
           return d.y;
@@ -380,10 +373,10 @@
 
       circles.append('svg:text')
         .attr('x', function(d) {
-          return d.x + (nodeR * 1.6);
+          return d.x + (nodeRadius * 1.6);
         })
         .attr('y', function(d) {
-          return d.y + nodeR / 2 - nodeR / 4;
+          return d.y + nodeRadius / 2 - nodeRadius / 4;
         })
         .text(function(d) {
           var nodeEvents = msdEventsService.getEventsByNodeId(d.id);
@@ -403,7 +396,7 @@
         .attr('class', function(d) {
           return formatClassName('circle', d);
         })
-        .attr('r', nodeR)
+        .attr('r', nodeRadius)
         .attr('cx', function(d) {
           return d.x;
         })
@@ -425,9 +418,9 @@
       });
       rects
         .append('svg:circle')
-        .attr('r', nodeR / 1.5)
+        .attr('r', nodeRadius / 1.5)
         .attr('cx', function(d) {
-          return d.x + (nodeR);
+          return d.x + (nodeRadius);
         })
         .attr('cy', function(d) {
           return d.y;
@@ -447,10 +440,10 @@
       rects
         .append('svg:text')
         .attr('x', function(d) {
-          return d.x + nodeR;
+          return d.x + nodeRadius;
         })
         .attr('y', function(d) {
-          return d.y + nodeR / 2 - nodeR / 4;
+          return d.y + nodeRadius / 2 - nodeRadius / 4;
         })
         .text(function(d) {
           var nodeEvents = msdEventsService.getEventsByNodeId(d.id);
@@ -466,7 +459,7 @@
         .attr('class', function(d) {
           return formatClassName('circle', d);
         })
-        // .attr("r", nodeR)
+        // .attr("r", nodeRadius)
         .attr('x', function(d) {
           return d.x - nodeWidth;
         })
@@ -521,32 +514,6 @@
         })
         .attr('text-anchor', 'middle')
         .style('font-size', textFontSize);
-
-
-      // Lanes
-      // graph.append('svg:g')
-      //   .selectAll('.lane')
-      //   .data(data.lanes)
-      //   .enter()
-      //   .append('svg:line')
-      //   .attr('class', 'lane')
-      //   .attr('x1', function(d) {
-      //     return x1(d.lane);
-      //   })
-      //   .attr('x2', function(d) {
-      //     return x1(d.lane);
-      //   })
-      //   .attr('y1', 0)
-      //   .attr('y2', height)
-      //   .style('visibility', function(d, i) {
-      //     return i === 0 ? null : 'visible';
-      //   });
-
-      // Build linked index
-      data.links
-        .forEach(function(d) {
-          linkedByIndex[d.source.index + ',' + d.target.index] = 1;
-        });
     }
 
     function render(element) {
@@ -579,11 +546,11 @@
         });
     }
 
-    onNodeMouseDown = function onNodeMouseDown(d) {
+    function onNodeMouseDown(d) {
       d.fixed = true;
       d3.select(this).classed('sticky', true);
       showTheDetails(d);
-    };
+    }
 
     function resize() {
       width = $window.innerWidth - margin.right - margin.left;
@@ -600,35 +567,6 @@
       render(element);
     }
 
-    // function formatLinkNameByIndex(prefix, object) {
-    //    return prefix + '-' + object.source + '-' + object.target;
-    // }
-
-    // function formatLinkNameByObject(prefix, object) {
-    //    return prefix + '-' + object.source.index + '-' + object.target.index;
-    // }
-
-    // function findElementByLink(prefix, link) {
-    //    var selector = '#' + formatLinkNameByObject(prefix, link);
-    //    return graph.select(selector);
-    // }
-
-    // function isConnected(a, b) {
-    //    //return linkedByIndex[a.index + "," + b.index]
-    //    // || linkedByIndex[b.index + "," + a.index]
-    //    // || a.index === b.index;
-    //    if (a.index === b.index) {
-    //        return true;
-    //    }
-    //    var connected = false;
-    //    data.links.forEach(function (d) {
-    //        if ((d.source === a && d.target === b) || (d.source === b && d.target === a)) {
-    //            connected = true;
-    //        }
-    //    });
-    //    return connected;
-    // }
-
     return {
       restrict: 'A',
       scope: {
@@ -638,7 +576,6 @@
         element = elem[0];
         d3.select($window).on('resize', resize); // Adds or removes an event listener to each element in the current selection, for the specified type.
         scope.$watch('graphData', function(newVal) {
-          // todo do an object equality check with lodash or keep $watch eqaulity check?
           if (newVal) {
             data = newVal;
             render(element);
