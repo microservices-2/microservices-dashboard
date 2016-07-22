@@ -388,8 +388,10 @@
         .text(function(d) {
           var nodeEvents = msdEventsService.getEventsByNodeId(d.id);
           if (nodeEvents) {
-            d.nodeEvents = nodeEvents;
-            return nodeEvents.events.length;
+            if (nodeEvents.nodeId === d.id) {
+              d.nodeEvents = nodeEvents;
+              return nodeEvents.events.length;
+            }
           }
           return 0;
         })

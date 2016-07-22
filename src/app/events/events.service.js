@@ -43,8 +43,6 @@
         });
         if (result.length === 1) {
           var element = result[0];
-          index = element.index;
-          _self.indexMap[event.nodeId] = index;
           element.events.push(event);
         } else {
           index += 1;
