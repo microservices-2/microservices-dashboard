@@ -31,9 +31,20 @@
 
     describe('Events per node', function() {
       var list;
+      var simpleList;
+
       beforeEach(function() {
         list = _mockList;
         service.setEventList(list);
+        simpleList = [
+          { message: 'hello', nodeId: 'a' },
+          { message: 'world', nodeId: 'a' },
+          { message: 'my', nodeId: 'b' },
+          { message: 'name', nodeId: 'c' },
+          { message: 'is', nodeId: 'b' },
+          { message: 'ry', nodeId: 'b' },
+          { message: 'animal', nodeId: 'c' }
+        ];
       });
 
       it('should get event count by node id', function() {
@@ -55,15 +66,6 @@
       });
 
       it('should index for quick access', function() {
-        var simpleList = [
-          { message: 'hello', nodeId: 'a' },
-          { message: 'world', nodeId: 'a' },
-          { message: 'my', nodeId: 'b' },
-          { message: 'name', nodeId: 'c' },
-          { message: 'is', nodeId: 'b' },
-          { message: 'ry', nodeId: 'b' },
-          { message: 'animal', nodeId: 'c' }
-        ];
         var expected = [
           {
             index: 0,
@@ -93,10 +95,51 @@
         ];
         var actual = service.createEventsGraph(simpleList);
         expect(actual).toEqual(expected);
+
+        simpleList = [
+          { message: 'hello', nodeId: 'a' },
+          { message: 'world', nodeId: 'a' },
+          { message: 'my', nodeId: 'b' },
+          { message: 'name', nodeId: 'c' }
+        ];
+        expected = [
+          {
+            index: 0,
+            nodeId: 'a',
+            events: [
+              { message: 'hello', nodeId: 'a' },
+              { message: 'world', nodeId: 'a' }
+            ]
+          },
+          {
+            index: 1,
+            nodeId: 'b',
+            events: [
+              { message: 'my', nodeId: 'b' }
+            ]
+          },
+          {
+            index: 2,
+            nodeId: 'c',
+            events: [
+              { message: 'name', nodeId: 'c' }
+            ]
+          }
+        ];
+        actual = service.createEventsGraph(simpleList);
+        expect(actual).toEqual(expected);
+      });
+
+      it('should return events of a particular node by index', function() {
+        service.setEventList(_mockList);
+        var nodeEvents = service.getEventsByIndex(service.indexMap['customer-group']);
+        expect(nodeEvents.nodeId).toBe('customer-group');
+        expect(nodeEvents.events.length).toBe(2);
       });
 
       it('should get all events by node id', function() {
         var expected = {
+          index: 0,
           nodeId: 'customer-group',
           events: [
             { message: 'Exception 404 Not Found for url http://localhost:8089/customer-group/mappings with headers [Cache-Control=must-revalidate,no-cache,no-store, Content-Type=text/html; charset=ISO-8859-1, Content-Length=309, Server=Jetty(9.2.16.v20160414)]', throwable: null, nodeId: 'customer-group' },
@@ -105,11 +148,10 @@
         };
         var actual = service.getEventsByNodeId('customer-group');
         expect(actual).toEqual(expected);
-
         actual = service.getEventsByNodeId('');
         expect(actual).toBeUndefined();
         actual = service.getEventsByNodeId(425);
-        expect(actual).toEqual({ nodeId: 425, events: [] });
+        expect(actual).toEqual(undefined);
       });
     });
   });

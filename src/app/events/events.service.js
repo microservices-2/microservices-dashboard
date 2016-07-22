@@ -18,7 +18,11 @@
     var _self = this;
 
     _self.eventList = undefined;
+    _self.indexEventList = undefined;
+    _self.indexMap = undefined;
 
+    _self.getIndexedList = getIndexedList;
+    _self.getEventsByIndex = getEventsByIndex;
     _self.request = request;
     _self.getEventList = getEventList;
     _self.setEventList = setEventList;
@@ -27,8 +31,12 @@
     _self.createEventsGraph = createEventsGraph;
 
     // //////////////
+    function getEventsByIndex(index) {
+      return _self.indexEventList[index];
+    }
     function createEventsGraph(list) {
       var index = -1;
+      _self.indexMap = {};
       return list.reduce(function(graph, event) {
         var result = graph.filter(function(graphElement) {
           return graphElement.nodeId === event.nodeId;
@@ -36,6 +44,7 @@
         if (result.length === 1) {
           var element = result[0];
           index = element.index;
+          _self.indexMap[event.nodeId] = index;
           element.events.push(event);
         } else {
           index += 1;
@@ -46,6 +55,7 @@
             nodeId: event.nodeId,
             events: evts
           });
+          _self.indexMap[event.nodeId] = index;
         }
         return graph;
       }, []);
@@ -53,14 +63,11 @@
 
     function getEventsByNodeId(id) {
       if (id) {
-        var nodeEvents = {
-          nodeId: id,
-          events: filterById(id)
-        };
-        return nodeEvents;
+        return getEventsByIndex(_self.indexMap[id]);
       }
       return undefined;
     }
+
     function filterById(id) {
       return _self.eventList.filter(function(event) {
         return event.nodeId === id;
@@ -77,6 +84,10 @@
     }
     function setEventList(list) {
       _self.eventList = list;
+      _self.indexEventList = createEventsGraph(list);
+    }
+    function getIndexedList() {
+      return _self.indexEventList;
     }
     function getEventList() {
       return _self.eventList;
@@ -86,7 +97,7 @@
         .get(BASE_URL + 'events')
         .then(function(response) {
           if (response.data) {
-            _self.eventList = response.data;
+            setEventList(response.data);
           }
         });
     }
