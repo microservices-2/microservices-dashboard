@@ -137,7 +137,7 @@ The server needs to be started to get any data in the dashboard: [microservices-
 
 Contributors to this project agree to uphold its [code of conduct][1].
 
-There are several that you can contribute to microservices-dashboard-server:
+There are several ways in which you can contribute to microservices-dashboard:
 
  - Open a [pull request][2]. Please see the [contributor guidelines][3] for details.
  - Chat with fellow users [on Gitter][4].
