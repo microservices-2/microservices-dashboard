@@ -7,8 +7,8 @@
     $stateProvider
       .state('home', {
         url: '/',
-        templateUrl: 'app/graph/graph.html',
-        controller: 'GraphController',
+        templateUrl: 'app/home/home.html',
+        controller: 'HomeController',
         controllerAs: 'vm'
       });
 

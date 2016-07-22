@@ -8,67 +8,39 @@
   /** @ngInject */
   function MsgD3Graph(
     d3, $modal, $window, NodeService, NodecolorService, createModalConfig,
-    msdEventsService, createEventModalConfig
+    msdEventsService, createEventModalConfig, helpers, GraphService, msdVisuals
   ) {
+    // graph box
     var margin = { top: 20, right: 0, bottom: 20, left: 0 };
     var width = $window.innerWidth - margin.right - margin.left - 16;
     var height = $window.innerHeight;
     var minheight = $window.innerHeight;
+
     var data;
     var graph;
     var layout;
     var links;
     var nodes;
     var element;
+
+    // fontsizes
     var titleFontSize;
     var textFontSize;
+
+    // node positioning
     var verticalNodeSpace = 75;
-    var verticalNodeSpaceRect = 25;
+    var verticalNodeSpaceRect = 30;
     var paddingAfterTitles = 10;
 
     // circles render settings
     var nodeRadius = 16;
 
     // rectangle render settings
-    var nodeWidth = 140;
+    var nodeWidth = 240;
     var nodeHeight = 20;
 
-    function fadeUnrelatedNodes(d, opacity, nodes, links) {
-      var connectedNodes = NodeService.getConnectedNodes(data.links, d);
-      nodes
-        .style('stroke-opacity', function(node) {
-          if (d.id === node.id) {
-            return 1;
-          }
-          return opacity;
-        });
-
-      links
-        .style('opacity', function(link) {
-          if (link.source.id === d.id && connectedNodes.indexOf(link.target)) {
-            return 1;
-          } else if (link.target.id === d.id && connectedNodes.indexOf(link.source)) {
-            return 1;
-          }
-          return opacity;
-        });
-    }
-
-    function fillColor(o) {
-      if (o.details !== undefined) {
-        return NodecolorService.getColorFor(o.details.type);
-      }
-    }
-
-    // Helpers
-    function formatClassName(prefix, object) {
-      if (object.id) {
-        return prefix + '-' + object.id.replace(/(\.|\/|:)/gi, '-');
-      }
-    }
-
     function findElementByNode(prefix, node) {
-      var selector = '.' + formatClassName(prefix, node);
+      var selector = '.' + helpers.formatClassName(prefix, node);
       return graph.select(selector);
     }
 
@@ -100,40 +72,69 @@
       fadeUnrelatedNodes(d, 1, nodes, links);
     }
 
-    function onLinkMouseDown() {
+    function onNodeMouseDown(node) {
+      node.fixed = true;
+      d3.select(this).classed('sticky', true);
+      NodeService.setSelectedNode(node);
+      var modalConfig = createModalConfig(node.lane);
+      var modalInstance = $modal.open(modalConfig);
 
+      modalInstance
+        .result
+        .then(function(updates) {
+          NodeService.updateNode(updates);
+          renderGraph();
+        });
     }
 
-    function determineFontSize() {
-      switch (true) {
-        case (width >= 0 && width < 480):
-          titleFontSize = 12;
-          textFontSize = 6;
-          break;
-        case (width >= 480 && width < 640):
-          titleFontSize = 18;
-          textFontSize = 8;
-          break;
-        // case (width > width):
-        //   titleFontSize = 22;
-        //   textFontSize = 10;
-        //   break;
-        default:
-          break;
+    function fadeUnrelatedNodes(d, opacity, nodes, links) {
+      var connectedNodes = NodeService.getConnectedNodes(data.links, d);
+      nodes
+        .style('stroke-opacity', function(node) {
+          if (connectedNodes.indexOf(node) > -1) {
+            return 1;
+          }
+          return opacity;
+        });
+
+      links
+        .style('opacity', function(link) {
+          if (link.source.id === d.id && connectedNodes.indexOf(link.target)) {
+            return 1;
+          } else if (link.target.id === d.id && connectedNodes.indexOf(link.source)) {
+            return 1;
+          }
+          return opacity;
+        });
+    }
+
+    function fillColor(o) {
+      if (o.details !== undefined) {
+        return NodecolorService.getColorFor(o.details.type);
       }
     }
 
-    function countNodesByLane(nodes) {
-      var counts = [0, 0, 0, 0];
-      nodes.forEach(function(n) {
-        counts[n.lane]++;
-      });
-      return counts;
+    function determineFontSize(width) {
+      var title;
+      var text;
+
+      if (width >= 0 && width < 480) {
+        title = 12;
+        text = 6;
+      } else if (width >= 480 && width < 640) {
+        title = 18;
+        text = 8;
+      }
+
+      return {
+        titleFontSize: title || 22,
+        textFontSize: text || 14
+      };
     }
 
     function getGraphHeight(data) {
       var numberOfNodes = 0;
-      var numberOfNodesByLane = countNodesByLane(data.nodes);
+      var numberOfNodesByLane = GraphService.countNodesByLane(data.nodes);
 
       numberOfNodesByLane.forEach(function(count, index) {
         count++;
@@ -151,34 +152,53 @@
       return minheight;
     }
 
-    function renderGraph(data) {
-      var laneLength = data.lanes.length;
+    function renderGraph() {
+      var laneCount = data.lanes.length;
+      var uiCounter = 0;
+      var epCounter = 0;
+      var microCounter = 0;
+      var dbCounter = 0;
+      var fontsizes = determineFontSize(width);
+
+      titleFontSize = fontsizes.titleFontSize;
+      textFontSize = fontsizes.textFontSize;
+      height = getGraphHeight(data);
+
+      d3.select('svg')
+        .remove();
+
+      layout = d3.layout
+        .force()
+        .size([width, height]);
+
+      graph = d3.select(element)
+        .append('svg')
+        .attr('width', width + margin.right + margin.left)
+        .attr('height', height)
+        .append('g');
+
       // tooltip
       var tooltip = graph
         .append('svg:text')
         .attr('class', 'svgtooltip');
 
-      var uiCounter = 0;
-      var epCounter = 0;
-      var microCounter = 0;
-      var dbCounter = 0;
-
-      var x1 = d3.scale.linear()
-        .domain([0, laneLength])
+      var xScale = d3.scale
+        .linear()
+        .domain([0, laneCount])
         .range([margin.left, width]);
 
-      // Update data
+      // Set node position
       for (var i = 0; i < data.nodes.length; i++) {
         var node = data.nodes[i];
         node.index = i;
-        node.x = x1(node.lane + 0.5);
+        node.x = xScale(node.lane + 0.5);
         switch (node.lane) {
           case 0:
             uiCounter++;
             node.y = verticalNodeSpace * uiCounter + paddingAfterTitles;
             break;
           case 1:
-            node.x = x1(node.lane + 0.5) + (nodeWidth / 2);
+            node.x = xScale(node.lane + 0.5) + (nodeWidth / 2);
             node.y = (verticalNodeSpaceRect * epCounter) + verticalNodeSpace + paddingAfterTitles;
             epCounter++;
             break;
@@ -195,22 +215,7 @@
         }
       }
 
-      // Lane Titles
-      graph.append('svg:g')
-        .selectAll('.label')
-        .data(data.lanes)
-        .enter()
-        .append('svg:text')
-        .text(function(d) {
-          return d.type;
-        })
-        .attr('x', function(d, i) {
-          return x1(i + 0.5);
-        })
-        .attr('y', 30)
-        .attr('text-anchor', 'middle')
-        .attr('class', 'lane-title')
-        .style('font-size', titleFontSize);
+      msdVisuals.drawLaneTitles(graph, data.lanes);
 
       // Circle Marker Arrows
       graph.append('svg:defs')
@@ -254,7 +259,6 @@
         .data(data.links)
         .enter()
         .append('path')
-        .on('click', onLinkMouseDown)
         .attr('class', 'link')
         .attr('d', function(l) {
           var sourceNode = data.nodes.filter(function(d, i) {
@@ -292,7 +296,6 @@
         .data(data.links)
         .enter()
         .append('path')
-        .on('click', onLinkMouseDown)
         .attr('class', 'clickablelink')
         .attr('d', function(l) {
           var sourceNode = data.nodes.filter(function(d, i) {
@@ -341,7 +344,7 @@
         .attr('class', 'node')
         .call(layout.drag)
         .attr('id', function(d) {
-          return formatClassName('node', d);
+          return helpers.formatClassName('node', d);
         });
 
       // Circles
@@ -394,7 +397,7 @@
       circles
         .append('svg:circle')
         .attr('class', function(d) {
-          return formatClassName('circle', d);
+          return helpers.formatClassName('circle', d);
         })
         .attr('r', nodeRadius)
         .attr('cx', function(d) {
@@ -457,7 +460,7 @@
         .style('font-size', textFontSize - 6);
       rects.append('svg:rect')
         .attr('class', function(d) {
-          return formatClassName('circle', d);
+          return helpers.formatClassName('circle', d);
         })
         // .attr("r", nodeRadius)
         .attr('x', function(d) {
@@ -478,13 +481,13 @@
       // A copy of the text with a thick white stroke for legibility.
       nodes.append('svg:text')
         .attr('x', function(d) {
-          return x1(d.lane + 0.5);
+          return xScale(d.lane + 0.5);
         })
         .attr('y', function(d) {
           return d.y + (d.lane === 1 ? 4 : 25);
         })
         .attr('class', function(d) {
-          return 'shadow ' + formatClassName('text', d);
+          return 'shadow ' + helpers.formatClassName('text', d);
         }).text(function(d) {
           var name = d.details.name ? d.details.name : d.id;
           if (d.details.virtual === true) {
@@ -497,10 +500,10 @@
 
       nodes.append('svg:text')
         .attr('class', function(d) {
-          return formatClassName('text', d);
+          return helpers.formatClassName('text', d);
         })
         .attr('x', function(d) {
-          return x1(d.lane + 0.5);
+          return xScale(d.lane + 0.5);
         })
         .attr('y', function(d) {
           return d.y + (d.lane === 1 ? 4 : 25);
@@ -516,42 +519,6 @@
         .style('font-size', textFontSize);
     }
 
-    function render(element) {
-      height = getGraphHeight(data);
-
-      d3.select('svg').remove();
-
-      graph = d3.select(element).append('svg')
-        .attr('width', width + margin.right + margin.left)
-        .attr('height', height)
-        .append('g');
-
-      layout = d3.layout.force()
-        .size([width, height]);
-
-      determineFontSize();
-      renderGraph(data);
-    }
-
-    function showTheDetails(node) {
-      NodeService.setSelectedNode(node);
-      var modalConfig = createModalConfig(node.lane);
-      var modalInstance = $modal.open(modalConfig);
-
-      modalInstance
-        .result
-        .then(function(updates) {
-          NodeService.updateNode(updates);
-          render(element);
-        });
-    }
-
-    function onNodeMouseDown(d) {
-      d.fixed = true;
-      d3.select(this).classed('sticky', true);
-      showTheDetails(d);
-    }
-
     function resize() {
       width = $window.innerWidth - margin.right - margin.left;
       height = $window.innerHeight;
@@ -564,7 +531,7 @@
         .attr('width', width + margin.right + margin.left)
         .attr('height', height);
 
-      render(element);
+      renderGraph();
     }
 
     return {
@@ -578,7 +545,7 @@
         scope.$watch('graphData', function(newVal) {
           if (newVal) {
             data = newVal;
-            render(element);
+            renderGraph();
           }
         }, true);
       }

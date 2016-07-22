@@ -20,6 +20,7 @@
     var graph = {};
 
     var factory = {
+      countNodesByLane: countNodesByLane,
       getGraph: getGraphData,
       setGraphData: setGraphData,
       requestGraph: requestGraph,
@@ -33,6 +34,13 @@
       getTypes: getTypes,
       getGroups: getGroups
     };
+
+    function countNodesByLane(nodes) {
+      return nodes.reduce(function(table, node) {
+        table[node.lane]++;
+        return table;
+      }, [0, 0, 0, 0]);
+    }
 
     function getGraphData() {
       return graph;
