@@ -39,7 +39,11 @@
     // == Methods == //
 
     function activate() {
-      GraphService.requestGraph();
+      msdEventsService
+        .request()
+        .then(function() {
+          GraphService.requestGraph();
+        });
     }
 
     function parseGraph(graphData) {
@@ -90,7 +94,11 @@
     function addOnNodeChangesListener() {
       return $rootScope.$on(EVENT_NODES_CHANGED, function() {
         withFilter = true;
-        parseGraph(GraphService.getGraph());
+        msdEventsService
+          .request()
+          .then(function() {
+            parseGraph(GraphService.getGraph());
+          });
       });
     }
   }
