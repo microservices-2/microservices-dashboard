@@ -7,7 +7,8 @@
 
   /** @ngInject */
   function MsgD3Graph(
-    d3, $modal, $window, NodeService, NodecolorService, createModalConfig
+    d3, $modal, $window, NodeService, NodecolorService, createModalConfig,
+    msdEventsService, createEventModalConfig
   ) {
     var margin = { top: 20, right: 0, bottom: 20, left: 0 };
     var width = $window.innerWidth - margin.right - margin.left - 16;
@@ -81,6 +82,16 @@
     /*
      Mouse events
      */
+    function onEventCircleMouseDown(node) {
+      if (node.nodeEvents) {
+        var modalConfig = createEventModalConfig(node.nodeEvents);
+        var modalInstance = $modal.open(modalConfig);
+
+        modalInstance
+          .result
+          .then();
+      }
+    }
 
     function onNodeMouseOver(nodes, links, d) {
       var elm = findElementByNode('circle', d);
@@ -336,15 +347,56 @@
         .append('svg:g')
         .attr('class', 'node')
         .call(layout.drag)
-        .on('mousedown', onNodeMouseDown)
         .attr('id', function(d) {
           return formatClassName('node', d);
         });
 
       // Circles
-      nodes.filter(function(d) {
-        return d.lane !== 1;
-      })
+      var circles = nodes
+        .filter(function(d) {
+          return d.lane !== 1;
+        });
+
+      circles
+        .append('svg:circle')
+        .attr('r', nodeR / 1.5)
+        .attr('cx', function(d) {
+          return d.x + (nodeR * 1.6);
+        })
+        .attr('cy', function(d) {
+          return d.y;
+        })
+        .style('stroke-width', 1)
+        .style('stroke', function(o) {
+          return fillColor(o);
+        })
+        .on('mouseover', _.bind(function() {
+
+        }, this, nodes, links))
+        .on('mouseout', _.bind(function() {
+
+        }, this, nodes, links))
+        .on('mousedown', _.bind(onEventCircleMouseDown));
+
+      circles.append('svg:text')
+        .attr('x', function(d) {
+          return d.x + (nodeR * 1.6);
+        })
+        .attr('y', function(d) {
+          return d.y + nodeR / 2 - nodeR / 4;
+        })
+        .text(function(d) {
+          var nodeEvents = msdEventsService.getEventsByNodeId(d.id);
+          if (nodeEvents) {
+            d.nodeEvents = nodeEvents;
+            return nodeEvents.events.length;
+          }
+          return 0;
+        })
+        .attr('text-anchor', 'middle')
+        .style('font-size', textFontSize - 6);
+
+      circles
         .append('svg:circle')
         .attr('class', function(d) {
           return formatClassName('circle', d);
@@ -360,15 +412,55 @@
         .on('mouseout', _.bind(onNodeMouseOut, this, nodes, links))
         .style('stroke', function(o) {
           return fillColor(o);
-        });
+        })
+        .on('mousedown', onNodeMouseDown);
       // .style("stroke-width", 5)
       // .style("fill", '#ffffff');
 
       // Rectangles
-      nodes.filter(function(d) {
+      var rects = nodes.filter(function(d) {
         return d.lane === 1;
-      })
-        .append('svg:rect')
+      });
+      rects
+        .append('svg:circle')
+        .attr('r', nodeR / 1.5)
+        .attr('cx', function(d) {
+          return d.x + (nodeR);
+        })
+        .attr('cy', function(d) {
+          return d.y;
+        })
+        .style('stroke-width', 1)
+        .style('stroke', function(o) {
+          return fillColor(o);
+        })
+        .on('mouseover', _.bind(function() {
+
+        }, this, nodes, links))
+        .on('mouseout', _.bind(function() {
+
+        }, this, nodes, links))
+        .on('mousedown', _.bind(onEventCircleMouseDown));
+
+      rects
+        .append('svg:text')
+        .attr('x', function(d) {
+          return d.x + nodeR;
+        })
+        .attr('y', function(d) {
+          return d.y + nodeR / 2 - nodeR / 4;
+        })
+        .text(function(d) {
+          var nodeEvents = msdEventsService.getEventsByNodeId(d.id);
+          if (nodeEvents) {
+            d.nodeEvents = nodeEvents;
+            return nodeEvents.events.length;
+          }
+          return 0;
+        })
+        .attr('text-anchor', 'middle')
+        .style('font-size', textFontSize - 6);
+      rects.append('svg:rect')
         .attr('class', function(d) {
           return formatClassName('circle', d);
         })
@@ -383,6 +475,7 @@
         .attr('height', nodeHeight)
         .on('mouseover', _.bind(onNodeMouseOver, this, nodes, links))
         .on('mouseout', _.bind(onNodeMouseOut, this, nodes, links))
+        .on('mousedown', onNodeMouseDown)
         .style('stroke', function(o) {
           return fillColor(o);
         });
@@ -426,6 +519,7 @@
         })
         .attr('text-anchor', 'middle')
         .style('font-size', textFontSize);
+
 
       // Lanes
       // graph.append('svg:g')
