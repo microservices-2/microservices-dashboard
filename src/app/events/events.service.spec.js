@@ -66,15 +66,15 @@
         ];
         var expected = [
           {
-            index: 1,
+            index: 0,
             nodeId: 'a',
             events: [
               { message: 'hello', nodeId: 'a' },
-              { message: 'world', nodeId: 'a' },
+              { message: 'world', nodeId: 'a' }
             ]
           },
           {
-            index: 2,
+            index: 1,
             nodeId: 'b',
             events: [
               { message: 'my', nodeId: 'b' },
@@ -83,7 +83,7 @@
             ]
           },
           {
-            index: 3,
+            index: 2,
             nodeId: 'c',
             events: [
               { message: 'name', nodeId: 'c' },

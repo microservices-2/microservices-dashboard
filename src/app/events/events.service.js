@@ -28,13 +28,14 @@
 
     // //////////////
     function createEventsGraph(list) {
-      var index = 0;
+      var index = -1;
       return list.reduce(function(graph, event) {
         var result = graph.filter(function(graphElement) {
           return graphElement.nodeId === event.nodeId;
         });
         if (result.length === 1) {
           var element = result[0];
+          index = element.index;
           element.events.push(event);
         } else {
           index += 1;
