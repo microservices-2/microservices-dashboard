@@ -10,7 +10,7 @@
   /** @ngInject */
   function GraphController(
     // services
-    $scope, $rootScope, $filter, $q, GraphService,
+    $scope, $rootScope, $filter, $q, GraphService, msdEventsService,
 
     // constants
     REQUEST_GRAPH_DATA_SUCCESS, EVENT_NODES_CHANGED
@@ -40,6 +40,7 @@
 
     function activate() {
       GraphService.requestGraph();
+      msdEventsService.request();
     }
 
     function parseGraph(graphData) {

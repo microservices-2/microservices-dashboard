@@ -7,13 +7,27 @@
     .service('msdEventsService', Service);
 
   Service.$inject = ['$http', 'BASE_URL'];
+  /**
+   * Responsible for managing the event list local state
+   * And managing the HTTP RESOURCE /events
+   *
+   * @param {any} $http
+   * @param {any} BASE_URL
+   */
   function Service($http, BASE_URL) {
-    this.request = request;
+    var self = this;
+
+    self.request = request;
+    self.eventList = [];
     // //////////////
     function request() {
-      $http
+      return $http
         .get(BASE_URL + 'events')
-        .then();
+        .then(function(response) {
+          if (response.data) {
+            self.eventList = response.data;
+          }
+        });
     }
   }
 })();
