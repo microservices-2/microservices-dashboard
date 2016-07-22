@@ -117,7 +117,8 @@
      *
      * var updates = {
      *  sourceNode: node,
-     *  toLinks: node[]
+     *  toLinks: node[],
+     *  isNewNode: boolean
      * }
      *
      * @returns a new array of link objects
