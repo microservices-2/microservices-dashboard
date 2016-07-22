@@ -42,6 +42,8 @@ Managers like to have a grip on things::
 [[getting-started]]
 == Getting started ==
 
+TIP: The absolutely simplest way (although not the default way) to get up and running is by <<starting-from-sample,cloning and running a simple sample>>. This is especially handy for people not familiar with Java or maven.
+
 [[default-set-up]]
 === Default set up ===
 
@@ -116,7 +118,7 @@ If successful, you should see the following output in the log:
 You should now be able to view the empty dashboard at `http://localhost:8080`.
 
 You can now configure integrations with your ecosystem to start aggregating node information.
-More details on how to do this can be found at the <<aggregation-configuration,Aggregation configuration>> section.
+More details on how to do this can be found at the <<aggregation-configuration,Node retrieval configuration>> section.
 
 [[alternative-set-up]]
 == Alternative set up ==
@@ -212,15 +214,115 @@ cd microservices-dashboard-server/samples/microservices-dashboard-simple
 ----
 
 [[aggregation-configuration]]
-== Aggregation configuration ==
+== Node retrieval configuration ==
 
-Currently three aggregators are provided out-of-the-box:
+Nodes are retrieved by node aggregators.
+Each of these aggregators calls certain resources which expose information that can be mapped to nodes.
+These nodes are then shown on the dashboard in one of the four columns.
+You can simply use the default aggregators and configure your ecosystem as we have intended it to be configured, or you can extend or override them.
+You can even write your own aggregators for resources we haven't covered yet.
+Configuring the existing aggregators is explained below.
+If you wish to extend or override an aggregator, have a look at <<aggregation-extending,Extending existing aggregators>>.
+And finally writing your own aggregator is covered in the <<aggregation-writing-your-own, Writing your own aggregator>> section.
+
+Currently four aggregators are provided out-of-the-box:
 
 * Health aggregator _(requires service discovery)_
 * Index aggregator _(requires service discovery)_
+* Mappings aggregator _(requires service discovery)_
 * Pact aggregator _(requires pact broker)_
 
+[[aggregation-health]]
+=== Health aggregator ===
+
 More information will be added as soon as possible.
+
+[[aggregation-index]]
+=== Index aggregator ===
+
+More information will be added as soon as possible.
+
+[[aggregation-mappings]]
+=== Mappings aggregator ===
+
+The mappings aggregator aggregates nodes from mappings information exposed by http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready[Spring Boot's Actuator].
+
+==== Prerequisites ====
+
+This aggregator uses service discovery to find available services.
+We are using the `org.springframework.cloud.client.discovery.DiscoveryClient` abstraction, which means that we support any implementation of said interface.
+At the time of writing Eureka, Zookeeper and Consul.io are supported, although the Spring Cloud team might add more at any moment.
+
+In case Spring Boot is not used in a microservice you would like to retrieve mappings of, your service must comply to the mappings format exposed by Spring Boot under the `/mappings` endpoint.
+
+[source,json,subs="verbatim,attributes"]
+.Example of a mappings response
+----
+{
+  "{[/endpoint1],methods=[GET],produces=[application/json]}" : {
+    "bean" : "requestMappingHandlerMapping",
+    "method" : "public java.util.Date be.ordina.controllers.Endpoint1Controller.retrieveDate(java.util.Date)"
+  },
+  "{[/endpoint2],methods=[GET, POST]}" : {
+    "bean" : "requestMappingHandlerMapping",
+    "method" : "public void be.ordina.controllers.Endpoint2Controller.createInformation(be.ordina.model.Information)"
+  }
+}
+----
+
+Any endpoint with a method signature containing `org.springframework` will be ignored.
+
+More information will be added as soon as possible.
+
+[[aggregation-pact]]
+=== Pact aggregator ===
+
+More information will be added as soon as possible.
+
+[[aggregation-extending]]
+=== Extending existing aggregators ===
+
+More information will be added as soon as possible.
+
+[[aggregation-writing-your-own]]
+=== Writing your own aggregator ===
+
+When writing your own aggregator, it is important to understand how http://reactivex.io/[ReactiveX] works.
+We use observables from https://github.com/ReactiveX/RxJava[RxJava] in order to make optimal use of the system resources the microservices-dashboard-server runs on.
+
+The `NodeAggregator` https://github.com/ordina-jworks/microservices-dashboard-server/blob/master/microservices-dashboard-server/src/main/java/be/ordina/msdashboard/aggregators/NodeAggregator.java[interface] exposes a single method:
+```java
+Observable<Node> aggregateNodes();
+```
+The easiest way to conform to this interface is to implement whichever logic you like, and in the end map the result to an observable as such:
+```java
+return Observable.from(nodes);
+```
+While this may be the easiest way to implement an aggregator, it probably isn't the most optimized way.
+Better would be to embrace observables from the start by using for instance https://github.com/ReactiveX/RxNetty[RxNetty] when you're calling external resources to fetch node information.
+You can find examples in the existing out-of-the-box aggregators, and you can reuse the useful `NettyServiceCaller` https://github.com/ordina-jworks/microservices-dashboard-server/blob/master/microservices-dashboard-server/src/main/java/be/ordina/msdashboard/aggregators/NettyServiceCaller.java[class] to work with observables from the source.
+
+==== Dealing with exceptions ====
+
+When errors occur during the treatment of an observable, its default behaviour is to terminate the emission of more information.
+While this might be desirable when reading a continuous stream of information, in our experience it often doesn't really match with our use case.
+
+Retrying the observable could seem the right course of action, if it wouldn't be for the fact that on retry the observable starts emitting information from the start.
+In other words, in case your observable emitting ten nodes, throws an exception on the fifth node, retrying will re-emit node one until five where it will terminate for the same exception again.
+
+The solution to this problem is turning the observable into a hot observable with autoconnection of the first subscriber:
+```java
+RxNetty.createHttpRequest(request)
+                .publish()
+                .autoConnect()
+```
+Or similarly:
+```java
+Observable.from(discoveryClient.getServices())
+                .subscribeOn(Schedulers.io())
+                .publish()
+                .autoConnect()
+```
 
 [[samples]]
 == Samples ==
