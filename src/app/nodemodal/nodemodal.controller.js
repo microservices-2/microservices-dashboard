@@ -77,21 +77,20 @@
     }
 
     function ok() {
-      if (vm.isNewNode) {
+      if (vm.newNode.id === undefined) {
         vm.newNode.id = vm.newNode.details.name;
-        $modalInstance.close(vm.newNode);
-      } else {
-        var updates = {
-          toLinks: vm.linkedToNodes.map(function(target) {
-            return {
-              source: vm.newNode,
-              target: target
-            };
-          }),
-          sourceNode: vm.newNode
-        };
-        $modalInstance.close(updates);
       }
+      var updates = {
+        toLinks: vm.linkedToNodes.map(function(target) {
+          return {
+            source: vm.newNode,
+            target: target
+          };
+        }),
+        sourceNode: vm.newNode,
+        isNewNode: vm.isNewNode
+      };
+      $modalInstance.close(updates);
     }
 
     function cancelModal() {

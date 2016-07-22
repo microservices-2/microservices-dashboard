@@ -28,14 +28,20 @@
       getNewNode: getNewNode
     };
 
-    function addNewNode(node) {
-      // TODO: add unique check
-      debugger;
-      if (node.id) {
+    function addNewNode(data) {
+      var node = data.sourceNode;
+      var toLinks = data.toLinks;
+      if (toLinks) {
+        node.linkedToNodeIds = getTargetIndices(toLinks);
+      }
+      if (node.id && data.isNewNode) {
         $http
           .post(BASE_URL + 'node', node)
           .then(function(response) {
             GraphService.addNewNode(node);
+            var oldLinks = GraphService.getGraph().links;
+            GraphService.getGraph().links = GraphService.updateToLinks(oldLinks, data);
+            $rootScope.$broadcast(EVENT_NODES_CHANGED);
           });
       }
     }
@@ -87,14 +93,16 @@
     }
 
     function updateNode(updates) {
-      var preparedNode = stripUnneededProperties(updates.sourceNode);
-      preparedNode.linkedToNodeIds = getTargetIndices(updates.toLinks);
-      $http.post(BASE_URL + 'node', preparedNode)
-        .then(function() {
-          var oldLinks = GraphService.getGraph().links;
-          GraphService.getGraph().links = GraphService.updateToLinks(oldLinks, updates);
-          $rootScope.$broadcast(EVENT_NODES_CHANGED);
-        });
+      if (updates.isNewNode === false) {
+        var preparedNode = stripUnneededProperties(updates.sourceNode);
+        preparedNode.linkedToNodeIds = getTargetIndices(updates.toLinks);
+        $http.post(BASE_URL + 'node', preparedNode)
+          .then(function() {
+            var oldLinks = GraphService.getGraph().links;
+            GraphService.getGraph().links = GraphService.updateToLinks(oldLinks, updates);
+            $rootScope.$broadcast(EVENT_NODES_CHANGED);
+          });
+      }
     }
 
     function getTargetIndices(links) {

@@ -30,8 +30,13 @@
       });
       it('should only make post if it has an id', function() {
         newNode.id = 'Ryan';
+        var data = {
+          isNewNode: true,
+          toLinks: [],
+          sourceNode: newNode
+        };
         $httpBackend.expectPOST('http://localhost:8080/node', newNode).respond(200);
-        NodeService.addNewNode(newNode);
+        NodeService.addNewNode(data);
         $httpBackend.flush();
       });
     });
