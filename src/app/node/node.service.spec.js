@@ -20,7 +20,7 @@
     }));
 
 
-    fdescribe('When adding a new node', function() {
+    describe('When adding a new node', function() {
       var newNode, nodes, nodeCount;
       beforeEach(function() {
         newNode = NodeService.getNewNode();

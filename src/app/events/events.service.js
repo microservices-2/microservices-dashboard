@@ -6,12 +6,14 @@
     .module('microServicesGui')
     .service('msdEventsService', Service);
 
-  Service.$inject = ['$http'];
-  function Service($http) {
-    this.exposedFn = exposedFn;
-
+  Service.$inject = ['$http', 'BASE_URL'];
+  function Service($http, BASE_URL) {
+    this.request = request;
     // //////////////
-
-    function exposedFn() { }
+    function request() {
+      $http
+        .get(BASE_URL + 'events')
+        .then();
+    }
   }
 })();
