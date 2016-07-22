@@ -8,9 +8,8 @@
   /** @ngInject */
   function MsgD3Graph(
     d3, $modal, $window, NodeService, NodecolorService, createModalConfig,
-    msdEventsService
+    msdEventsService, createEventModalConfig
   ) {
-    var eventsService = msdEventsService;
     var margin = { top: 20, right: 0, bottom: 20, left: 0 };
     var width = $window.innerWidth - margin.right - margin.left - 16;
     var height = $window.innerHeight;
@@ -83,6 +82,16 @@
     /*
      Mouse events
      */
+    function onEventCircleMouseDown(node) {
+      if (node.nodeEvents) {
+        var modalConfig = createEventModalConfig(node.nodeEvents);
+        var modalInstance = $modal.open(modalConfig);
+
+        modalInstance
+          .result
+          .then();
+      }
+    }
 
     function onNodeMouseOver(nodes, links, d) {
       var elm = findElementByNode('circle', d);
@@ -366,7 +375,8 @@
         }, this, nodes, links))
         .on('mouseout', _.bind(function() {
 
-        }, this, nodes, links));
+        }, this, nodes, links))
+        .on('mousedown', _.bind(onEventCircleMouseDown));
 
       circles.append('svg:text')
         .attr('x', function(d) {
@@ -378,6 +388,7 @@
         .text(function(d) {
           var nodeEvents = msdEventsService.getEventsByNodeId(d.id);
           if (nodeEvents) {
+            d.nodeEvents = nodeEvents;
             return nodeEvents.events.length;
           }
           return 0;
@@ -428,7 +439,9 @@
         }, this, nodes, links))
         .on('mouseout', _.bind(function() {
 
-        }, this, nodes, links));
+        }, this, nodes, links))
+        .on('mousedown', _.bind(onEventCircleMouseDown));
+
       rects
         .append('svg:text')
         .attr('x', function(d) {
@@ -440,6 +453,7 @@
         .text(function(d) {
           var nodeEvents = msdEventsService.getEventsByNodeId(d.id);
           if (nodeEvents) {
+            d.nodeEvents = nodeEvents;
             return nodeEvents.events.length;
           }
           return 0;
