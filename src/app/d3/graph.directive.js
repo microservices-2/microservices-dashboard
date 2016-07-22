@@ -150,7 +150,6 @@
     }
 
     function renderGraph(data) {
-      var eventsList = msdEventsService.getIndexedList();
       var laneLength = data.lanes.length;
       // tooltip
       var tooltip = graph
