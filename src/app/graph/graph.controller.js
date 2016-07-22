@@ -40,7 +40,6 @@
 
     function activate() {
       GraphService.requestGraph();
-      msdEventsService.request();
     }
 
     function parseGraph(graphData) {
