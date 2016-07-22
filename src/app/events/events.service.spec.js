@@ -53,6 +53,64 @@
         actual = service.getEventCountByNodeId(23);
         expect(actual).toBe(expected);
       });
+
+      it('should index for quick access', function() {
+        var simpleList = [
+          { message: 'hello', nodeId: 'a' },
+          { message: 'world', nodeId: 'a' },
+          { message: 'my', nodeId: 'b' },
+          { message: 'name', nodeId: 'c' },
+          { message: 'is', nodeId: 'b' },
+          { message: 'ry', nodeId: 'b' },
+          { message: 'animal', nodeId: 'c' }
+        ];
+        var expected = [
+          {
+            index: 1,
+            nodeId: 'a',
+            events: [
+              { message: 'hello', nodeId: 'a' },
+              { message: 'world', nodeId: 'a' },
+            ]
+          },
+          {
+            index: 2,
+            nodeId: 'b',
+            events: [
+              { message: 'my', nodeId: 'b' },
+              { message: 'is', nodeId: 'b' },
+              { message: 'ry', nodeId: 'b' }
+            ]
+          },
+          {
+            index: 3,
+            nodeId: 'c',
+            events: [
+              { message: 'name', nodeId: 'c' },
+              { message: 'animal', nodeId: 'c' }
+            ]
+          }
+        ];
+        var actual = service.createEventsGraph(simpleList);
+        expect(actual).toEqual(expected);
+      });
+
+      it('should get all events by node id', function() {
+        var expected = {
+          nodeId: 'customer-group',
+          events: [
+            { message: 'Exception 404 Not Found for url http://localhost:8089/customer-group/mappings with headers [Cache-Control=must-revalidate,no-cache,no-store, Content-Type=text/html; charset=ISO-8859-1, Content-Length=309, Server=Jetty(9.2.16.v20160414)]', throwable: null, nodeId: 'customer-group' },
+            { message: 'Exception 404 Not Found for url http://localhost:8089/customer-group/mappings with headers [Cache-Control=must-revalidate,no-cache,no-store, Content-Type=text/html; charset=ISO-8859-1, Content-Length=309, Server=Jetty(9.2.16.v20160414)]', throwable: null, nodeId: 'customer-group' }
+          ]
+        };
+        var actual = service.getEventsByNodeId('customer-group');
+        expect(actual).toEqual(expected);
+
+        actual = service.getEventsByNodeId('');
+        expect(actual).toBeUndefined();
+        actual = service.getEventsByNodeId(425);
+        expect(actual).toEqual({ nodeId: 425, events: [] });
+      });
     });
   });
 

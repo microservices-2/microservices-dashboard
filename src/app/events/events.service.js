@@ -23,14 +23,52 @@
     _self.getEventList = getEventList;
     _self.setEventList = setEventList;
     _self.getEventCountByNodeId = getEventCountByNodeId;
+    _self.getEventsByNodeId = getEventsByNodeId;
+    _self.createEventsGraph = createEventsGraph;
 
     // //////////////
+    function createEventsGraph(list) {
+      var index = 0;
+      return list.reduce(function(graph, event) {
+        var result = graph.filter(function(graphElement) {
+          return graphElement.nodeId === event.nodeId;
+        });
+        if (result.length === 1) {
+          var element = result[0];
+          element.events.push(event);
+        } else {
+          index += 1;
+          var evts = [];
+          evts.push(event);
+          graph.push({
+            index: index,
+            nodeId: event.nodeId,
+            events: evts
+          });
+        }
+        return graph;
+      }, []);
+    }
+
+    function getEventsByNodeId(id) {
+      if (id) {
+        var nodeEvents = {
+          nodeId: id,
+          events: filterById(id)
+        };
+        return nodeEvents;
+      }
+      return undefined;
+    }
+    function filterById(id) {
+      return _self.eventList.filter(function(event) {
+        return event.nodeId === id;
+      });
+    }
     function getEventCountByNodeId(id) {
       var count = 0;
       if (id) {
-        count = _self.eventList.filter(function(event) {
-          return event.nodeId === id;
-        }).length;
+        count = filterById(id).length;
       } else {
         count = -1;
       }
