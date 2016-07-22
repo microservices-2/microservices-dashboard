@@ -1,4 +1,4 @@
-/* global angular */
+/* global angular _ */
 (function() {
   'use strict';
 
@@ -17,12 +17,25 @@
   function Service($http, BASE_URL) {
     var _self = this;
 
+    _self.eventList = undefined;
+
     _self.request = request;
     _self.getEventList = getEventList;
     _self.setEventList = setEventList;
-    _self.eventList = undefined;
+    _self.getEventCountByNodeId = getEventCountByNodeId;
 
     // //////////////
+    function getEventCountByNodeId(id) {
+      var count = 0;
+      if (id) {
+        count = _self.eventList.filter(function(event) {
+          return event.nodeId === id;
+        }).length;
+      } else {
+        count = -1;
+      }
+      return count;
+    }
     function setEventList(list) {
       _self.eventList = list;
     }
