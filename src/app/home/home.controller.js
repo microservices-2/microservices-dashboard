@@ -5,10 +5,10 @@
 
   angular
     .module('microServicesGui')
-    .controller('GraphController', GraphController);
+    .controller('HomeController', Controller);
 
   /** @ngInject */
-  function GraphController(
+  function Controller(
     // services
     $scope, $rootScope, $filter, $q, GraphService, msdEventsService,
 

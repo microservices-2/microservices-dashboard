@@ -20,6 +20,7 @@
       getFromLinksByNodeId: getFromLinksByNodeId,
       setSelectedNode: setSelectedNode,
       getSelectedNode: getSelectedNode,
+      getConnectedNodes: getConnectedNodes,
       getAvailableNodes: getAvailableNodes,
       updateNode: updateNode,
       addNewNode: addNewNode,
@@ -27,6 +28,18 @@
       getNodeType: getNodeType,
       getNewNode: getNewNode
     };
+
+    function getConnectedNodes(linkList, node) {
+      return linkList
+        .reduce(function(connectedNodes, link) {
+          if (link.source.id === node.id) {
+            connectedNodes.push(link.target);
+          } else if (link.target.id === node.id) {
+            connectedNodes.push(link.source);
+          }
+          return connectedNodes;
+        }, [node]);
+    }
 
     function addNewNode(data) {
       var node = data.sourceNode;
