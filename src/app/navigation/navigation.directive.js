@@ -9,11 +9,13 @@
     self.clearAllEvents = clearAllEvents;
 
     function clearAllEvents() {
-      msdEventsService.deleteAllEvents().then(function() {
-        if (msdVisuals.isRendered) {
-          msdVisuals.reDraw();
-        }
-      });
+      msdEventsService
+        .deleteAllEvents()
+        .then(function() {
+          if (msdVisuals.isRendered) {
+            msdVisuals.reDraw();
+          }
+        });
     }
   }
 

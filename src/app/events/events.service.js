@@ -40,6 +40,7 @@
       return $http.delete(BASE_URL + 'events').then(function() {
         setEventList([]);
         $rootScope.dataLoading = false;
+        return true;
       });
     }
 

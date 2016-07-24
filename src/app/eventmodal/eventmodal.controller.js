@@ -22,7 +22,9 @@
     // ////////////////////////
     function clear() {
       msdEventsService.removedEventsByNodeId(vm.id);
-      msdVisuals.reDraw();
+      if (msdVisuals.isRendered) {
+        msdVisuals.reDraw();
+      }
       $modalInstance.dismiss('clear');
     }
   }

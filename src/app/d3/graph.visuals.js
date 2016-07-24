@@ -9,9 +9,8 @@
   Service.$inject = ['d3', '$window', 'helpers', 'NodecolorService', 'createEventModalConfig', '$modal', 'msdEventsService', 'NodeService', 'createModalConfig', 'GraphService'];
   function Service(d3, $window, helpers, NodecolorService, createEventModalConfig, $modal, msdEventsService, NodeService, createModalConfig, GraphService) {
     var self = this;
-    var isRendered = false;
     self.renderGraph = renderGraph;
-    self.isRendered = isRendered;
+    self.isRendered = false;
     self.reDraw = reDraw;
     // //////////////
     d3.select($window).on('resize', resize); // Adds or removes an event listener to each element in the current selection, for the specified type.
@@ -57,7 +56,7 @@
     }
 
     function renderGraph(data, element) {
-      isRendered = true;
+      self.isRendered = true;
       _graphData = data;
       _element = element;
       _nodes = data.nodes;
