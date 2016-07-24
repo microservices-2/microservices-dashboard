@@ -146,10 +146,20 @@
               },
               'id': 'user',
               'lane': 2
+            }, {
+              'details': {
+                'minVersion': '1.0.2',
+                'type': 'MICROSERVICE',
+                'version': '1.4.0',
+                'status': 'UP',
+                'group': 'SP'
+              },
+              'id': 'user',
+              'lane': 2
             }];
 
           var actual = GraphService.getGroups(data);
-          var expected = ['FUNCTIONAL', 'SP'];
+          var expected = [{ key: 'FUNCTIONAL', value: 'FUNCTIONAL' }, { key: 'SP', value: 'SP' }];
           expect(actual).toEqual(expected);
         });
 

@@ -7,7 +7,7 @@
     .directive('lanefilter', LanefilterDirective);
 
   /** @ngInject */
-  function LanefilterCtrl(GraphService, $q) {
+  function LanefilterCtrl($rootScope, REQUEST_GRAPH_DATA_SUCCESS, GraphService, $q) {
     var vm = this;
 
     vm.filter = { details: {} };
@@ -18,12 +18,13 @@
     function activate() {
       $q.all([
         GraphService.getTypes(),
-        GraphService.getGroups(),
         GraphService.getStates()
       ]).then(function(resp) {
         vm.types = resp[0];
-        vm.groups = resp[1];
-        vm.states = resp[2];
+        vm.states = resp[1];
+      });
+      $rootScope.$on(REQUEST_GRAPH_DATA_SUCCESS, function() {
+        vm.groups = GraphService.getGroups(GraphService.getGraph().nodes);
       });
     }
 

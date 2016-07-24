@@ -245,16 +245,31 @@
     }
 
     function getGroups(nodes) {
-      return nodes.reduce(function(state, val) {
-        if (val) {
-          if (val.details) {
-            if (val.details.group) {
-              state.push(val.details.group);
+      if (nodes) {
+        return nodes.reduce(function(state, val) {
+          if (val) {
+            if (val.details) {
+              if (val.details.group) {
+                var newGroup = {
+                  key: val.details.group,
+                  value: val.details.group
+                };
+                var hasGroup = state.filter(function(group) {
+                  return newGroup.key === group.key;
+                }).length >= 1;
+                if (hasGroup === false) {
+                  state.push(newGroup);
+                }
+              }
             }
           }
-        }
-        return state;
-      }, []);
+          return state;
+        }, []).sort(function(a, b) {
+          if (a.key < b.key) return -1;
+          if (a.key > b.key) return 1;
+          return 0;
+        });
+      }
     }
 
     function getStates() {
