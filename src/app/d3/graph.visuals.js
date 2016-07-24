@@ -47,8 +47,11 @@
     var _width = $window.innerWidth - _margin.right - _margin.left - 16;
     var _minheight = $window.innerHeight;
     var _height = $window.innerHeight;
-    var _titleFontSize = 22;
-    var _textFontSize = 14;
+    var DEFAULT_TITLE_FONT_SIZE = 22;
+    var DEFAULT_TEXT_FONT_SIZE = 12;
+    var EVENT_COUNT_FONT_SIZE = 10;
+    var _titleFontSize;
+    var _textFontSize;
     var _xScale;
 
     function reDraw() {
@@ -178,8 +181,8 @@
       }
 
       return {
-        titleFontSize: title || 22,
-        textFontSize: text || 14
+        titleFontSize: title || DEFAULT_TITLE_FONT_SIZE,
+        textFontSize: text || DEFAULT_TEXT_FONT_SIZE
       };
     }
     function fillColor(o) {
@@ -331,7 +334,7 @@
           return 0;
         })
         .attr('text-anchor', 'middle')
-        .style('font-size', _textFontSize - 6);
+        .style('font-size', EVENT_COUNT_FONT_SIZE);
 
       _d3RectNodes.append('svg:rect')
         .attr('class', function(d) {
@@ -395,7 +398,7 @@
           return 0;
         })
         .attr('text-anchor', 'middle')
-        .style('font-size', _textFontSize - 6);
+        .style('font-size', EVENT_COUNT_FONT_SIZE);
 
       _d3CircleNodes
         .append('svg:circle')
