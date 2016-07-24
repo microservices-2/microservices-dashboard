@@ -3,6 +3,8 @@
 [ ![Codeship Status for ordina-jworks/microservices-dashboard](https://codeship.com/projects/89e46fa0-1b60-0134-de15-0e8ad2af7d49/status?branch=master)](https://codeship.com/projects/159640)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f49a317f145e4f2fb0a596c9b99d1675)](https://www.codacy.com/app/ordina-jworks/microservices-dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ordina-jworks/microservices-dashboard&amp;utm_campaign=Badge_Grade)
 [![][license img]][license]
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/ordina-jworks/microservices-dashboard.svg)](http://isitmaintained.com/project/ordina-jworks/microservices-dashboard "Average time to resolve an issue")
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/ordina-jworks/microservices-dashboard.svg)](http://isitmaintained.com/project/ordina-jworks/microservices-dashboard "Percentage of issues still open")
 
 ## Overview
 
