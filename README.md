@@ -144,7 +144,7 @@ There are several ways in which you can contribute to microservices-dashboard:
 
 ## Licence
 
-Spring REST Docs is open source software released under the [Apache 2.0 license][5].
+Microservices Dashboard is open source software released under the [Apache 2.0 license][5].
 
 [license]:LICENSE-2.0.txt
 [license img]:https://img.shields.io/badge/License-Apache%202-blue.svg
