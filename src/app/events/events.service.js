@@ -6,7 +6,7 @@
     .module('microServicesGui')
     .service('msdEventsService', Service);
 
-  Service.$inject = ['$http', 'BASE_URL'];
+  Service.$inject = ['$rootScope', '$http', 'BASE_URL'];
   /**
    * Responsible for managing the local event list state.
    * And managing the HTTP RESOURCE /events
@@ -14,13 +14,17 @@
    * @param {any} $http
    * @param {any} BASE_URL
    */
-  function Service($http, BASE_URL) {
+  function Service($rootScope, $http, BASE_URL) {
     var _self = this;
+    var _eventsToNodeIdMap;
+    var _eventList;
+    var _indexToNodeIdMap;
 
-    _self.eventList = undefined;
-    _self.indexEventList = undefined;
-    _self.indexMap = undefined;
-
+    _self.getIndexMap = getIndexMap;
+    _self.deleteAllEvents = deleteAllEvents;
+    _self.getEventsByNodeIdMap = getEventsByNodeIdMap;
+    _self.getMappedEventList = getMappedEventList;
+    _self.removedEventsByNodeId = removedEventsByNodeId;
     _self.getIndexedList = getIndexedList;
     _self.getEventsByIndex = getEventsByIndex;
     _self.request = request;
@@ -31,12 +35,40 @@
     _self.createEventsGraph = createEventsGraph;
 
     // //////////////
+    function deleteAllEvents() {
+      $rootScope.dataLoading = true;
+      return $http.delete(BASE_URL + 'events').then(function() {
+        setEventList([]);
+        $rootScope.dataLoading = false;
+        return true;
+      });
+    }
+
+    function getEventsByNodeIdMap() {
+      return _eventsToNodeIdMap;
+    }
+    function getIndexMap() {
+      return _indexToNodeIdMap;
+    }
+    function getMappedEventList() {
+      return _eventsToNodeIdMap;
+    }
+    function removedEventsByNodeId(nodeId) {
+      clearEventsByIndex(_indexToNodeIdMap[nodeId]);
+      var newEventList = _eventList.filter(function(eventDetails) {
+        return eventDetails.nodeId !== nodeId;
+      });
+      setEventList(newEventList);
+    }
+    function clearEventsByIndex(index) {
+      _eventsToNodeIdMap.splice(index, 1);
+    }
     function getEventsByIndex(index) {
-      return _self.indexEventList[index];
+      return _eventsToNodeIdMap[index];
     }
     function createEventsGraph(list) {
       var index = -1;
-      _self.indexMap = {};
+      _indexToNodeIdMap = {};
       return list.reduce(function(graph, event) {
         var result = graph.filter(function(graphElement) {
           return graphElement.nodeId === event.nodeId;
@@ -53,7 +85,7 @@
             nodeId: event.nodeId,
             events: evts
           });
-          _self.indexMap[event.nodeId] = index;
+          _indexToNodeIdMap[event.nodeId] = index;
         }
         return graph;
       }, []);
@@ -61,13 +93,13 @@
 
     function getEventsByNodeId(id) {
       if (id) {
-        return getEventsByIndex(_self.indexMap[id]);
+        return getEventsByIndex(_indexToNodeIdMap[id]);
       }
       return undefined;
     }
 
     function filterById(id) {
-      return _self.eventList.filter(function(event) {
+      return _eventList.filter(function(event) {
         return event.nodeId === id;
       });
     }
@@ -81,14 +113,14 @@
       return count;
     }
     function setEventList(list) {
-      _self.eventList = list;
-      _self.indexEventList = createEventsGraph(list);
+      _eventList = list;
+      _eventsToNodeIdMap = createEventsGraph(list);
     }
     function getIndexedList() {
-      return _self.indexEventList;
+      return _eventsToNodeIdMap;
     }
     function getEventList() {
-      return _self.eventList;
+      return _eventList;
     }
     function request() {
       return $http

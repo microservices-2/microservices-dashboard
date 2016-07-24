@@ -1,4 +1,4 @@
-/* global inject beforeEach it describe expect */
+/* global inject beforeEach it describe expect _ */
 
 (function() {
   'use strict';
@@ -132,9 +132,24 @@
 
       it('should return events of a particular node by index', function() {
         service.setEventList(_mockList);
-        var nodeEvents = service.getEventsByIndex(service.indexMap['customer-group']);
+        var nodeEvents = service.getEventsByIndex(service.getIndexMap()['customer-group']);
         expect(nodeEvents.nodeId).toBe('customer-group');
         expect(nodeEvents.events.length).toBe(2);
+      });
+
+      it('should remove all events of a perticular node by id', function() {
+        service.setEventList(_mockList);
+        expect(service.getEventList().length).toBe(26);
+        expect(service.getEventsByNodeIdMap().length).toBe(16);
+        expect(service.getEventsByNodeIdMap().length).toBe(_.keys(service.getIndexMap()).length);
+        service.removedEventsByNodeId('blalbal');
+        expect(service.getEventList().length).toBe(26);
+        expect(service.getEventsByNodeIdMap().length).toBe(16);
+        expect(service.getEventsByNodeIdMap().length).toBe(_.keys(service.getIndexMap()).length);
+        service.removedEventsByNodeId('customer-group');
+        expect(service.getEventList().length).toBe(24);
+        expect(service.getEventsByNodeIdMap().length).toBe(15);
+        expect(service.getEventsByNodeIdMap().length).toBe(_.keys(service.getIndexMap()).length);
       });
 
       it('should get all events by node id', function() {
