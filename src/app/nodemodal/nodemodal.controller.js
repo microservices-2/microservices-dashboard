@@ -57,15 +57,15 @@
     function qryData() {
       $q.all([
         GraphService.getStates(),
-        GraphService.getTypes(),
-        GraphService.getGroups()
+        GraphService.getTypes()
       ]).then(function(values) {
         vm.states = values[0];
         vm.types = values[1];
-        vm.groups = values[2];
 
         var graphData = GraphService.getGraph();
         nodes = graphData.nodes;
+        vm.groups = GraphService.getGroups(nodes);
+
         links = graphData.links;
 
         var availableToNodes = NodeService.getAvailableNodes(vm.newNode, nodes, links);
