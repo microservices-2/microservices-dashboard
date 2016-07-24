@@ -9,7 +9,7 @@
   /** @ngInject */
   function Controller(
     // services
-    $modalInstance, msdEventsService,
+    $modalInstance, msdEventsService, msdVisuals,
 
     // resolved
     nodeEvents
@@ -18,5 +18,12 @@
     var vm = this;
     vm.id = nodeEvents.nodeId;
     vm.events = nodeEvents.events;
+    vm.clear = clear;
+    // ////////////////////////
+    function clear() {
+      msdEventsService.removedEventsByNodeId(vm.id);
+      msdVisuals.reDraw();
+      $modalInstance.dismiss('clear');
+    }
   }
 })();
