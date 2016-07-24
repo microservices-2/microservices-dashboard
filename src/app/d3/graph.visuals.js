@@ -194,14 +194,8 @@
      Mouse events
      */
     function onEventCircleMouseDown(node) {
-      if (node.nodeEvents) {
-        var modalConfig = createEventModalConfig(node.nodeEvents);
-        var modalInstance = $modal.open(modalConfig);
-
-        modalInstance
-          .result
-          .then();
-      }
+      var modalConfig = createEventModalConfig(node);
+      $modal.open(modalConfig);
     }
 
     function fadeUnrelatedNodes(d, opacity) {

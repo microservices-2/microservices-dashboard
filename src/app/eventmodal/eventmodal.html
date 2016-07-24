@@ -1,5 +1,6 @@
 <h1>Events: {{vm.id}}</h1>
-<button ng-click="vm.clear()">clear</button>
+<button ng-disabled="vm.events.length <= 0" ng-click="vm.clear()">clear</button>
+<p ng-if="vm.events.length <= 0">No events</p>
 <ul>
   <li ng-repeat="event in vm.events">{{event.message}}</li>
 </ul>

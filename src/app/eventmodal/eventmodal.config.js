@@ -6,14 +6,14 @@
   .module('microServicesGui')
   .constant('createEventModalConfig', modalConfig);
 
-  function modalConfig(nodeEvents) {
+  function modalConfig(node) {
     var modalConfig = {
       templateUrl: 'app/eventmodal/eventmodal.html',
       controller: 'eventModalController',
       controllerAs: 'vm',
       resolve: {
-        nodeEvents: function() {
-          return nodeEvents;
+        id: function() {
+          return node.id;
         }
       }
     };

@@ -17,7 +17,7 @@
   function Service($rootScope, $http, BASE_URL) {
     var _self = this;
     var _eventsToNodeIdMap;
-    var _eventList;
+    var _eventList = [];
     var _indexToNodeIdMap;
 
     _self.getIndexMap = getIndexMap;

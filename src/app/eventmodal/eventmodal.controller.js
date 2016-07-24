@@ -12,12 +12,16 @@
     $modalInstance, msdEventsService, msdVisuals,
 
     // resolved
-    nodeEvents
+    id
   ) {
     // View model, variabled used inside the template
     var vm = this;
-    vm.id = nodeEvents.nodeId;
-    vm.events = nodeEvents.events;
+    vm.id = id;
+    vm.events = [];
+    var nodeEvents = msdEventsService.getEventsByNodeId(id);
+    if (nodeEvents) {
+      vm.events = nodeEvents.events;
+    }
     vm.clear = clear;
     // ////////////////////////
     function clear() {
