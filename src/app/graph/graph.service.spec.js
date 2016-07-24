@@ -125,6 +125,44 @@
           expect(GraphService.updateToLinks(smallGraph.links, updates).length).toEqual(1);
         });
 
+        it('should map groups', function() {
+          var data = [{
+            'details': {
+              'minVersion': '1.0.2',
+              'type': 'MICROSERVICE',
+              'version': '1.4.0',
+              'status': 'UP',
+              'group': 'FUNCTIONAL'
+            },
+            'id': 'user',
+            'lane': 2
+          }, {
+              'details': {
+                'minVersion': '1.0.2',
+                'type': 'MICROSERVICE',
+                'version': '1.4.0',
+                'status': 'UP',
+                'group': 'SP'
+              },
+              'id': 'user',
+              'lane': 2
+            }, {
+              'details': {
+                'minVersion': '1.0.2',
+                'type': 'MICROSERVICE',
+                'version': '1.4.0',
+                'status': 'UP',
+                'group': 'SP'
+              },
+              'id': 'user',
+              'lane': 2
+            }];
+
+          var actual = GraphService.getGroups(data);
+          var expected = [{ key: 'FUNCTIONAL', value: 'FUNCTIONAL' }, { key: 'SP', value: 'SP' }];
+          expect(actual).toEqual(expected);
+        });
+
         it('should add links when updating to nodes correctly', function() {
           var expected = [
             { source: createNode(3), target: createNode(92348) },

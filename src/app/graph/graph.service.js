@@ -244,25 +244,32 @@
       return linksWithNodes;
     }
 
-    function getGroups() {
-      return $q(function(resolve) {
-        resolve([
-          { key: 'BCI', value: 'BCI' },
-          { key: 'BPS', value: 'BPS' },
-          { key: 'BUSC', value: 'BUSC' },
-          { key: 'CRMODS', value: 'CRMODS' },
-          { key: 'CSL', value: 'CSL' },
-          { key: 'IMA', value: 'IMA' },
-          { key: 'MBP', value: 'MBP' },
-          { key: 'NGRP', value: 'NGRP' },
-          { key: 'OCT', value: 'OCT' },
-          { key: 'PDB', value: 'PDB' },
-          { key: 'PPT', value: 'PPT' },
-          { key: 'RHE', value: 'RHE' },
-          { key: 'ROSY', value: 'ROSY' },
-          { key: 'SAPACHE', value: 'SAPACHE' }
-        ]);
-      });
+    function getGroups(nodes) {
+      if (nodes) {
+        return nodes.reduce(function(state, val) {
+          if (val) {
+            if (val.details) {
+              if (val.details.group) {
+                var newGroup = {
+                  key: val.details.group,
+                  value: val.details.group
+                };
+                var hasGroup = state.filter(function(group) {
+                  return newGroup.key === group.key;
+                }).length >= 1;
+                if (hasGroup === false) {
+                  state.push(newGroup);
+                }
+              }
+            }
+          }
+          return state;
+        }, []).sort(function(a, b) {
+          if (a.key < b.key) return -1;
+          if (a.key > b.key) return 1;
+          return 0;
+        });
+      }
     }
 
     function getStates() {

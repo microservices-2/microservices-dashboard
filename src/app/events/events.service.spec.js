@@ -22,7 +22,7 @@
 
     it('setEventList() should set the local event list state', function() {
       var eventList = service.getEventList();
-      expect(eventList).toBeUndefined();
+      expect(eventList).toEqual([]);
 
       var newList = _mockList;
       service.setEventList(newList);
