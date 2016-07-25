@@ -17,8 +17,15 @@ nav.top-bar {
     > li.credits {
       color:$primary-color;
       font-size: 10px;
-      float: right;
+      vertical-align: center;
+      float: left;
     }
+  }
+}
+
+.settings{
+  li{
+    text-align: center;
   }
 }
 

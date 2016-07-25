@@ -18,12 +18,17 @@
     var vm = this;
     vm.id = id;
     vm.events = [];
-    var nodeEvents = msdEventsService.getEventsByNodeId(id);
-    if (nodeEvents) {
-      vm.events = nodeEvents.events;
-    }
     vm.clear = clear;
+
+    activate();
     // ////////////////////////
+    function activate() {
+      var nodeEvents = msdEventsService.getEventsByNodeId(id);
+      if (nodeEvents) {
+        vm.events = nodeEvents.events;
+      }
+    }
+
     function clear() {
       msdEventsService.removedEventsByNodeId(vm.id);
       if (msdVisuals.isRendered) {

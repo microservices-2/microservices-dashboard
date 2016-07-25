@@ -13,7 +13,10 @@
       controllerAs: 'vm',
       resolve: {
         id: function() {
-          return node.id;
+          if (node) {
+            return node.id;
+          }
+          return undefined;
         }
       }
     };

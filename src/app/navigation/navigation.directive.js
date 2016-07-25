@@ -3,11 +3,18 @@
   'use strict';
 
   /** @ngInject */
-  function Controller(msdVisuals, msdEventsService) {
+  function Controller($modal, createEventModalConfig, msdVisuals, msdEventsService) {
     var self = this;
     self.clearAllEvents = clearAllEvents;
     self.isUiLaneVisible = true;
     self.onChange = onChange;
+    self.openEventsModal = openEventsModal;
+    self.modal = $modal;
+
+    function openEventsModal() {
+      var modalConfig = createEventModalConfig(undefined);
+      self.modal.open(modalConfig);
+    }
 
     function onChange() {
       msdVisuals.setUiLaneVisibility(self.isUiLaneVisible);
