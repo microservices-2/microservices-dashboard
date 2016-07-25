@@ -36,7 +36,7 @@
             <div class="large-4 columns">
                 <label>Type
                     <select ng-model="vm.newNode.details.type"
-                            ng-options="type.key as type.value for type in vm.types"
+                            ng-options="type for type in vm.types"
                             ng-disabled="(!vm.isVirtualNode || vm.isNewNode && vm.isFixedLane)">
                     </select>
                 </label>
