@@ -37,10 +37,10 @@
     // positioning and dimensions
     var _nodeRadius = 16;
     var _verticalNodeSpace = 75;
-    var _verticalNodeSpaceRect = 30;
+    var _verticalNodeSpaceRect = 25;
     var _paddingAfterTitles = 10;
 
-    var _nodeWidth = 240;
+    var _nodeWidth = 210;
     var _nodeHeight = 20;
 
     var _margin = { top: 20, right: 0, bottom: 20, left: 0 };
@@ -48,8 +48,8 @@
     var _minheight = $window.innerHeight;
     var _height = $window.innerHeight;
     var DEFAULT_TITLE_FONT_SIZE = 22;
-    var DEFAULT_TEXT_FONT_SIZE = 12;
-    var EVENT_COUNT_FONT_SIZE = 10;
+    var DEFAULT_TEXT_FONT_SIZE = 10;
+    var EVENT_COUNT_FONT_SIZE = 8;
     var _titleFontSize;
     var _textFontSize;
     var _xScale;
@@ -294,42 +294,6 @@
       _d3RectNodes = _d3Nodes.filter(function(d) {
         return d.lane === 1;
       });
-      // event count circles
-      _d3RectNodes
-        .append('svg:circle')
-        .attr('r', _nodeRadius / 1.5)
-        .attr('cx', function(d) {
-          return d.x + 12;
-        })
-        .attr('cy', function(d) {
-          return d.y;
-        })
-        .style('stroke-width', 1)
-        .style('stroke', function(o) {
-          return fillColor(o);
-        })
-        .on('mousedown', _.bind(onEventCircleMouseDown));
-
-      // event count text
-      _d3RectNodes
-        .append('svg:text')
-        .attr('x', function(d) {
-          return d.x + 12;
-        })
-        .attr('y', function(d) {
-          return d.y + 4;
-        })
-        .text(function(d) {
-          var nodeEvents = msdEventsService.getEventsByNodeId(d.id);
-          if (nodeEvents) {
-            d.nodeEvents = nodeEvents;
-            return nodeEvents.events.length;
-          }
-          return 0;
-        })
-        .attr('text-anchor', 'middle')
-        .style('font-size', EVENT_COUNT_FONT_SIZE);
-
       _d3RectNodes.append('svg:rect')
         .attr('class', function(d) {
           return helpers.formatClassName('circle', d);
@@ -357,29 +321,35 @@
         });
 
       // event count circles
-      _d3CircleNodes
-        .append('svg:circle')
-        .attr('r', _nodeRadius / 1.5)
+      var msNodes = _d3CircleNodes
+        .filter(function(circleNode) {
+          return circleNode.lane === 2;
+        });
+      var eventCountCirclePositionOffset = { x: 22, y: -16 };
+      var eventCountTextPositionOffset = { x: 22, y: -14 };
+
+      msNodes.append('svg:circle')
+        .attr('r', _nodeRadius / 1.8)
         .attr('cx', function(d) {
-          return d.x + 28;
+          return d.x + eventCountCirclePositionOffset.x;
         })
         .attr('cy', function(d) {
-          return d.y;
+          return d.y + eventCountCirclePositionOffset.y;
         })
         .style('stroke-width', 1)
         .style('stroke', function(o) {
-          return fillColor(o);
+          return '#8c0101';
         })
         .on('mousedown', _.bind(onEventCircleMouseDown));
 
       // event count text
-      _d3CircleNodes
+      msNodes
         .append('svg:text')
         .attr('x', function(d) {
-          return d.x + 28;
+          return d.x + eventCountTextPositionOffset.x;
         })
         .attr('y', function(d) {
-          return d.y + 3;
+          return d.y + eventCountTextPositionOffset.y;
         })
         .text(function(d) {
           var nodeEvents = msdEventsService.getEventsByNodeId(d.id);
@@ -391,6 +361,7 @@
           }
           return 0;
         })
+        .style('fill', '#8c0101')
         .attr('text-anchor', 'middle')
         .style('font-size', EVENT_COUNT_FONT_SIZE);
 
