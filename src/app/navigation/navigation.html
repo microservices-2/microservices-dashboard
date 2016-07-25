@@ -3,15 +3,42 @@
     <ul class="title-area">
       <li class="name">
         <h1>
-          <a href="#">
-            <img src="icon.png" width="50"> Microservices Dashboard
-          </a>
+          <a href="#"><img src="icon.png" width="50" />Microservices Dashboard</a>
         </h1>
       </li>
-      <li><button ng-click="vm.clearAllEvents()">Clear events</button></li>
-      <li class="credits">
-        <span>Logo created by Vicons Design from the Noun Project</span>
-      </li>
     </ul>
+
+    <top-bar-section>
+      <!-- Right Nav Section -->
+      <ul class="right">
+        <li has-dropdown>
+          <a href="#">Settings</a>
+          <ul top-bar-dropdown>
+            <li><a href="#">Events</a></li>
+            <li><input type="checkbox" ng-model="vm.isUiLaneVisible" ng-change="vm.onChange()"
+                ng-true-value="true" ng-false-value="false"><label>Disable UI Lane</label></li>
+          </ul>
+        </li>
+      </ul>
+    </top-bar-section>
   </top-bar>
 </div>
+<!--<top-bar>
+  <ul class="title-area">
+    <li class="name">
+      <h1>
+        <a href="#">
+          <img src="icon.png" width="50"> Microservices Dashboard
+        </a>
+      </h1>
+    </li>
+    <li><button ng-click="vm.clearAllEvents()">Clear events</button></li>
+    <li class="credits">
+      <div>Logo created by Vicons Design from the Noun Project</div>
+      <ul style="display: float;">
+        <li><button>Events</button> </li>
+        <li><input id="disable-uilane-cb" type="checkbox"><label for="disable-uilane-cb">Disable UI Lane</label></li>
+      </ul>
+    </li>
+  </ul>
+</top-bar>-->

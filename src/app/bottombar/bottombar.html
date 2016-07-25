@@ -1,22 +1,7 @@
 <div id="bottombar">
-    <div class="button-div">
-        <button class="button round addnode" ng-click="open(0)">
+  <div ng-class="{'button-div': isUiLaneVisible,'button-div-3': !isUiLaneVisible}" ng-repeat="btn in addButtons">
+    <button class="button round addnode" ng-click="open(btn)">
             <span>+</span>
         </button>
-    </div>
-    <div class="button-div">
-        <button class="button round addnode" ng-click="open(1)">
-            <span>+</span>
-        </button>
-    </div>
-    <div class="button-div">
-        <button class="button round addnode" ng-click="open(2)">
-            <span>+</span>
-        </button>
-    </div>
-    <div class="button-div">
-        <button class="button round addnode" ng-click="open(3)">
-            <span>+</span>
-        </button>
-    </div>
+  </div>
 </div>

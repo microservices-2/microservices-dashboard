@@ -6,12 +6,13 @@
     .module('msgGraph')
     .service('msdVisuals', Service);
 
-  Service.$inject = ['d3', '$window', 'helpers', 'NodecolorService', 'createEventModalConfig', '$modal', 'msdEventsService', 'NodeService', 'createModalConfig', 'GraphService'];
-  function Service(d3, $window, helpers, NodecolorService, createEventModalConfig, $modal, msdEventsService, NodeService, createModalConfig, GraphService) {
+  Service.$inject = ['$rootScope', 'EVENT_SET_LANE_VISIBILITY', 'UI_LANE', 'RESOURCE_LANE', 'd3', '$window', 'helpers', 'NodecolorService', 'createEventModalConfig', '$modal', 'msdEventsService', 'NodeService', 'createModalConfig', 'GraphService'];
+  function Service($rootScope, EVENT_SET_LANE_VISIBILITY, UI_LANE, RESOURCE_LANE, d3, $window, helpers, NodecolorService, createEventModalConfig, $modal, msdEventsService, NodeService, createModalConfig, GraphService) {
     var self = this;
     self.renderGraph = renderGraph;
     self.isRendered = false;
     self.reDraw = reDraw;
+    self.setUiLaneVisibility = setUiLaneVisibility;
     // //////////////
     d3.select($window).on('resize', resize); // Adds or removes an event listener to each element in the current selection, for the specified type.
 
@@ -24,6 +25,8 @@
     var _d3CircleNodes;
     var _d3RectNodes;
     var _d3Nodes;
+
+    var _isUiLaneVisible = true;
 
     // graph data
     var _graphData;
@@ -53,6 +56,12 @@
     var _titleFontSize;
     var _textFontSize;
     var _xScale;
+
+    function setUiLaneVisibility(isVisible) {
+      $rootScope.$broadcast(EVENT_SET_LANE_VISIBILITY, isVisible);
+      _isUiLaneVisible = isVisible;
+      reDraw();
+    }
 
     function reDraw() {
       renderGraph(GraphService.getGraph(), _element);
@@ -89,10 +98,17 @@
         .attr('height', _height)
         .append('g');
 
-      _xScale = d3.scale
-        .linear()
-        .domain([0, data.lanes.length])
-        .range([_margin.left, _width]);
+      if (_isUiLaneVisible) {
+        _xScale = d3.scale
+          .linear()
+          .domain([0, data.lanes.length])
+          .range([_margin.left, _width]);
+      } else {
+        _xScale = d3.scale
+          .linear()
+          .domain([0, 3])
+          .range([_margin.left, _width]);
+      }
 
       drawLaneTitles();
       defineMarkerArrows();
@@ -130,7 +146,11 @@
       for (var i = 0; i < _nodes.length; i++) {
         var node = _nodes[i];
         node.index = i;
-        node.x = _xScale(node.lane + 0.5);
+        if (_isUiLaneVisible) {
+          node.x = _xScale(node.lane + 0.5);
+        } else {
+          node.x = _xScale(node.lane - 1 + 0.5);
+        }
         switch (node.lane) {
           case 0:
             _uiCounter++;
@@ -138,6 +158,11 @@
             break;
           case 1:
             node.x = _xScale(node.lane + 0.5) + (_nodeWidth / 2);
+            if (_isUiLaneVisible) {
+              node.x = _xScale(node.lane + 0.5) + (_nodeWidth / 2);
+            } else {
+              node.x = _xScale(node.lane - 1 + 0.5) + (_nodeWidth / 2);
+            }
             node.y = (_verticalNodeSpaceRect * _epCounter) + _verticalNodeSpace + _paddingAfterTitles;
             _epCounter++;
             break;
@@ -250,9 +275,13 @@
           renderGraph(_graphData, _element);
         });
     }
+    // TODO: dont draw lables when ui lane is hidden
     function drawLables() {
       _d3Nodes.append('svg:text')
         .attr('x', function(d) {
+          if (_isUiLaneVisible === false) {
+            return _xScale(d.lane - 1 + 0.5);
+          }
           return _xScale(d.lane + 0.5);
         })
         .attr('y', function(d) {
@@ -275,6 +304,9 @@
           return helpers.formatClassName('text', d);
         })
         .attr('x', function(d) {
+          if (_isUiLaneVisible === false) {
+            return _xScale(d.lane - 1 + 0.5);
+          }
           return _xScale(d.lane + 0.5);
         })
         .attr('y', function(d) {
@@ -317,7 +349,10 @@
     function drawCircleNodes() {
       _d3CircleNodes = _d3Nodes
         .filter(function(d) {
-          return d.lane !== 1;
+          if (_isUiLaneVisible) {
+            return d.lane !== 1;
+          }
+          return d.lane !== 1 && d.lane !== UI_LANE;
         });
 
       // event count circles
@@ -417,6 +452,12 @@
         .data(_links)
         .enter()
         .append('path')
+        .filter(function(d) {
+          if (_isUiLaneVisible) {
+            return true;
+          }
+          return d.source.lane !== UI_LANE;
+        })
         .attr('class', 'link')
         .attr('d', function(l) {
           var sourceNode = _nodes.filter(function(d, i) {
@@ -456,6 +497,12 @@
         .data(_links)
         .enter()
         .append('path')
+        .filter(function(d) {
+          if (_isUiLaneVisible) {
+            return true;
+          }
+          return d.source.lane !== UI_LANE;
+        })
         .attr('class', 'clickablelink')
         .attr('d', function(l) {
           var sourceNode = _nodes.filter(function(d, i) {
@@ -534,6 +581,12 @@
         .data(_graphData.lanes)
         .enter()
         .append('svg:text')
+        .filter(function(d) {
+          if (d.lane === UI_LANE) {
+            return _isUiLaneVisible;
+          }
+          return true;
+        })
         .text(function(d) {
           return d.type;
         })

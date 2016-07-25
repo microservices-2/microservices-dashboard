@@ -5,8 +5,13 @@
   /** @ngInject */
   function Controller(msdVisuals, msdEventsService) {
     var self = this;
-
     self.clearAllEvents = clearAllEvents;
+    self.isUiLaneVisible = true;
+    self.onChange = onChange;
+
+    function onChange() {
+      msdVisuals.setUiLaneVisibility(self.isUiLaneVisible);
+    }
 
     function clearAllEvents() {
       msdEventsService
