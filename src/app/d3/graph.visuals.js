@@ -454,21 +454,23 @@
           var targetNode = _nodes.filter(function(d, i) {
             return i === l.target.index;
           })[0];
-          if (sourceNode.lane === targetNode.lane) {
-            var curve = {
-              x: targetNode.x + 100,
-              y: (targetNode.y + sourceNode.y) / 2
-            };
-            return lineFunction([sourceNode, curve, targetNode]);
+          if (sourceNode && targetNode) {
+            if (sourceNode.lane === targetNode.lane) {
+              var curve = {
+                x: targetNode.x + 100,
+                y: (targetNode.y + sourceNode.y) / 2
+              };
+              return lineFunction([sourceNode, curve, targetNode]);
+            }
+            if (targetNode.lane === 1) {
+              var position = {
+                x: targetNode.x - _nodeWidth - 5,
+                y: targetNode.y
+              };
+              return lineFunction([sourceNode, position]);
+            }
+            return lineFunction([sourceNode, targetNode]);
           }
-          if (targetNode.lane === 1) {
-            var position = {
-              x: targetNode.x - _nodeWidth - 5,
-              y: targetNode.y
-            };
-            return lineFunction([sourceNode, position]);
-          }
-          return lineFunction([sourceNode, targetNode]);
         })
         .attr('pointer-events', 'none')
         .attr('marker-end', function(x) {
@@ -491,21 +493,23 @@
           var targetNode = _nodes.filter(function(d, i) {
             return i === l.target.index;
           })[0];
-          if (sourceNode.lane === targetNode.lane) {
-            var curve = {
-              x: targetNode.x + 100,
-              y: (targetNode.y + sourceNode.y) / 2
-            };
-            return lineFunction([sourceNode, curve, targetNode]);
+          if (sourceNode && targetNode) {
+            if (sourceNode.lane === targetNode.lane) {
+              var curve = {
+                x: targetNode.x + 100,
+                y: (targetNode.y + sourceNode.y) / 2
+              };
+              return lineFunction([sourceNode, curve, targetNode]);
+            }
+            if (targetNode.lane === 1) {
+              var position = {
+                x: targetNode.x - _nodeWidth - 5,
+                y: targetNode.y
+              };
+              return lineFunction([sourceNode, position]);
+            }
+            return lineFunction([sourceNode, targetNode]);
           }
-          if (targetNode.lane === 1) {
-            var position = {
-              x: targetNode.x - _nodeWidth - 5,
-              y: targetNode.y
-            };
-            return lineFunction([sourceNode, position]);
-          }
-          return lineFunction([sourceNode, targetNode]);
         })
         .attr('pointer-events', 'stroke')
         .on('mouseover', function(d) {
