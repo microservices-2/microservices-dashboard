@@ -128,7 +128,8 @@
       if (typeof node.id !== 'undefined') {
         return $http.delete(BASE_URL + 'node/' + node.id).then(function() {
           var index = GraphService.findNodeIndex(node.id);
-
+          var links = GraphService.getGraph().links;
+          GraphService.removeLinkByNodeIndex(links, node.index);
           GraphService.getGraph().nodes.splice(index, 1);
           $rootScope.$broadcast(EVENT_NODES_CHANGED);
         });
