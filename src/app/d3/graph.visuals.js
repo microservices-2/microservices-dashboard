@@ -454,9 +454,6 @@
           var targetNode = _nodes.filter(function(d, i) {
             return i === l.target.index;
           })[0];
-          if (sourceNode.lane === undefined || targetNode.lane === undefined) {
-            debugger;
-          }
           if (sourceNode.lane === targetNode.lane) {
             var curve = {
               x: targetNode.x + 100,
