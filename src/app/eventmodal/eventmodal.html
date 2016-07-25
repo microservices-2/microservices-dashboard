@@ -1,4 +1,4 @@
-<h1>Events {{vm.id}}</h1>
+<h1>{{vm.selectedId ? 'Events: '+vm.selectedId : 'Events'}}</h1>
 <button ng-disabled="vm.events.length <= 0" ng-click="vm.clear()">clear</button>
 <div>
   <select ng-model="vm.selectedId" ng-options="k as k for (k,v) in vm.nodeIdSet" ng-change="vm.onSelect()">
