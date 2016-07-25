@@ -284,15 +284,7 @@
 
     function getTypes() {
       return $q(function(resolve) {
-        resolve([
-          { key: 'RESOURCE', value: 'RESOURCE' },
-          { key: 'MICROSERVICE', value: 'MICROSERVICE' },
-          { key: 'DB', value: 'DB' },
-          { key: 'SOAP', value: 'SOAP' },
-          { key: 'REST', value: 'REST' },
-          { key: 'JMS', value: 'JMS' },
-          { key: 'UI', value: 'UI_COMPONENT' }
-        ]);
+        resolve(['RESOURCE', 'MICROSERVICE', 'DB', 'SOAP', 'REST', 'JMS', 'UI_COMPONENT']);
       });
     }
     return factory;
