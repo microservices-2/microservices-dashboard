@@ -1,19 +1,26 @@
 <div>
-    <h2>{{vm.isNewNode ? 'Add Node' : vm.newNode.id}}</h2>
-
-    <form name="nodeForm" novalidate ng-submit="vm.ok()">
-        <div class="row">
-            <div class="large-4 columns">
-                <label>Name
+  <h2>{{vm.isNewNode ? 'Add Node' : vm.newNode.id}}</h2>
+  <form name="vm.nodeForm" novalidate ng-submit="vm.ok()">
+    <div class="row">
+      <div class="large-4 columns">
+        <label>Name
                     <input type="text" placeholder="Enter Name"
+                           unique-id
+                           ng-model-options="{ updateOn: 'blur'}"
                            ng-model="vm.newNode.details.name"
                            ng-disabled="!vm.isVirtualNode"
                            name="name"
                     />
                 </label>
-            </div>
-            <div class="large-4 columns">
-                <label>Version
+        <alert ng-show="vm.nodeForm.name.$pending.uniqueId" class="warning">
+          <span>Checking id...</span>
+        </alert>
+        <alert ng-show="vm.nodeForm.name.$error.uniqueId" type="danger" class="alert">
+          <span>This id is already taken!</span>
+        </alert>
+      </div>
+      <div class="large-4 columns">
+        <label>Version
                     <input type="text"
                            placeholder="Enter Version"
                            ng-model="vm.newNode.details.version"
@@ -21,104 +28,96 @@
                            name="version"
                     />
                 </label>
-            </div>
-            <div class="large-4 columns"></div>
-        </div>
-        <div class="row">
-            <div class="large-4 columns">
-                <label>Status
+      </div>
+      <div class="large-4 columns"></div>
+    </div>
+    <div class="row">
+      <div class="large-4 columns">
+        <label>Status
                     <select ng-model="vm.newNode.details.status"
                             ng-options="state.key as state.value for state in vm.states"
                             ng-disabled="true">
                     </select>
                 </label>
-            </div>
-            <div class="large-4 columns">
-                <label>Type
+      </div>
+      <div class="large-4 columns">
+        <label>Type
                     <select ng-model="vm.newNode.details.type"
                             ng-options="type for type in vm.types"
                             ng-disabled="(!vm.isVirtualNode || vm.isNewNode && vm.isFixedLane)">
                     </select>
                 </label>
-            </div>
-            <div class="large-4 columns">
-                <label>Group
+      </div>
+      <div class="large-4 columns">
+        <label>Group
                     <select ng-model="vm.newNode.details.group"
                             ng-options="group.key as group.value for group in vm.groups"
                             ng-disabled="!vm.isVirtualNode">
                     </select>
                 </label>
-            </div>
-        </div>
-        <div class="row" ng-if="vm.isVirtualNode">
-            <div class="large-3 columns">
-                <label>Launch date
+      </div>
+    </div>
+    <div class="row" ng-if="vm.isVirtualNode">
+      <div class="large-3 columns">
+        <label>Launch date
                     <input type="text"
                            placeholder="Enter expected launch date"
                            ng-model="vm.newNode.details.launchDate"
                            name="launchDate"/>
                 </label>
-            </div>
-            <div class="large-3 columns">
-                <label>Project
+      </div>
+      <div class="large-3 columns">
+        <label>Project
                     <input type="text"
                            placeholder="Enter project name"
                            ng-model="vm.newNode.details.project"
                            name="project"/>
                 </label>
-            </div>
-            <div class="large-3 columns">
-                <label>Intake
+      </div>
+      <div class="large-3 columns">
+        <label>Intake
                     <input type="text"
                            placeholder="Enter intake"
                            ng-model="vm.newNode.details.intake"
                            name="intake"/>
                 </label>
-            </div>
-            <div class="large-3 columns">
-                <label>Contact
+      </div>
+      <div class="large-3 columns">
+        <label>Contact
                     <input type="text"
                            placeholder="Enter contact"
                            ng-model="vm.newNode.details.contact"
                            name="contact" />
                 </label>
-            </div>
-        </div>
-        <div class="row" ng-if="isVirtualNode">
-            <div class="large-4 columns" ng-repeat="custom in vm.newNode.details.custom">
-                <label ng-if="!custom.isNew">{{custom.key}}
+      </div>
+    </div>
+    <div class="row" ng-if="isVirtualNode">
+      <div class="large-4 columns" ng-repeat="custom in vm.newNode.details.custom">
+        <label ng-if="!custom.isNew">{{custom.key}}
                     <input type="text"
                            placeholder="Enter {{custom.key}}"
                            ng-model="custom.value"
                            name="project" />
                 </label>
-                <div class="row collapse" ng-if="custom.isNew">
-                    <label>new value</label>
-                    <div class="large-4 columns">
-                        <input type="text"
-                               placeholder="Enter the key"
-                               ng-model="custom.key"
-                               ng-blur="vm.checkFilledIn(custom)"
-                        />
-                    </div>
-                    <div class="large-8 columns">
-                        <input type="text"
-                               placeholder="Enter the value"
-                               ng-model="custom.value"
-                               ng-blur="vm.checkFilledIn(custom)"
-                        />
-                    </div>
-                </div>
-            </div>
-            <div class="large-4 columns">
-                <label><br>
+        <div class="row collapse" ng-if="custom.isNew">
+          <label>new value</label>
+          <div class="large-4 columns">
+            <input type="text" placeholder="Enter the key" ng-model="custom.key" ng-blur="vm.checkFilledIn(custom)" />
+          </div>
+          <div class="large-8 columns">
+            <input type="text" placeholder="Enter the value" ng-model="custom.value" ng-blur="vm.checkFilledIn(custom)" />
+          </div>
+        </div>
+      </div>
+      <div class="large-4 columns">
+        <label><br>
                     <button type="button" class="button round" ng-click="vm.addCustomValue()">Add custom field</button>
                 </label>
-            </div>
-        </div>
-        <div class="row" ng-if="vm.newNode.details.type === 'RESOURCE'">
-            <div class="large-12 columns">
-                <label>Link to documentation
+      </div>
+    </div>
+    <div class="row" ng-if="vm.newNode.details.type === 'RESOURCE'">
+      <div class="large-12 columns">
+        <label>Link to documentation
                     <div class="row collapse">
                         <div class="small-10 columns">
                             <input ng-model="vm.newNode.details.docs"
@@ -129,62 +128,53 @@
                         </div>
                     </div>
                 </label>
-            </div>
-        </div>
-        <div class="row">
-            <div class="large-12 columns">
-                <label>Description
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-12 columns">
+        <label>Description
                     <textarea ng-model="vm.newNode.details.description"
                               placeholder="Enter Description"
                               ng-disabled="!vm.isVirtualNode">
                     </textarea>
                 </label>
-            </div>
-        </div>
-        <div class="row">
-            <div class="small-6 columns">
-                <label>Available <strong>TO</strong> nodes</label>
-                <ul
-                  class="links-container"
-                  ui-sortable="vm.toOptions" ng-model="vm.availableToNodes">
-                    <li
-                      class="node-placeholder"
-                      ng-repeat='node in vm.availableToNodes track by $index'>
-                      {{node.id}}
-                    </li>
-                </ul>
-            </div>
-            <div class="small-6 columns">
-                <label>Linked <strong>TO</strong> nodes</label>
-                <ul
-                class="links-container right"
-                ui-sortable="vm.toOptions" ng-model="vm.linkedToNodes">
-                    <li
-                      class="node-placeholder"
-                      ng-repeat='link in vm.linkedToNodes track by $index'>
-                      {{link.id}} ({{link.details.type}})
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="row">
-          <span class="small-3 columns">
-            <input type="submit" role="button" aria-label="submit form"
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-6 columns">
+        <label>Available <strong>TO</strong> nodes</label>
+        <ul class="links-container" ui-sortable="vm.toOptions" ng-model="vm.availableToNodes">
+          <li class="node-placeholder" ng-repeat='node in vm.availableToNodes track by $index'>
+            {{node.id}}
+          </li>
+        </ul>
+      </div>
+      <div class="small-6 columns">
+        <label>Linked <strong>TO</strong> nodes</label>
+        <ul class="links-container right" ui-sortable="vm.toOptions" ng-model="vm.linkedToNodes">
+          <li class="node-placeholder" ng-repeat='link in vm.linkedToNodes track by $index'>
+            {{link.id}} ({{link.details.type}})
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+      <span class="small-3 columns">
+            <input type="submit" role="button" ng-disabled="vm.nodeForm.$invalid || vm.nodeForm.$pristine" aria-label="submit form"
                    class="blue radius button" value="Submit"/>
           </span>
-                <span class="small-3 columns" ng-if="!vm.isNewNode && vm.newNode.details.status==='VIRTUAL'">
+      <span class="small-3 columns" ng-if="!vm.isNewNode && vm.newNode.details.status==='VIRTUAL'">
             <input role="button" aria-label="delete node"
                    class="button radius alert" value="Delete"
                    ng-click="vm.delete()"/>
           </span>
-            <span class="small-3 columns">
+      <span class="small-3 columns">
                 <input role="button" aria-label="cancel action"
                        class="button radius secondary" value="Cancel"
                        ng-click="vm.cancel()"/>
           </span>
-        </div>
-    </form>
+    </div>
+  </form>
 
-    <a class="close-reveal-modal" aria-label="Close" ng-click="vm.cancel()">&#215;</a>
+  <a class="close-reveal-modal" aria-label="Close" ng-click="vm.cancel()">&#215;</a>
 </div>
-
