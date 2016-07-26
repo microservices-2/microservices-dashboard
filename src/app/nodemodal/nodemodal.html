@@ -18,7 +18,7 @@
                            name="name"
                     />
                 </label>
-        <alert ng-show="vm.nodeForm.name.$pending.uniqueId" class="warning">
+        <alert ng-show="vm.nodeForm.name.$pending.uniqueId && !vm.nodeForm.name.$pristine" class="warning">
           <span>Checking id...</span>
         </alert>
         <alert ng-show="vm.nodeForm.name.$error.uniqueId" type="danger" class="alert">
