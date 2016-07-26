@@ -481,7 +481,20 @@
               };
               return lineFunction([sourceNode, position]);
             }
-            return lineFunction([sourceNode, targetNode]);
+            var b = {
+              x: sourceNode.x + 40,
+              y: sourceNode.y
+            };
+            var c = {
+              x: targetNode.x - 80,
+              y: targetNode.y
+            };
+            return lineFunction([sourceNode, b, c, targetNode]);
+          }
+        })
+        .style('stroke', function(d) {
+          if (d.source.details.status === 'VIRTUAL' || d.source.details.virtual === true) {
+            return fillColor(d.source);
           }
         })
         .attr('pointer-events', 'none')
@@ -526,7 +539,15 @@
               };
               return lineFunction([sourceNode, position]);
             }
-            return lineFunction([sourceNode, targetNode]);
+            var b = {
+              x: sourceNode.x + 40,
+              y: sourceNode.y
+            };
+            var c = {
+              x: targetNode.x - 80,
+              y: targetNode.y
+            };
+            return lineFunction([sourceNode, b, c, targetNode]);
           }
         })
         .attr('pointer-events', 'stroke')
