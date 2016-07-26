@@ -4,8 +4,14 @@
     <div class="row">
       <div class="large-4 columns">
         <label>Name
-                    <input type="text" placeholder="Enter Name"
+                    <input ng-if="vm.isNewNode" type="text" placeholder="Enter Name"
                            unique-id
+                           ng-model-options="{ updateOn: 'blur'}"
+                           ng-model="vm.newNode.details.name"
+                           ng-disabled="!vm.isVirtualNode"
+                           name="name"
+                    />
+                    <input ng-if="!vm.isNewNode" type="text" placeholder="Enter Name"
                            ng-model-options="{ updateOn: 'blur'}"
                            ng-model="vm.newNode.details.name"
                            ng-disabled="!vm.isVirtualNode"
@@ -160,7 +166,7 @@
     </div>
     <div class="row">
       <span class="small-3 columns">
-            <input type="submit" role="button" ng-disabled="vm.nodeForm.$invalid || vm.nodeForm.$pristine" aria-label="submit form"
+            <input type="submit" role="button" ng-disabled="(vm.nodeForm.$invalid || vm.nodeForm.$pristine) && vm.isNewNode" aria-label="submit form"
                    class="blue radius button" value="Submit"/>
           </span>
       <span class="small-3 columns" ng-if="!vm.isNewNode && vm.newNode.details.status==='VIRTUAL'">
