@@ -1,10 +1,30 @@
-<h1>{{vm.selectedId ? 'Events: '+vm.selectedId : 'Events'}}</h1>
-<button ng-disabled="vm.events.length <= 0" ng-click="vm.clear()">clear</button>
-<div>
-  <select ng-model="vm.selectedId" ng-options="k as k for (k,v) in vm.nodeIdSet" ng-change="vm.onSelect()">
-    </select>
+<div class="row">
+  <div class="large-2 columns">
+    <button class="button alert tiny" ng-disabled="vm.events.length <= 0" ng-click="vm.clear()">clear</button>
+  </div>
+  <div class="large-10 columns">
+  </div>
 </div>
-<p ng-if="vm.events.length <= 0">No events</p>
-<ul>
-  <li ng-repeat="event in vm.events">{{event.message}}</li>
-</ul>
+<div class="row">
+  <div class="large-12 columns">
+    <div class="row collapse prefix-radius">
+      <div class="small-3 columns">
+        <span class="prefix">Select an ID</span>
+      </div>
+      <div class="small-9 columns">
+        <select ng-model="vm.selectedId" ng-options="k as k for (k,v) in vm.nodeIdSet" ng-change="vm.onSelect()">
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="large-12 columns">
+    <h3 ng-if="vm.selectedId">Events: <span class="primary">{{ vm.selectedId }}</span></h3>
+  </div>
+  <div class="large-12 columns">
+    <ul>
+      <li ng-repeat="event in vm.events">{{event.message}}</li>
+    </ul>
+  </div>
+</div>
