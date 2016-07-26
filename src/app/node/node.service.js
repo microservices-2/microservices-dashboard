@@ -87,6 +87,7 @@
           _.assign(
             availableNodes,
             getBackendNodes(selectedNode, nodes, links),
+            getResources(selectedNode, nodes, links),
             getMsNodes(selectedNode, nodes, links)
           );
           break;
@@ -101,12 +102,12 @@
         default:
           break;
       }
-
       return availableNodes;
     }
 
     function updateNode(updates) {
       if (updates.isNewNode === false) {
+        updates.sourceNode.details.virtual = true;
         var preparedNode = stripUnneededProperties(updates.sourceNode);
         preparedNode.linkedToNodeIds = getTargetIndices(updates.toLinks);
         $http.post(BASE_URL + 'node', preparedNode)

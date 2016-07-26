@@ -462,9 +462,6 @@
         })
         .attr('class', 'link')
         .attr('d', function(l) {
-          if (l.source.id === 'pet-store-catalog-view' && l.target.id === 'cugr:group') {
-
-          }
           var sourceNode = _nodes.filter(function(d, i) {
             return i === l.source.index;
           })[0];
@@ -485,6 +482,10 @@
                 x: targetNode.x - _nodeWidth - 5,
                 y: targetNode.y
               };
+              if (l.source.lane === 2) {
+                position.x += _nodeWidth + 10;
+                return lineFunction([sourceNode, position]);
+              }
               return lineFunction([sourceNode, position]);
             }
             return lineFunction([sourceNode, targetNode]);
@@ -492,7 +493,7 @@
         })
         .style('stroke', function(d) {
           if (d.source.details.status === 'VIRTUAL' || d.source.details.virtual === true) {
-            return 'green';
+            return '#c5c5e2';
           }
         })
         .attr('pointer-events', 'none')
@@ -595,7 +596,7 @@
         .attr('class', 'link')
         .attr('orient', 'auto')
         .append('svg:path')
-        .style('stroke', 'green')
+        .style('stroke', '#c5c5e2')
         .attr('d', 'M0,-5L10,0L0,5');
     }
 
@@ -611,7 +612,7 @@
         .attr('class', 'link')
         .attr('orient', 'auto')
         .append('svg:path')
-        .style('stroke', 'green')
+        .style('stroke', '#c5c5e2')
         .attr('d', 'M0,-5L10,0L0,5');
     }
 

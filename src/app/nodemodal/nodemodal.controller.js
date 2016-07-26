@@ -69,7 +69,7 @@
         links = graphData.links;
 
         var availableToNodes = NodeService.getAvailableNodes(vm.newNode, nodes, links);
-        vm.availableToNodes = _.values(availableToNodes)[0];
+        vm.availableToNodes = _.flatten(_.values(availableToNodes));
         vm.linkedToNodes = NodeService.getToLinksByNodeId(vm.newNode.index).map(function(link) {
           return link.target;
         });
