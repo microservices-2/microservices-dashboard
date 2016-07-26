@@ -166,7 +166,7 @@
     </div>
     <div class="row">
       <span class="small-3 columns">
-            <input type="submit" role="button" ng-disabled="(vm.nodeForm.$invalid || vm.nodeForm.$pristine) && vm.isNewNode" aria-label="submit form"
+            <input type="submit" role="button" ng-disabled="(vm.nodeForm.$invalid || vm.nodeForm.$pristine ||vm.nodeForm.$pending) && vm.isNewNode" aria-label="submit form"
                    class="blue radius button" value="Submit"/>
           </span>
       <span class="small-3 columns" ng-if="!vm.isNewNode && vm.newNode.details.status==='VIRTUAL'">
