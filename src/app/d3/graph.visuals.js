@@ -291,7 +291,7 @@
           return 'shadow ' + helpers.formatClassName('text', d);
         }).text(function(d) {
           var name = d.details.name ? d.details.name : d.id;
-          if (d.details.virtual === true) {
+          if (d.details.virtual === true || d.details.status === 'VIRTUAL') {
             name += ' (virtual)';
           }
           return name;
@@ -314,7 +314,7 @@
         })
         .text(function(d) {
           var name = d.details.name ? d.details.name : d.id;
-          if (d.details.virtual === true) {
+          if (d.details.virtual === true || d.details.status === 'VIRTUAL') {
             name += ' (virtual)';
           }
           return name;
