@@ -113,6 +113,8 @@
       drawLaneTitles();
       defineMarkerArrows();
       defineRectangleArrows();
+      defineGreenRectangleMarkers();
+      defineGreenCircleMarkers();
       setNodePositions();
       drawLinks();
       drawNodes();
@@ -460,12 +462,16 @@
         })
         .attr('class', 'link')
         .attr('d', function(l) {
+          if (l.source.id === 'pet-store-catalog-view' && l.target.id === 'cugr:group') {
+
+          }
           var sourceNode = _nodes.filter(function(d, i) {
             return i === l.source.index;
           })[0];
           var targetNode = _nodes.filter(function(d, i) {
             return i === l.target.index;
           })[0];
+
           if (sourceNode && targetNode) {
             if (sourceNode.lane === targetNode.lane) {
               var curve = {
@@ -484,12 +490,29 @@
             return lineFunction([sourceNode, targetNode]);
           }
         })
+        .style('stroke', function(d) {
+          if (d.source.details.status === 'VIRTUAL' || d.source.details.virtual === true) {
+            return 'green';
+          }
+        })
         .attr('pointer-events', 'none')
         .attr('marker-end', function(x) {
           if (x.target.lane === 1) {
+            if (x.source.details.status === 'VIRTUAL' || x.source.details.virtual === true) {
+              return 'url(#arrow-rect-green)';
+            }
             return 'url(#arrow-rect)';
           }
+          if (x.source.details.status === 'VIRTUAL' || x.source.details.virtual === true) {
+            return 'url(#arrow-green)';
+          }
           return 'url(#arrow)';
+        })
+        .sort(function(a, b) {
+          if (a.source.details.status === 'VIRTUAL' || a.source.details.virtual === true) {
+            return 1;
+          }
+          return -1;
         });
 
       _d3GraphSvg.append('svg:g')
@@ -557,6 +580,38 @@
         .attr('class', 'link')
         .attr('orient', 'auto')
         .append('svg:path')
+        .attr('d', 'M0,-5L10,0L0,5');
+    }
+
+    function defineGreenRectangleMarkers() {
+      _d3GraphSvg.append('svg:defs')
+        .append('svg:marker')
+        .attr('id', 'arrow-rect-green')
+        .attr('viewBox', '0 -5 10 10')
+        .attr('refX', 9)
+        .attr('refY', 0.0)
+        .attr('markerWidth', 60)
+        .attr('markerHeight', 6)
+        .attr('class', 'link')
+        .attr('orient', 'auto')
+        .append('svg:path')
+        .style('stroke', 'green')
+        .attr('d', 'M0,-5L10,0L0,5');
+    }
+
+    function defineGreenCircleMarkers() {
+      _d3GraphSvg.append('svg:defs')
+        .append('svg:marker')
+        .attr('id', 'arrow-green')
+        .attr('viewBox', '0 -5 10 10')
+        .attr('refX', _nodeRadius + 9 + 2)
+        .attr('refY', 0.0)
+        .attr('markerWidth', 60)
+        .attr('markerHeight', 6)
+        .attr('class', 'link')
+        .attr('orient', 'auto')
+        .append('svg:path')
+        .style('stroke', 'green')
         .attr('d', 'M0,-5L10,0L0,5');
     }
 

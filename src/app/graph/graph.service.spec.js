@@ -200,6 +200,23 @@
 
           expect(GraphService.updateToLinks(smallGraph.links, updates).length).toEqual(4);
           expect(GraphService.updateToLinks(smallGraph.links, updates)).toEqual(expected);
+
+          expected = [
+            { source: createNode(3), target: createNode(92348) },
+            { source: createNode(4), target: createNode(1) },
+            { source: createNode(1), target: createNode(299) },
+            { source: createNode(1), target: createNode(8) },
+            { source: createNode(1), target: createNode(5) }
+          ];
+
+          updates.toLinks = [
+            { source: createNode(1), target: createNode(299) },
+            { source: createNode(1), target: createNode(8) },
+            { source: createNode(1), target: createNode(5) }
+          ];
+
+          expect(GraphService.updateToLinks(asTargetGraph.links, updates).length).toEqual(5);
+          expect(GraphService.updateToLinks(asTargetGraph.links, updates)).toEqual(expected);
         });
       });
     });
@@ -230,6 +247,23 @@
       {
         source: createNode(1),
         target: createNode(3)
+      }
+    ]
+  };
+  var asTargetGraph = {
+    links: [
+      { source: createNode(3), target: createNode(92348) },
+      {
+        source: createNode(1),
+        target: createNode(2)
+      },
+      {
+        source: createNode(1),
+        target: createNode(3)
+      },
+      {
+        source: createNode(4),
+        target: createNode(1)
       }
     ]
   };
