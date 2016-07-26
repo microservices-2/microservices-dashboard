@@ -145,6 +145,9 @@
             if (isNodeInLink(link, sourceNode)) {
               return true;
             }
+            if (link.target.index === sourceNode.index) {
+              return true;
+            }
             return hasEqualLinks(link, newLinks);
           });
 
