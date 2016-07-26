@@ -203,10 +203,10 @@
 
           expected = [
             { source: createNode(3), target: createNode(92348) },
+            { source: createNode(4), target: createNode(1) },
             { source: createNode(1), target: createNode(299) },
             { source: createNode(1), target: createNode(8) },
-            { source: createNode(1), target: createNode(5) },
-            { source: createNode(4), target: createNode(1) }
+            { source: createNode(1), target: createNode(5) }
           ];
 
           updates.toLinks = [
