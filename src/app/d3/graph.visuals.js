@@ -74,6 +74,7 @@
 
     function renderGraph(data, element) {
       self.isRendered = true;
+      _width = element.clientWidth;
       _graphData = data;
       _element = element;
       _nodes = data.nodes;
