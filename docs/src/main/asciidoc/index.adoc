@@ -411,6 +411,29 @@ msdashboard.mappings.filteredServices[1]=diskSpace
 [[aggregation-pact]]
 ==== Pact aggregator ====
 
+The pacts aggregator retrieves and aggregates nodes from information exposed by the https://github.com/bethesque/pact_broker[Pact broker].
+The broker holds contracts between producers and consumers which describe their interactions.
+
+===== Prerequisites =====
+
+The Pact broker should expose a JSON resource containing links to the latest pacts.
+Out of this response, we extract all the links to the pacts with the following default jsonPath:
+```json
+$.pacts[*]._links.self[0].href
+```
+NOTE: You can supply your own jsonPath using properties.
+
+Once the links to the pacts are retrieved, each pact will be called and processed.
+Please refer to the https://github.com/realestate-com-au/pact[Pact] documentation for in-depth details on what Pact contracts should look like.
+
+We expect only a couple fields to be present:
+
+```json
+$.interactions[*].request.path
+$.provider.name
+$.consumer.name
+```
+
 More information will be added as soon as possible.
 
 [[aggregation-service-discovery]]
