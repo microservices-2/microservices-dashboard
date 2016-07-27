@@ -37,6 +37,10 @@
     var _microCounter = 0;
     var _dbCounter = 0;
 
+    // colors
+    var _lineHighlightColor = '#DFF0D8';
+    var _lineColor = '#F5F5F5';
+
     // positioning and dimensions
     var _nodeRadius = 16;
     var _verticalNodeSpace = 75;
@@ -48,6 +52,7 @@
 
     var _margin = { top: 20, right: 0, bottom: 20, left: 0 };
     var _width = $window.innerWidth - _margin.right - _margin.left - 16;
+
     var _minheight = $window.innerHeight;
     var _height = $window.innerHeight;
     var DEFAULT_TITLE_FONT_SIZE = 22;
@@ -493,7 +498,7 @@
         })
         .style('stroke', function(d) {
           if (d.source.details.status === 'VIRTUAL' || d.source.details.virtual === true) {
-            return '#c5c5e2';
+            return _lineHighlightColor;
           }
         })
         .attr('pointer-events', 'none')
@@ -596,7 +601,7 @@
         .attr('class', 'link')
         .attr('orient', 'auto')
         .append('svg:path')
-        .style('stroke', '#c5c5e2')
+        .style('stroke', _lineHighlightColor)
         .attr('d', 'M0,-5L10,0L0,5');
     }
 
@@ -612,7 +617,7 @@
         .attr('class', 'link')
         .attr('orient', 'auto')
         .append('svg:path')
-        .style('stroke', '#c5c5e2')
+        .style('stroke', _lineHighlightColor)
         .attr('d', 'M0,-5L10,0L0,5');
     }
 

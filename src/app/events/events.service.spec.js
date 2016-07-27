@@ -148,7 +148,7 @@
         expect(service.getEventsByNodeIdMap().length).toBe(_.keys(service.getIndexMap()).length);
         service.removedEventsByNodeId('customer-group');
         expect(service.getEventList().length).toBe(24);
-        expect(service.getEventsByNodeIdMap().length).toBe(15);
+        expect(service.getEventsByNodeIdMap().length).toBe(16);
         expect(service.getEventsByNodeIdMap().length).toBe(_.keys(service.getIndexMap()).length);
       });
 

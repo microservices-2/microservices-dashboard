@@ -55,13 +55,15 @@
     }
     function removedEventsByNodeId(nodeId) {
       clearEventsByIndex(_indexToNodeIdMap[nodeId]);
-      var newEventList = _eventList.filter(function(eventDetails) {
+      _eventList = _eventList.filter(function(eventDetails) {
         return eventDetails.nodeId !== nodeId;
       });
-      setEventList(newEventList);
     }
     function clearEventsByIndex(index) {
-      _eventsToNodeIdMap.splice(index, 1);
+      var nodeEvents = _eventsToNodeIdMap[index];
+      if (nodeEvents) {
+        nodeEvents.events = [];
+      }
     }
     function getEventsByIndex(index) {
       return _eventsToNodeIdMap[index];

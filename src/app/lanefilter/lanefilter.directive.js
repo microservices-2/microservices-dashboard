@@ -7,7 +7,7 @@
     .directive('lanefilter', LanefilterDirective);
 
   /** @ngInject */
-  function LanefilterCtrl($rootScope, REQUEST_GRAPH_DATA_SUCCESS, GraphService, $q) {
+  function LanefilterCtrl($rootScope, REQUEST_GRAPH_DATA_SUCCESS, GraphService, $q, msdEventsService) {
     var vm = this;
 
     vm.filter = { details: {} };
@@ -29,10 +29,14 @@
     }
 
     function refresh() {
-      GraphService.requestGraph();
-      vm.filter = {
-        details: {}
-      };
+      msdEventsService
+        .request()
+        .then(function() {
+          GraphService.requestGraph();
+          vm.filter = {
+            details: {}
+          };
+        });
     }
   }
 
