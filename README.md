@@ -20,15 +20,15 @@ To learn everything there is to know about the Microservices Dashboard, please c
 
 ## Screenshots
 
-<img width="1440" alt="screen shot 2016-04-07 at 10 56 44" src="https://cloud.githubusercontent.com/assets/6663110/14345954/11db9980-fcb0-11e5-963f-38bca041e5bb.png">
+<img width="1440" alt="screen shot 2016-07-27 at 09 26 14" src="https://cloud.githubusercontent.com/assets/6663110/17167270/8af65fac-53dc-11e6-999d-e298b4a6d84f.png">
 
-<img width="1440" alt="screen shot 2016-04-07 at 11 02 41" src="https://cloud.githubusercontent.com/assets/6663110/14345993/4fa2383c-fcb0-11e5-832d-10cbe2bdc2d6.png">
+<img width="1440" alt="screen shot 2016-07-27 at 09 26 26" src="https://cloud.githubusercontent.com/assets/6663110/17167273/8aff9b62-53dc-11e6-9e12-f1301371815f.png">
 
-<img width="1440" alt="screen shot 2016-04-07 at 10 58 25" src="https://cloud.githubusercontent.com/assets/6663110/14345957/1496601a-fcb0-11e5-812b-b1abac778d79.png">
+<img width="1440" alt="screen shot 2016-07-27 at 09 26 41" src="https://cloud.githubusercontent.com/assets/6663110/17167271/8af7c1da-53dc-11e6-996b-0d4e15ab7236.png">
 
-<img width="1440" alt="screen shot 2016-04-07 at 11 00 03" src="https://cloud.githubusercontent.com/assets/6663110/14345958/16809878-fcb0-11e5-8045-d4b6ff4b920a.png">
+<img width="1440" alt="screen shot 2016-07-27 at 09 27 52" src="https://cloud.githubusercontent.com/assets/6663110/17167272/8af96094-53dc-11e6-9503-06a984519f13.png">
 
-<img width="1440" alt="screen shot 2016-04-07 at 11 00 22" src="https://cloud.githubusercontent.com/assets/6663110/14345960/19004c10-fcb0-11e5-80dd-dd4e1eab25ab.png">
+<img width="1440" alt="screen shot 2016-07-27 at 09 29 51" src="https://cloud.githubusercontent.com/assets/6663110/17167310/b88e08c0-53dc-11e6-9f82-76a986e88862.png">
 
 ## Setting up the dashboard
 
