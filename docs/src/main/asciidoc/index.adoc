@@ -225,6 +225,9 @@ Configuring the existing aggregators is explained below.
 If you wish to extend or override an aggregator, have a look at <<aggregation-extending,Extending existing aggregators>>.
 And finally writing your own aggregator is covered in the <<aggregation-writing-your-own, Writing your own aggregator>> section.
 
+[[aggregation-provided]]
+=== Provided aggregators ===
+
 Currently four aggregators are provided out-of-the-box:
 
 * Health aggregator _(requires service discovery)_
@@ -233,25 +236,103 @@ Currently four aggregators are provided out-of-the-box:
 * Pact aggregator _(requires pact broker)_
 
 [[aggregation-health]]
-=== Health aggregator ===
+==== Health aggregator ====
 
-More information will be added as soon as possible.
+The health aggregator retrieves and aggregates nodes from health information exposed by http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready[Spring Boot's Actuator].
+
+===== Prerequisites =====
+
+This aggregator uses service discovery to find available services.
+More details on using service discovery is covered in section <<aggregation-service-discovery,Using service discovery>>.
+
+In case Spring Boot is not used in a microservice you would like to retrieve health information of, your service must comply to the health format exposed by Spring Boot under the `/health` endpoint.
+
+[source,json,subs="verbatim,attributes"]
+.Example of a health response
+----
+{
+  "status": "UP",
+  "foo": "bar",
+  "serviceWhichThisServiceCalls": {
+    "status": "UNKNOWN",
+    "type": "SOAP",
+    "group": "SVCGROUP"
+  },
+  "anotherServiceWhichThisServiceCalls": {
+    "status": "DOWN",
+    "type": "REST",
+    "group": "SVCGROUP",
+    "foo": "bar"
+  }
+}
+----
+
+The only required field is `status`.
+Any field which isn't an array, is added to the details of the current node.
+
+TIP: The Spring Boot `/health` endpoint is part of its Actuator functionality.
+A detailed description of its purpose and characteristics can be found in the http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready[reference documentation].
+
+===== Aggregation =====
+
+For each service returned from the service discovery, a top level node is created.
+For each nested entity found in the response of each health response, a node is created and being linked from the top level node. 
+
+.Health aggregator configuration options
+|===
+| Property name |Description |Example |Default value
+
+| msdashboard.health.requestHeaders
+| Map of request header keys and values used for calling the services' health endpoint.
+a|
+[source,yaml,subs="verbatim,attributes"]
+.Using yaml
+----
+msdashboard.health.requestHeaders:
+  headername1: headervalue1
+  headername2: headervalue2
+----
+[source,properties,subs="verbatim,attributes"]
+.Using properties
+----
+msdashboard.health.requestHeaders.headername1=headervalue1
+msdashboard.health.requestHeaders.headername2=headervalue2
+----
+| 
+
+| msdashboard.health.filteredServices
+| List of names of services which should be ignored during health aggregation.
+a|
+[source,yaml,subs="verbatim,attributes"]
+.Using yaml
+----
+msdashboard.health.filteredServices:
+  - hystrix
+  - diskSpace
+----
+[source,yaml,subs="verbatim,attributes"]
+.Using properties
+----
+msdashboard.health.filteredServices[0]=hystrix
+msdashboard.health.filteredServices[1]=diskSpace
+----
+| hystrix, diskSpace, configServer, discovery
+|===
 
 [[aggregation-index]]
-=== Index aggregator ===
+==== Index aggregator ====
 
 More information will be added as soon as possible.
 
 [[aggregation-mappings]]
-=== Mappings aggregator ===
+==== Mappings aggregator ====
 
-The mappings aggregator aggregates nodes from mappings information exposed by http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready[Spring Boot's Actuator].
+The mappings aggregator retrieves and aggregates nodes from mappings information exposed by http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready[Spring Boot's Actuator].
 
-==== Prerequisites ====
+===== Prerequisites =====
 
 This aggregator uses service discovery to find available services.
-We are using the `org.springframework.cloud.client.discovery.DiscoveryClient` abstraction, which means that we support any implementation of said interface.
-At the time of writing Eureka, Zookeeper and Consul.io are supported, although the Spring Cloud team might add more at any moment.
+More details on using service discovery is covered in section <<aggregation-service-discovery,Using service discovery>>.
 
 In case Spring Boot is not used in a microservice you would like to retrieve mappings of, your service must comply to the mappings format exposed by Spring Boot under the `/mappings` endpoint.
 
@@ -270,14 +351,73 @@ In case Spring Boot is not used in a microservice you would like to retrieve map
 }
 ----
 
+The only required segment is the endpoint in the key.
+The endpoint should be relative (starting with a slash), between brackets and part of an array wrapped in quotes.
+The smallest accepted mapping key is the following:
+`"{[/]}"`.
+Consequentially, the smallest accepted mapping response is the following: `{"{[/]}" : {}}`.
+
 Any endpoint with a method signature containing `org.springframework` will be ignored.
 
-More information will be added as soon as possible.
+TIP: The Spring Boot `/health` endpoint is part of its Actuator functionality.
+A detailed description of its purpose and characteristics can be found in the http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready[reference documentation].
+
+===== Aggregation =====
+
+For each service returned from the service discovery, a top level node is created.
+For each unfiltered mapping found in the response of each mappings response, a node is created and being linked to the top level node. 
+
+.Mappings aggregator configuration options
+|===
+| Property name |Description |Example |Default value
+
+| msdashboard.mappings.requestHeaders
+| Map of request header keys and values used for calling the services' mappings endpoint.
+a|
+[source,yaml,subs="verbatim,attributes"]
+.Using yaml
+----
+msdashboard.mappings.requestHeaders:
+  headername1: headervalue1
+  headername2: headervalue2
+----
+[source,properties,subs="verbatim,attributes"]
+.Using properties
+----
+msdashboard.mappings.requestHeaders.headername1=headervalue1
+msdashboard.mappings.requestHeaders.headername2=headervalue2
+----
+| 
+
+| msdashboard.mappings.filteredServices
+| List of names of services which should be ignored during health aggregation.
+a|
+[source,yaml,subs="verbatim,attributes"]
+.Using yaml
+----
+msdashboard.mappings.filteredServices:
+  - hystrix
+  - diskSpace
+----
+[source,yaml,subs="verbatim,attributes"]
+.Using properties
+----
+msdashboard.mappings.filteredServices[0]=hystrix
+msdashboard.mappings.filteredServices[1]=diskSpace
+----
+| hystrix, diskSpace, configServer, discovery
+|===
 
 [[aggregation-pact]]
-=== Pact aggregator ===
+==== Pact aggregator ====
 
 More information will be added as soon as possible.
+
+[[aggregation-service-discovery]]
+=== Using service discovery ===
+
+We are using the `org.springframework.cloud.client.discovery.DiscoveryClient` abstraction, which means that we support any implementation of said interface.
+At the time of writing Eureka, Zookeeper and Consul.io are supported, although the Spring Cloud team might add more at any moment.
 
 [[aggregation-extending]]
 === Extending existing aggregators ===
