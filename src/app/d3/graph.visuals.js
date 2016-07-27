@@ -1,4 +1,4 @@
-/* global angular _ */
+/* global angular, _ */
 (function() {
   'use strict';
 
@@ -39,7 +39,6 @@
 
     // colors
     var _lineHighlightColor = '#DFF0D8';
-    var _lineColor = '#F5F5F5';
 
     // positioning and dimensions
     var _nodeRadius = 16;
@@ -380,7 +379,7 @@
           return d.y + eventCountCirclePositionOffset.y;
         })
         .style('stroke-width', 1)
-        .style('stroke', function(o) {
+        .style('stroke', function() {
           return '#8c0101';
         })
         .on('mousedown', _.bind(onEventCircleMouseDown));
@@ -515,7 +514,7 @@
           }
           return 'url(#arrow)';
         })
-        .sort(function(a, b) {
+        .sort(function(a) {
           if (a.source.details.status === 'VIRTUAL' || a.source.details.virtual === true) {
             return 1;
           }

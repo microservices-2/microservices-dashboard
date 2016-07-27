@@ -4,13 +4,9 @@
   'use strict';
 
   /** @ngInject */
-  function config($logProvider, $httpProvider) {
+  function config($logProvider) {
     // enable log debug
     $logProvider.debugEnabled(true);
-
-    // why?
-    // $httpProvider.defaults.useXDomain = true;
-    // delete $httpProvider.defaults.headers.common['X-Requested-With'];
   }
 
   angular

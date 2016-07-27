@@ -50,7 +50,7 @@
       if (node.id && data.isNewNode) {
         $http
           .post(BASE_URL + 'node', node)
-          .then(function(response) {
+          .then(function() {
             GraphService.addNewNode(node);
             var oldLinks = GraphService.getGraph().links;
             GraphService.getGraph().links = GraphService.updateToLinks(oldLinks, data);
@@ -173,12 +173,12 @@
       };
     }
 
-    function selectSourceNodes(nodeIndex) {
-      var index = nodeIndex;
-      return function(link) {
-        return link.source.index === index;
-      };
-    }
+    // function selectSourceNodes(nodeIndex) {
+    //   var index = nodeIndex;
+    //   return function(link) {
+    //     return link.source.index === index;
+    //   };
+    // }
 
     function getMsNodes(node, nodes, links) {
       return { microServices: filterNodesByLane(nodes, MS_LANE, links)(node) };
