@@ -235,6 +235,41 @@ Currently four aggregators are provided out-of-the-box:
 * Mappings aggregator _(requires service discovery)_
 * Pact aggregator _(requires pact broker)_
 
+[WARNING]
+====
+Every aggregator has a set of properties available which can easily be changed in `application.yml` or `application.properties` in your Spring Boot application.
+Setting maps and lists in properties is less straightforward.
+
+Configuring a map can be done as follows:
+[source,yaml,subs="verbatim,attributes"]
+.Using yaml
+----
+msdashboard.health.requestHeaders:
+  headername1: headervalue1
+  headername2: headervalue2
+----
+[source,properties,subs="verbatim,attributes"]
+.Using properties
+----
+msdashboard.health.requestHeaders.headername1=headervalue1
+msdashboard.health.requestHeaders.headername2=headervalue2
+----
+Configuring a list can be done as follows:
+[source,yaml,subs="verbatim,attributes"]
+.Using yaml
+----
+msdashboard.health.filteredServices:
+  - hystrix
+  - diskSpace
+----
+[source,properties,subs="verbatim,attributes"]
+.Using properties
+----
+msdashboard.health.filteredServices[0]=hystrix
+msdashboard.health.filteredServices[1]=diskSpace
+----
+====
+
 [[aggregation-health]]
 ==== Health aggregator ====
 
@@ -280,42 +315,14 @@ For each nested entity found in the response of each health response, a node is 
 
 .Health aggregator configuration options
 |===
-| Property name |Description |Example |Default value
+| Property name |Description |Default value
 
 | msdashboard.health.requestHeaders
 | Map of request header keys and values used for calling the services' health endpoint.
-a|
-[source,yaml,subs="verbatim,attributes"]
-.Using yaml
-----
-msdashboard.health.requestHeaders:
-  headername1: headervalue1
-  headername2: headervalue2
-----
-[source,properties,subs="verbatim,attributes"]
-.Using properties
-----
-msdashboard.health.requestHeaders.headername1=headervalue1
-msdashboard.health.requestHeaders.headername2=headervalue2
-----
 | 
 
 | msdashboard.health.filteredServices
 | List of names of services which should be ignored during health aggregation.
-a|
-[source,yaml,subs="verbatim,attributes"]
-.Using yaml
-----
-msdashboard.health.filteredServices:
-  - hystrix
-  - diskSpace
-----
-[source,yaml,subs="verbatim,attributes"]
-.Using properties
-----
-msdashboard.health.filteredServices[0]=hystrix
-msdashboard.health.filteredServices[1]=diskSpace
-----
 | hystrix, diskSpace, configServer, discovery
 |===
 
@@ -369,42 +376,14 @@ For each unfiltered mapping found in the response of each mappings response, a n
 
 .Mappings aggregator configuration options
 |===
-| Property name |Description |Example |Default value
+| Property name |Description |Default value
 
 | msdashboard.mappings.requestHeaders
 | Map of request header keys and values used for calling the services' mappings endpoint.
-a|
-[source,yaml,subs="verbatim,attributes"]
-.Using yaml
-----
-msdashboard.mappings.requestHeaders:
-  headername1: headervalue1
-  headername2: headervalue2
-----
-[source,properties,subs="verbatim,attributes"]
-.Using properties
-----
-msdashboard.mappings.requestHeaders.headername1=headervalue1
-msdashboard.mappings.requestHeaders.headername2=headervalue2
-----
 | 
 
 | msdashboard.mappings.filteredServices
 | List of names of services which should be ignored during health aggregation.
-a|
-[source,yaml,subs="verbatim,attributes"]
-.Using yaml
-----
-msdashboard.mappings.filteredServices:
-  - hystrix
-  - diskSpace
-----
-[source,yaml,subs="verbatim,attributes"]
-.Using properties
-----
-msdashboard.mappings.filteredServices[0]=hystrix
-msdashboard.mappings.filteredServices[1]=diskSpace
-----
 | hystrix, diskSpace, configServer, discovery
 |===
 
@@ -418,23 +397,51 @@ The broker holds contracts between producers and consumers which describe their 
 
 The Pact broker should expose a JSON resource containing links to the latest pacts.
 Out of this response, we extract all the links to the pacts with the following default jsonPath:
-```json
+```jsonpath
 $.pacts[*]._links.self[0].href
 ```
-NOTE: You can supply your own jsonPath using properties.
+NOTE: You can change many of these settings by using the properties.
+See below for the available properties and their default values.
 
 Once the links to the pacts are retrieved, each pact will be called and processed.
 Please refer to the https://github.com/realestate-com-au/pact[Pact] documentation for in-depth details on what Pact contracts should look like.
 
 We expect only a couple fields to be present:
 
-```json
+```jsonpath
 $.interactions[*].request.path
 $.provider.name
 $.consumer.name
 ```
 
-More information will be added as soon as possible.
+===== Aggregation =====
+
+For each interaction found in each contract returned by the pact broker, nodes and links are being created for its consumer and producer.
+
+.Pact aggregator configuration options
+|===
+| Property name |Description |Default value
+
+| msdashboard.pact.requestHeaders
+| Map of request header keys and values used for calling the services' mappings endpoint.
+| 
+
+| msdashboard.pact.filteredServices
+| List of names of services which should be ignored during health aggregation.
+| hystrix, diskSpace, configServer, discovery
+
+| pact-broker.url
+| The url to the pact broker.
+| http://localhost:8089
+
+| pact-broker.latest-url
+| The relative url to the list of pacts.
+| /pacts/latest
+
+| pact-broker.self-href-jsonPath
+| The jsonPath to retrieve the links to the individual pact contracts.
+| $.pacts[*]._links.self[0].href
+|===
 
 [[aggregation-service-discovery]]
 === Using service discovery ===
@@ -517,8 +524,8 @@ More information will be added as soon as possible.
 For remote debugging, run the following command:
 
 ```bash
-./mvnw install
-java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 target/*.jar
+$ mvnw install
+$ java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 target/*.jar
 ```
 
 To enable Spring debug logging, add ```--debug``` to the command.
