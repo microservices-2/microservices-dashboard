@@ -328,8 +328,27 @@ For each nested entity found in the response of each health response, a node is 
 
 [[aggregation-index]]
 ==== Index aggregator ====
-
 ===== Prerequisites =====
+
+This aggregator uses service discovery to find available services.
+More details on using service discovery is covered in section <<aggregation-service-discovery,Using service discovery>>.
+
+[source,json,subs="verbatim,attributes"]
+.Example of an index response
+----
+{
+  "_links": {
+    "svc1:svc1rsc1": {
+        "href": "http://host0015.local:8301/svc1rsc1",
+        "templated": true
+    },
+    "svc1:svc1rsc2": {
+        "href": "http://host0015.local:8301/svc1rsc2",
+        "templated": true
+    }
+  }
+}
+----
 
 ===== Aggregation =====
 
