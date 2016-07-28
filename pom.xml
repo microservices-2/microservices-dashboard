@@ -11,9 +11,9 @@
 
     <distributionManagement>
         <repository>
-            <id>bintray-ordina-jworks-microservices-dashboard</id>
-            <name>ordina-jworks-microservices-dashboard</name>
-            <url>https://api.bintray.com/maven/ordina-jworks/microservices-dashboard/microservices-dashboard/;publish=1</url>
+            <id>bintray-ordina-jworks-microservices-dashboard-server</id>
+            <name>ordina-jworks-microservices-dashboard-server</name>
+            <url>https://api.bintray.com/maven/ordina-jworks/microservices-dashboard-server/microservices-dashboard/;publish=1</url>
         </repository>
         <repository>
             <id>central</id>
