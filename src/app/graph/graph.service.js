@@ -20,6 +20,7 @@
     var graph = {};
 
     var factory = {
+      evict: evict,
       countNodesByLane: countNodesByLane,
       getGraph: getGraphData,
       setGraphData: setGraphData,
@@ -34,7 +35,14 @@
       getTypes: getTypes,
       getGroups: getGroups
     };
-
+    function evict() {
+      return $http.post(BASE_URL + 'evictCache')
+        .then(function(ok) {
+          console.log('evict cache success');
+        }, (function(bad) {
+          console.log('evict cache failed');
+        }));
+    }
     function countNodesByLane(nodes) {
       return nodes.reduce(function(table, node) {
         table[node.lane]++;

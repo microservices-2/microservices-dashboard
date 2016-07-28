@@ -3,14 +3,24 @@
   'use strict';
 
   /** @ngInject */
-  function Controller($modal, createEventModalConfig, msdVisuals, msdEventsService) {
+  function Controller($modal, createEventModalConfig, msdVisuals, msdEventsService, GraphService) {
     var self = this;
     self.clearAllEvents = clearAllEvents;
     self.isUiLaneVisible = true;
     self.onChange = onChange;
     self.openEventsModal = openEventsModal;
     self.modal = $modal;
+    self.evictCache = evictCache;
 
+    function evictCache() {
+      GraphService.evict()
+        .then(function(evictCacheSuccess) {
+          return msdEventsService.request();
+        })
+        .then(function(eventsFetched) {
+          return GraphService.requestGraph();
+        });
+    }
     function openEventsModal() {
       var modalConfig = createEventModalConfig(undefined);
       self.modal.open(modalConfig);
