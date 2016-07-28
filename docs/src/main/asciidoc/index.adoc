@@ -328,10 +328,15 @@ For each nested entity found in the response of each health response, a node is 
 
 [[aggregation-index]]
 ==== Index aggregator ====
+
+The index aggregator retrieves and aggregates nodes from index information exposed by http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready[Spring Boot's Actuator].
+
 ===== Prerequisites =====
 
 This aggregator uses service discovery to find available services.
 More details on using service discovery is covered in section <<aggregation-service-discovery,Using service discovery>>.
+
+In case Spring Boot is not used in a microservice you would like to retrieve mappings of, your service must comply to the mappings format exposed by Spring Boot under the `/index` endpoint.
 
 [source,json,subs="verbatim,attributes"]
 .Example of an index response
@@ -361,7 +366,7 @@ For each unfiltered mapping found in the response of each mappings response, a n
 
 | msdashboard.index.enabled
 | Index aggregator is enabled
-| true
+| false
 
 | msdashboard.index.requestHeaders
 | Map of request header keys and values used for calling the services' mappings endpoint.
