@@ -378,6 +378,10 @@ For each unfiltered mapping found in the response of each mappings response, a n
 |===
 | Property name |Description |Default value
 
+| msdashboard.mappings.enabled
+| Mappings aggregator is enabled
+| true
+
 | msdashboard.mappings.requestHeaders
 | Map of request header keys and values used for calling the services' mappings endpoint.
 | 
