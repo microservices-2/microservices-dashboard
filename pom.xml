@@ -10,11 +10,11 @@
     </properties>
 
     <distributionManagement>
-        <!--<repository>
-            <id>bintray-ordina-jworks-microservices-dashboard-server</id>
-            <name>ordina-jworks-microservices-dashboard-server</name>
-            <url>https://api.bintray.com/maven/ordina-jworks/microservices-dashboard-server/microservices-dashboard-server/;publish=1</url>
-        </repository>-->
+        <repository>
+            <id>bintray-ordina-jworks-microservices-dashboard</id>
+            <name>ordina-jworks-microservices-dashboard</name>
+            <url>https://api.bintray.com/maven/ordina-jworks/microservices-dashboard/microservices-dashboard/;publish=1</url>
+        </repository>
         <repository>
             <id>central</id>
             <name>oss-jfrog-artifactory-releases</name>
@@ -87,6 +87,15 @@
             </nonFilteredFileExtensions>
           </configuration>
         </plugin>
+        <plugin>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.4.1</version>
+          <configuration>
+            <useReleaseProfile>false</useReleaseProfile>
+            <releaseProfiles>release</releaseProfiles>
+            <autoVersionSubmodules>true</autoVersionSubmodules>
+          </configuration>
+        </plugin>
       </plugins>
       <resources>
         <resource>
@@ -96,4 +105,36 @@
         </resource>
       </resources>
     </build>
+    
+    <profiles>
+      <profile>
+        <id>release</id>
+        <build>
+          <plugins>
+            <plugin>
+              <artifactId>maven-source-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>attach-sources</id>
+                  <goals>
+                    <goal>jar</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+            <plugin>
+              <artifactId>maven-javadoc-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>attach-javadocs</id>
+                  <goals>
+                    <goal>jar</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </build>
+      </profile>
+    </profiles>
   </project>
