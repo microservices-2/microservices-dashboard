@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>be.ordina</groupId>
   <artifactId>microservices-dashboard-ui</artifactId>
@@ -9,6 +10,14 @@
     <destDir>${project.build.outputDirectory}/META-INF/resources</destDir>
   </properties>
 
+  <scm>
+    <connection>scm:git:https://github.com/ordina-jworks/microservices-dashboard.git</connection>
+    <developerConnection>scm:git:git://github.com/ordina-jworks/microservices-dashboard.git</developerConnection>
+    <url>https://github.com/ordina-jworks/microservices-dashboard.git/</url>
+    <tag>HEAD</tag>
+  </scm>
+
+
   <profiles>
     <profile>
       <id>bintray</id>
@@ -16,7 +25,9 @@
         <repository>
           <id>bintray-ordina-jworks-microservices-dashboard-server</id>
           <name>ordina-jworks-microservices-dashboard-server</name>
-          <url>https://api.bintray.com/maven/ordina-jworks/microservices-dashboard-server/microservices-dashboard/;publish=1</url>
+          <url>
+            https://api.bintray.com/maven/ordina-jworks/microservices-dashboard-server/microservices-dashboard/;publish=1
+          </url>
         </repository>
       </distributionManagement>
     </profile>
@@ -103,6 +114,11 @@
             <nonFilteredFileExtension>ico</nonFilteredFileExtension>
           </nonFilteredFileExtensions>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.5.3</version>
       </plugin>
     </plugins>
     <resources>
