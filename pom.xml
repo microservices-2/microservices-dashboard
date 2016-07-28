@@ -12,7 +12,7 @@
 
   <scm>
     <connection>scm:git:https://github.com/ordina-jworks/microservices-dashboard.git</connection>
-    <developerConnection>scm:git:git@github.com/ordina-jworks/microservices-dashboard.git</developerConnection>
+    <developerConnection>scm:git:git@github.com:ordina-jworks/microservices-dashboard.git</developerConnection>
     <url>https://github.com/ordina-jworks/microservices-dashboard.git/</url>
     <tag>HEAD</tag>
   </scm>
