@@ -329,7 +329,29 @@ For each nested entity found in the response of each health response, a node is 
 [[aggregation-index]]
 ==== Index aggregator ====
 
-More information will be added as soon as possible.
+===== Prerequisites =====
+
+===== Aggregation =====
+
+For each service returned from the service discovery, a top level node is created.
+For each unfiltered mapping found in the response of each mappings response, a node is created and being linked to the top level node. 
+
+.Index aggregator configuration options
+|===
+| Property name |Description |Default value
+
+| msdashboard.index.enabled
+| Index aggregator is enabled
+| true
+
+| msdashboard.index.requestHeaders
+| Map of request header keys and values used for calling the services' mappings endpoint.
+| 
+
+| msdashboard.index.filteredServices
+| List of names of services which should be ignored during index aggregation.
+| hystrix, diskSpace, configServer, discovery
+|===
 
 [[aggregation-mappings]]
 ==== Mappings aggregator ====
