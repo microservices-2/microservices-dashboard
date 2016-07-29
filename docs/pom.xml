@@ -4,7 +4,7 @@
     
     <groupId>be.ordina</groupId>
     <artifactId>microservices-dashboard-docs</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Microservices Dashboard Docs</name>
