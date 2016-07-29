@@ -126,6 +126,11 @@
         <targetPath>${destDir}</targetPath>
         <filtering>true</filtering>
       </resource>
+      <resource>
+        <directory>${project.build.outputDirectory}/dist</directory>
+        <targetPath>${destDir}</targetPath>
+        <filtering>true</filtering>
+      </resource>
     </resources>
   </build>
   <repositories>
