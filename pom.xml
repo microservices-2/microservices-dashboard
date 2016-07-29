@@ -25,7 +25,7 @@
           <id>bintray-ordina-jworks-microservices-dashboard-server</id>
           <name>ordina-jworks-microservices-dashboard-server</name>
           <url>
-            https://api.bintray.com/maven/ordina-jworks/microservices-dashboard-server/microservices-dashboard/;publish=1
+            https://api.bintray.com/maven/ordina-jworks/microservices-dashboard-server/microservices-dashboard-ui/;publish=1
           </url>
         </repository>
       </distributionManagement>
