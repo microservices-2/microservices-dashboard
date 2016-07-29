@@ -329,14 +329,16 @@ For each nested entity found in the response of each health response, a node is 
 [[aggregation-index]]
 ==== Index aggregator ====
 
-The index aggregator retrieves and aggregates nodes from index information exposed by http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready[Spring Boot's Actuator].
+The index aggregator retrieves and aggregates nodes from custom index endpoints implementing hypermedia.
+Currently only HAL is supported as mediatype.
+See http://projects.spring.io/spring-hateoas/[Spring HATEOAS] to easily implement said endpoints.
 
 ===== Prerequisites =====
 
 This aggregator uses service discovery to find available services.
 More details on using service discovery is covered in section <<aggregation-service-discovery,Using service discovery>>.
 
-In case Spring Boot is not used in a microservice you would like to retrieve mappings of, your service must comply to the mappings format exposed by Spring Boot under the `/index` endpoint.
+Your service must comply to the HAL format and expose an index under the root (`/`) endpoint.
 
 [source,json,subs="verbatim,attributes"]
 .Example of an index response
@@ -358,7 +360,7 @@ In case Spring Boot is not used in a microservice you would like to retrieve map
 ===== Aggregation =====
 
 For each service returned from the service discovery, a top level node is created.
-For each unfiltered mapping found in the response of each mappings response, a node is created and being linked to the top level node. 
+For each unfiltered link found in the response of each index response, a node is created and being linked from the top level node. 
 
 .Index aggregator configuration options
 |===
@@ -561,10 +563,14 @@ You can use this as a base for your own version of the microservices-dashboard.
 === Sample 2: microservices-dashboard-simple-mocks ===
 This sample builds on top of the simple sample, with mocks enabled.
 
-More information will be added as soon as possible.
+Currently it contains mocks for indexes, healths and pacts.
 
 [[extending]]
 == Extending the Microservices Dashboard ==
+
+First have a look at the properties exposed by the server application for easy configuration.
+If properties won't suffice, almost every bean of the Microservices Dashboard can be overridden by its conditional nature.
+Simply create a bean of the same type and/or name and add your own logic to it.
 
 More information will be added as soon as possible.
 
