@@ -546,6 +546,40 @@ Observable.from(discoveryClient.getServices())
                 .autoConnect()
 ```
 
+[[graph-configuration]]
+== Graph configuration ==
+
+[[graph-configuration-lanes]]
+== Lanes configuration ==
+
+Currently we support 4 types of lane, based on the results the aggregators return.
+
+- UI
+- Resources
+- Microservices
+- Backends
+
+The last lane constains all the nodes that don't belong to the previous 3.
+To change the label in the JSON output, you just need  to rename the corresponding property.
+
+.Lane configuration options
+|===
+| Property name |Default value
+
+| msdashboard.graph.ui
+| UI
+
+| msdashboard.graph.resources
+| Resources
+
+| msdashboard.graph.microservices
+| Microservices
+
+| msdashboard.graph.backends
+| Backends
+|===
+
+
 [[samples]]
 == Samples ==
 
