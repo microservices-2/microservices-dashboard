@@ -5,6 +5,29 @@
   <artifactId>microservices-dashboard-ui</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 
+  <name>Microservices Dashboard</name>
+  <description>Dashboard for visualizing Spring Boot microservices and the components they link to.</description>
+  <url>https://github.com/ordina-jworks/microservices-dashboard</url>
+  <inceptionYear>2015</inceptionYear>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <organization>
+    <name>Ordina Belgium NV</name>
+    <url>https://github.com/ordina-jworks</url>
+  </organization>
+  <developers>
+    <developer>
+      <id>andreasevers</id>
+      <name>Andreas Evers</name>
+      <email>andreas.evers@ordina.be</email>
+    </developer>
+  </developers>
+
   <properties>
     <destDir>${project.build.outputDirectory}/META-INF/resources</destDir>
   </properties>
@@ -15,7 +38,6 @@
     <url>https://github.com/ordina-jworks/microservices-dashboard.git/</url>
     <tag>HEAD</tag>
   </scm>
-
 
   <profiles>
     <profile>
