@@ -16,7 +16,7 @@ The information for these links come from Spring Boot Actuator health and mappin
 
 ## Reference documentation
 
-To learn everything there is to know about the Microservices Dashboard, please consult the [reference documentation](http://ordina-jworks.github.io/microservices-dashboard/0.2.0-SNAPSHOT/).
+To learn everything there is to know about the Microservices Dashboard, please consult the [reference documentation](http://ordina-jworks.github.io/microservices-dashboard/1.0.0).
 
 ## Screenshots
 
