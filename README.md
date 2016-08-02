@@ -5,6 +5,7 @@
 [![][license img]][license]
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/ordina-jworks/microservices-dashboard.svg)](http://isitmaintained.com/project/ordina-jworks/microservices-dashboard "Average time to resolve an issue")
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/ordina-jworks/microservices-dashboard.svg)](http://isitmaintained.com/project/ordina-jworks/microservices-dashboard "Percentage of issues still open")
+[ ![Download](https://api.bintray.com/packages/ordina-jworks/microservices-dashboard-server/microservices-dashboard-ui/images/download.svg) ](https://bintray.com/ordina-jworks/microservices-dashboard-server/microservices-dashboard-ui/_latestVersion)
 
 ## Overview
 
