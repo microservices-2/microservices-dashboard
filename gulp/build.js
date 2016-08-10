@@ -30,7 +30,7 @@ gulp.task('html', ['inject', 'partials'], function () {
   var partialsInjectOptions = {
     starttag: '<!-- inject:partials -->',
     transform: function (filePath, file) {
-      return file.contents.toString('utf8')
+      return file.contents.toString('utf8');
     },
     addRootSlash: false
   };
