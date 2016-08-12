@@ -504,6 +504,103 @@ For each interaction found in each contract returned by the pact broker, nodes a
 We are using the `org.springframework.cloud.client.discovery.DiscoveryClient` abstraction, which means that we support any implementation of said interface.
 At the time of writing Eureka, Zookeeper and Consul.io are supported, although the Spring Cloud team might add more at any moment.
 
+==== Enabling service discovery ====
+
+. Add a discovery dependency to your `pom.xml` file:
++
+[source,xml,subs="verbatim,attributes",indent=0,role="primary"]
+.Eureka
+----
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-netflix</artifactId>
+            <version>1.1.2.RELEASE</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-eureka</artifactId>
+    </dependency>
+</dependencies>
+----
++
+[source,xml,subs="verbatim,attributes",indent=0,role="secondary"]
+.Consul
+----
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-consul-dependencies</artifactId>
+            <version>1.0.1.RELEASE</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-consul-all</artifactId>
+    </dependency>
+</dependencies>
+----
++
+[source,xml,subs="verbatim,attributes",indent=0,role="tertiary"]
+.Zookeeper
+----
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-zookeeper-dependencies</artifactId>
+            <version>1.0.1.RELEASE</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-zookeeper-discovery</artifactId>
+    </dependency>
+</dependencies>
+----
+
+. In case you haven't used the default location for your service registry (see Spring Cloud documentation for defaults), you can specify a custom url to the registry:
++
+.Eureka
+http://cloud.spring.io/spring-cloud-static/spring-cloud.html#_registering_with_eureka[Registring with Eureka]
++
+.Consul
+http://cloud.spring.io/spring-cloud-consul/spring-cloud-consul.html#_registering_with_consul[Registring with Consul]
++
+.Zookeeper
+http://cloud.spring.io/spring-cloud-zookeeper/spring-cloud-zookeeper.html#_registering_with_zookeeper[Registring with Zookeeper]
+
+[NOTE]
+====
+In case you'd like to register the dashboard in the service registry as well, simply add the `@EnableEurekaClient` annotation to the Microservices Dashboard Server application:
+
+[source,java]
+----
+@EnableEurekaClient
+@SpringBootApplication
+@EnableMicroservicesDashboardServer
+public class MicroservicesDashboardServerApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+----
+====
+
 [[aggregation-extending]]
 === Extending existing aggregators ===
 
@@ -551,6 +648,8 @@ Observable.from(discoveryClient.getServices())
 
 [[graph-configuration]]
 == Graph configuration ==
+
+More information will be added as soon as possible.
 
 [[graph-configuration-lanes]]
 == Lanes configuration ==
