@@ -1,4 +1,4 @@
-microservices-dashboard-server/target/
+target/
 *.iml
 .idea/
 .ssh/
