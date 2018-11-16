@@ -1,11 +1,12 @@
 package be.ordina.msdashboard;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import be.ordina.msdashboard.events.NewServiceDiscovered;
 import be.ordina.msdashboard.events.NewServiceInstanceDiscovered;
@@ -21,6 +22,8 @@ import org.springframework.cloud.client.discovery.event.HeartbeatEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.collections4.CollectionUtils.intersection;
 import static org.apache.commons.collections4.CollectionUtils.subtract;
 
@@ -61,11 +64,18 @@ public class LandscapeWatcher {
 		this.services = retrievedServices;
 	}
 
+	private List<ServiceInstance> getInstances(String service) {
+		return this.discoveryClient.getInstances(service)
+				.stream()
+				.map(ServiceInstanceWrapper::new)
+				.collect(toList());
+	}
+
 	private void processNewServices(Collection<String> newServices) {
 		logger.debug("Discovering new services");
 		newServices.forEach(service -> {
 			logger.debug("Registering new service '{}'", service);
-			List<ServiceInstance> instances = this.discoveryClient.getInstances(service);
+			List<ServiceInstance> instances = this.getInstances(service);
 			processNewServiceInstances(instances);
 			this.serviceInstances.put(service, instances);
 			this.publisher.publishEvent(new NewServiceDiscovered(service));
@@ -85,8 +95,8 @@ public class LandscapeWatcher {
 	private void processExistingServices(Collection<String> existingServices) {
 		logger.debug("Checking for changes in known services");
 		existingServices.forEach(service -> {
-			List<ServiceInstance> retrievedInstances = this.discoveryClient.getInstances(service);
-			List<ServiceInstance> knownServiceInstances = this.serviceInstances.getOrDefault(service, Collections.emptyList());
+			List<ServiceInstance> retrievedInstances = this.getInstances(service);
+			List<ServiceInstance> knownServiceInstances = this.serviceInstances.getOrDefault(service, emptyList());
 			processNewServiceInstances(subtract(retrievedInstances, knownServiceInstances));
 			processDeletedServiceInstances(subtract(knownServiceInstances, retrievedInstances));
 			this.serviceInstances.put(service, retrievedInstances);
@@ -105,6 +115,71 @@ public class LandscapeWatcher {
 			logger.debug("Deregistering service instance for '{}'", serviceInstance.getServiceId());
 			this.publisher.publishEvent(new ServiceInstanceDeregistered(serviceInstance));
 		});
+	}
+
+	private static final class ServiceInstanceWrapper implements ServiceInstance {
+
+		private final ServiceInstance delegate;
+
+		private ServiceInstanceWrapper(ServiceInstance delegate) {
+			this.delegate = delegate;
+		}
+
+		@Override
+		public String getServiceId() {
+			return this.delegate.getServiceId();
+		}
+
+		@Override
+		public String getHost() {
+			return this.delegate.getHost();
+		}
+
+		@Override
+		public int getPort() {
+			return this.delegate.getPort();
+		}
+
+		@Override
+		public boolean isSecure() {
+			return this.delegate.isSecure();
+		}
+
+		@Override
+		public URI getUri() {
+			return this.delegate.getUri();
+		}
+
+		@Override
+		public Map<String, String> getMetadata() {
+			return this.delegate.getMetadata();
+		}
+
+		@Override
+		public String getScheme() {
+			return this.delegate.getScheme();
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			ServiceInstance that = (ServiceInstance) o;
+			return this.delegate.getPort() == that.getPort() &&
+					this.delegate.isSecure() == that.isSecure() &&
+					Objects.equals(this.delegate.getServiceId(), that.getServiceId()) &&
+					Objects.equals(this.delegate.getHost(), that.getHost()) &&
+					Objects.equals(this.delegate.getMetadata(), that.getMetadata());
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(this.delegate.getServiceId(),
+					this.delegate.getHost(),
+					this.delegate.getPort(),
+					this.delegate.isSecure(),
+					this.delegate.getMetadata());
+		}
 	}
 
 }
