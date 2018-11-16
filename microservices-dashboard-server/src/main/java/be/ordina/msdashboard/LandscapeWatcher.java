@@ -168,8 +168,7 @@ public class LandscapeWatcher {
 			return this.delegate.getPort() == that.getPort() &&
 					this.delegate.isSecure() == that.isSecure() &&
 					Objects.equals(this.delegate.getServiceId(), that.getServiceId()) &&
-					Objects.equals(this.delegate.getHost(), that.getHost()) &&
-					Objects.equals(this.delegate.getMetadata(), that.getMetadata());
+					Objects.equals(this.delegate.getHost(), that.getHost());
 		}
 
 		@Override
@@ -177,8 +176,7 @@ public class LandscapeWatcher {
 			return Objects.hash(this.delegate.getServiceId(),
 					this.delegate.getHost(),
 					this.delegate.getPort(),
-					this.delegate.isSecure(),
-					this.delegate.getMetadata());
+					this.delegate.isSecure());
 		}
 	}
 
