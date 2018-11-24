@@ -51,7 +51,6 @@ public class MicroservicesDashboardServerApplicationTest {
 
 	@Configuration
 	@EnableAutoConfiguration
-	@EnableMicroservicesDashboardServer
 	public static class TestMicroservicesDashboardServerApplication {
 
 		public static void main(String[] args) {}
