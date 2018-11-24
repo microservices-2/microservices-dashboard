@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2016 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package be.ordina.msdashboard;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
  * Tests for the Microservices Dashboard server application
@@ -34,7 +35,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * @author Andreas Evers
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = RANDOM_PORT,
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT,
 		classes = MicroservicesDashboardServerApplicationTest.TestMicroservicesDashboardServerApplication.class)
 @DirtiesContext
 public class MicroservicesDashboardServerApplicationTest {
@@ -53,6 +54,8 @@ public class MicroservicesDashboardServerApplicationTest {
 	@EnableAutoConfiguration
 	public static class TestMicroservicesDashboardServerApplication {
 
-		public static void main(String[] args) {}
+		public static void main(String[] args) {
+
+		}
 	}
 }
