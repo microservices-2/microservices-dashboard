@@ -55,6 +55,7 @@ public class LandscapeWatcher {
 
 	private final DiscoveryClient discoveryClient;
 	private final ApplicationEventPublisher publisher;
+
 	private final Map<String, List<ServiceInstance>> serviceInstances = new HashMap<>();
 
 	private List<String> services = new ArrayList<>();
@@ -134,6 +135,10 @@ public class LandscapeWatcher {
 		});
 	}
 
+	public Map<String, List<ServiceInstance>> getServiceInstances() {
+		return this.serviceInstances;
+	}
+
 	private static final class ServiceInstanceWrapper implements ServiceInstance {
 
 		private final ServiceInstance delegate;
@@ -200,5 +205,4 @@ public class LandscapeWatcher {
 					this.delegate.isSecure());
 		}
 	}
-
 }

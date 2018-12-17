@@ -17,11 +17,13 @@
 package be.ordina.msdashboard.autoconfigure;
 
 import be.ordina.msdashboard.LandscapeWatcher;
+import be.ordina.msdashboard.aggregator.health.HealthAggregator;
 
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.client.WebClient;
 
 /**
  * Auto-configuration for the microservices dashboard server.
@@ -36,4 +38,13 @@ public class MicroservicesDashboardServerAutoConfiguration {
 		return new LandscapeWatcher(discoveryClient, publisher);
 	}
 
+	@Bean
+	public WebClient webClient() {
+		return WebClient.create();
+	}
+
+	@Bean
+	public HealthAggregator msHealthAggregator(LandscapeWatcher landscapeWatcher, WebClient webClient, ApplicationEventPublisher publisher) {
+		return new HealthAggregator(landscapeWatcher, webClient, publisher);
+	}
 }
