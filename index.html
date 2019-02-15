@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.7.1">
+<title>Microservices Dashboard Reference Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
+/* Uncomment @import statement below to use as custom stylesheet */
+/*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
+article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block}
+audio,canvas,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+script{display:none!important}
+html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
+a{background:transparent}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+abbr[title]{border-bottom:1px dotted}
+b,strong{font-weight:bold}
+dfn{font-style:italic}
+hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,*::before,*::after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0;direction:ltr}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:none}
+p{font-family:inherit;font-weight:400;font-size:1em;line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #ddddd8;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em;height:0}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{font-size:1em;line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0;font-size:1em}
+ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
+ul.square{list-style-type:square}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+abbr,acronym{text-transform:uppercase;font-size:90%;color:rgba(0,0,0,.8);border-bottom:1px dotted #ddd;cursor:help}
+abbr{text-transform:none}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote cite{display:block;font-size:.9375em;color:rgba(0,0,0,.6)}
+blockquote cite::before{content:"\2014 \0020"}
+blockquote cite a,blockquote cite a:visited{color:rgba(0,0,0,.6)}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt,table tr:nth-of-type(even){background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
+*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
+*:not(pre)>code.nobreak{word-wrap:normal}
+*:not(pre)>code.nowrap{white-space:nowrap}
+pre,pre>code{line-height:1.45;color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;text-rendering:optimizeSpeed}
+em em{font-style:normal}
+strong strong{font-weight:400}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background-color:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
+#content{margin-top:1.25em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #ddddd8}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #ddddd8;padding-bottom:8px}
+#header .details{border-bottom:1px solid #ddddd8;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:-ms-flexbox;display:-webkit-flex;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #ddddd8;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #efefed;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+#toc.toc2{margin-top:0!important;background-color:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #efefed;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #efefed;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:100%;background-color:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:rgba(255,255,255,.8);line-height:1.44}
+#content{margin-bottom:.625em}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #efefed}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:inherit}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #ddddd8;color:rgba(0,0,0,.6)}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border-style:solid;border-width:1px;border-color:#e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;-webkit-border-radius:4px;border-radius:4px}
+.exampleblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child{margin-bottom:0}
+.sidebarblock{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+.sidebarblock>:first-child{margin-top:0}
+.sidebarblock>:last-child{margin-bottom:0}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock pre:not(.highlight),.listingblock pre[class="highlight"],.listingblock pre[class^="highlight "],.listingblock pre.CodeRay,.listingblock pre.prettyprint{background:#f7f7f8}
+.sidebarblock .literalblock pre,.sidebarblock .listingblock pre:not(.highlight),.sidebarblock .listingblock pre[class="highlight"],.sidebarblock .listingblock pre[class^="highlight "],.sidebarblock .listingblock pre.CodeRay,.sidebarblock .listingblock pre.prettyprint{background:#f2f1f1}
+.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;padding:1em;font-size:.8125em}
+.literalblock pre.nowrap,.literalblock pre[class].nowrap,.listingblock pre.nowrap,.listingblock pre[class].nowrap{overflow-x:auto;white-space:pre;word-wrap:normal}
+@media screen and (min-width:768px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:1em}}
+.literalblock.output pre{color:#f7f7f8;background-color:rgba(0,0,0,.9)}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;-webkit-border-radius:4px;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:#999}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:#999}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+table.pyhltable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.pyhltable td{vertical-align:top;padding-top:0;padding-bottom:0;line-height:1.45}
+table.pyhltable td.code{padding-left:.75em;padding-right:0}
+pre.pygments .lineno,table.pyhltable td:not(.code){color:#999;padding-left:0;padding-right:.5em;border-right:1px solid #ddddd8}
+pre.pygments .lineno{display:inline-block;margin-right:.25em}
+table.pyhltable .linenodiv{background:none!important;padding-right:0!important}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock blockquote p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.5em;margin-right:.5ex;text-align:right}
+.quoteblock .quoteblock{margin-left:0;margin-right:0;padding:.5em 0;border-left:3px solid rgba(0,0,0,.6)}
+.quoteblock .quoteblock blockquote{padding:0 0 0 .75em}
+.quoteblock .quoteblock blockquote::before{display:none}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.abstract blockquote,.quoteblock.abstract blockquote p{word-spacing:0;line-height:1.6}
+.quoteblock.abstract blockquote::before,.quoteblock.abstract p::before{display:none}
+table.tableblock{max-width:100%;border-collapse:separate}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content{margin-bottom:-1.25em}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
+table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
+table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
+table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px}
+table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0}
+table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
+table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
+table.frame-all{border-width:1px}
+table.frame-sides{border-width:0 1px}
+table.frame-topbot,table.frame-ends{border-width:1px 0}
+table.stripes-all tr,table.stripes-odd tr:nth-of-type(odd){background:#f8f8f7}
+table.stripes-none tr,table.stripes-odd tr:nth-of-type(even){background:none}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{display:table-cell;line-height:1.6;background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+td>div.verse{white-space:pre}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+ul.checklist{margin-left:.625em}
+ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist li>p:first-child>input[type="checkbox"]:first-child{margin-right:.25em}
+ul.inline{display:-ms-flexbox;display:-webkit-box;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
+.imageblock.left,.imageblock[style*="float: left"]{margin:.25em .625em 1.25em 0}
+.imageblock.right,.imageblock[style*="float: right"]{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+.gist .file-data>table{border:0;background:#fff;width:100%;margin-bottom:0}
+.gist .file-data>table td.line-data{width:99%}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background-color:#00fafa}
+.black{color:#000}
+.black-background{background-color:#000}
+.blue{color:#0000bf}
+.blue-background{background-color:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background-color:#fa00fa}
+.gray{color:#606060}
+.gray-background{background-color:#7d7d7d}
+.green{color:#006000}
+.green-background{background-color:#007d00}
+.lime{color:#00bf00}
+.lime-background{background-color:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background-color:#7d0000}
+.navy{color:#000060}
+.navy-background{background-color:#00007d}
+.olive{color:#606000}
+.olive-background{background-color:#7d7d00}
+.purple{color:#600060}
+.purple-background{background-color:#7d007d}
+.red{color:#bf0000}
+.red-background{background-color:#fa0000}
+.silver{color:#909090}
+.silver-background{background-color:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background-color:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background-color:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background-color:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background-color:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,span.alt{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background-color:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{-webkit-box-shadow:none!important;box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]::after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #ddddd8!important;padding-bottom:0!important}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span::before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+@media print,amzn-kf8{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
+</style>
+<style>
+.hidden {
+	display: none;
+}
+
+.switch {
+	border-width: 1px 1px 0 1px;
+	border-style: solid;
+	border-color: #7a2518;
+	display: inline-block;
+}
+
+.switch--item {
+	padding: 10px;
+	background-color: #ffffff;
+	color: #7a2518;
+	display: inline-block;
+	cursor: pointer;
+}
+
+.switch--item.selected {
+	background-color: #7a2519;
+	color: #ffffff;
+}
+</style>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+<script type="text/javascript">
+function addBlockSwitches() {
+	$('.primary').each(function() {
+		primary = $(this);
+		createSwitchItem(primary, createBlockSwitch(primary)).item.addClass("selected");
+		primary.children('.title').remove();
+	});
+	$('.secondary').each(function(idx, node) {
+		secondary = $(node);
+		primary = findPrimary(secondary);
+		switchItem = createSwitchItem(secondary, primary.children('.switch'));
+		switchItem.content.addClass('hidden');
+		findPrimary(secondary).append(switchItem.content);
+		secondary.remove();
+	});
+}
+
+function createBlockSwitch(primary) {
+	blockSwitch = $('<div class="switch"></div>');
+	primary.prepend(blockSwitch);
+	return blockSwitch;
+}
+
+function findPrimary(secondary) {
+	candidate = secondary.prev();
+	while (!candidate.is('.primary')) {
+		candidate = candidate.prev();
+	}
+	return candidate;
+}
+
+function createSwitchItem(block, blockSwitch) {
+	blockName = block.children('.title').text();
+	content = block.children('.content').first().append(block.next('.colist'));
+	item = $('<div class="switch--item">' + blockName + '</div>');
+	item.on('click', '', content, function(e) {
+		$(this).addClass('selected');
+		$(this).siblings().removeClass('selected');
+		e.data.siblings('.content').addClass('hidden');
+		e.data.removeClass('hidden');
+	});
+	blockSwitch.append(item);
+	return {'item': item, 'content': content};
+}
+
+$(addBlockSwitches);
+</script>
+</head>
+
+<body class="book">
+<div id="header">
+<h1>Microservices Dashboard Reference Guide</h1>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Microservices Dashboard Server Reference Guide</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>Steve De Zitter, Andreas Evers, Dieter Hubau, Tim Ysewyn</p>
+</div>
+<div class="paragraph">
+<p><strong>2.0.0.BUILD-SNAPSHOT</strong></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what"><a class="anchor" href="#what"></a>1. What is the Microservices Dashboard?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Microservices Dashboard is a simple application to visualize links between microservices and the encompassing ecosystem. This AngularJS application consumes endpoints exposed by microservices-dashboard-server. It displays four columns: UI, Resources, Microservices and Backends. Each of these columns show nodes and links between them. The information for these links come from Spring Boot Actuator health endpoints, pact consumer-driven-contract-tests and hypermedia indexes, which are aggregated in the microservices-dashboard-server project.</p>
+</div>
+<div class="sect2">
+<h3 id="driving-forces-behind-the-dashboard-effort"><a class="anchor" href="#driving-forces-behind-the-dashboard-effort"></a>1.1. Driving forces behind the dashboard effort</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Existing tooling doesn’t expose links between the different components in a microservices architecture</dt>
+<dd>
+<div class="ulist checklist">
+<ul class="checklist">
+<li>
+<p><i class="fa fa-square-o"></i> Eureka shows which microservices are out there</p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> Spring Boot Admin only shows the details of the individual services</p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> Hystrix dashboard shows integration points but not a total view</p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> Zipkin focuses on performance and only shows a temporal view of the connections</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Analysts need to know what functionality is out there</dt>
+<dd>
+<div class="ulist checklist">
+<ul class="checklist">
+<li>
+<p><i class="fa fa-check-square-o"></i> They want to see which resources are exposed by what microservices</p>
+</li>
+<li>
+<p><i class="fa fa-check-square-o"></i> They want to know what services are impacted when a component has to change</p>
+</li>
+<li>
+<p><i class="fa fa-check-square-o"></i> They like to have an end-to-end trace of where a frontend call goes through</p>
+</li>
+<li>
+<p><i class="fa fa-check-square-o"></i> They would like to have a view of what’s coming and perhaps give input on that</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Developers can benefit from a broader view as well</dt>
+<dd>
+<div class="ulist checklist">
+<ul class="checklist">
+<li>
+<p><i class="fa fa-check-square-o"></i> They like an easy access point for documentation</p>
+</li>
+<li>
+<p><i class="fa fa-check-square-o"></i> They want to see where which version of their components are deployed</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Managers like to have a grip on things</dt>
+<dd>
+<div class="ulist checklist">
+<ul class="checklist">
+<li>
+<p><i class="fa fa-check-square-o"></i> They want to get a sense of compliancy and maturity of the components</p>
+</li>
+<li>
+<p><i class="fa fa-check-square-o"></i> They want some level of change management</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="getting-started"><a class="anchor" href="#getting-started"></a>2. Getting started</h2>
+<div class="sectionbody">
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+The absolutely simplest way (although not the default way) to get up and running is by <a href="#starting-from-sample">cloning and running a simple sample</a>. This is especially handy for people not familiar with Java or maven.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="default-set-up"><a class="anchor" href="#default-set-up"></a>2.1. Default set up</h3>
+<div class="paragraph">
+<p>First you need to setup a simple Spring Boot project (using <a href="http://start.spring.io" class="bare">start.spring.io</a> for example).
+Microservices-dashboard-server requires Java 8 or later.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add the microservices-dashboard-server as a dependency to your new Spring Boot&#8217;s dependencies:</p>
+<div class="listingblock">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;be.ordina&lt;/groupId&gt;
+    &lt;artifactId&gt;microservices-dashboard-server&lt;/artifactId&gt;
+    &lt;version&gt;{project-version}&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>In case you use a <code>SNAPSHOT</code> version, add the JFrog OSS Artifactory repository:</p>
+<div class="listingblock">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;repositories&gt;
+    &lt;repository&gt;
+        &lt;id&gt;oss-snapshots&lt;/id&gt;
+        &lt;name&gt;JFrog OSS Snapshots&lt;/name&gt;
+        &lt;url&gt;https://oss.jfrog.org/simple/oss-snapshot-local/&lt;/url&gt;
+        &lt;snapshots&gt;
+            &lt;enabled&gt;true&lt;/enabled&gt;
+        &lt;/snapshots&gt;
+    &lt;/repository&gt;
+&lt;/repositories&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Pull in the Microservices Dashboard Server configuration via adding <code>@EnableMicroservicesDashboardServer</code> to your configuration:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@SpringBootApplication
+@EnableMicroservicesDashboardServer
+public class MicroservicesDashboardServerApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+There are a number of other ways to set up the Microservices Dashboard. Please refer to the <a href="#alternative-set-up">Alternative set up</a> section for more information.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="default-usage"><a class="anchor" href="#default-usage"></a>2.2. Default usage</h3>
+<div class="paragraph">
+<p>You can either start the application from within your IDE, or use the command line to build and start the application:</p>
+</div>
+<div class="listingblock">
+<div class="title">Using the embedded maven wrapper</div>
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">$ mvnw spring-boot:run</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Using your own maven installation</div>
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">$ mvn spring-boot:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If successful, you should see the following output in the log:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>o.s.b.c.e.t.TomcatEmbeddedServletContainer Tomcat started on port(s): 8080 (http)</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>You should now be able to view the empty dashboard at <code><a href="http://localhost:8080" class="bare">localhost:8080</a></code>.</p>
+</div>
+<div class="paragraph">
+<p>You can now configure integrations with your ecosystem to start aggregating node information.
+More details on how to do this can be found at the <a href="#aggregation-configuration">Node retrieval configuration</a> section.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="alternative-set-up"><a class="anchor" href="#alternative-set-up"></a>3. Alternative set up</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="deploying-on-standalone-server"><a class="anchor" href="#deploying-on-standalone-server"></a>3.1. Deploying on a standalone server</h3>
+<div class="paragraph">
+<p>If you want to setup the Microservices Dashboard via war-deployment in a servlet-container, please have a look at the <a href="http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#build-tool-plugins-maven-packaging">reference documentation of Spring Boot</a>.</p>
+</div>
+<div class="paragraph">
+<p>A sample project will be created soon to illustrate this, tracked through this <a href="https://github.com/ordina-jworks/microservices-dashboard-server/issues/25">issue</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="deploying-ui-separately"><a class="anchor" href="#deploying-ui-separately"></a>3.2. Deploying the UI separately from the server</h3>
+<div class="paragraph">
+<p>The microservices-dashboard consists of two components: the UI and the server.
+The UI is located under the <a href="https://github.com/ordina-jworks/microservices-dashboard">microservices-dashboard repository</a>, while the server is located under the <a href="https://github.com/ordina-jworks/microservices-dashboard-server">microservices-dashboard-server repository</a>.
+These two components can either be packaged and deployed together as a single Spring Boot application (as explained in the <a href="#default-set-up">Default set up</a> section), or separately as a NodeJS application and a Spring Boot application.<br>
+In case of the former, the UI is served from the embedded Tomcat or Jetty inside the Spring Boot application.<br>
+In case of the latter, the UI is ran separately on a NodeJS server, while the Spring Boot application simply exposes the JSON API.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Deploying the UI separately from the server can be very useful when you want to extend or modify the UI application. Simply build the UI from source and deploy it. No need to package it within the server application first.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="excluding-ui-from-server"><a class="anchor" href="#excluding-ui-from-server"></a>3.2.1. Excluding the UI from the Spring Boot application</h4>
+<div class="paragraph">
+<p>When running the UI separately, ideally the Spring Boot server shouldn&#8217;t serve the UI in this case.</p>
+</div>
+<div class="listingblock">
+<div class="title">pom.xml</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;be.ordina&lt;/groupId&gt;
+    &lt;artifactId&gt;microservices-dashboard-server&lt;/artifactId&gt;
+    &lt;version&gt;{project-version}&lt;/version&gt;
+    &lt;exclusions&gt;
+      &lt;exclusion&gt;
+        &lt;artifactId&gt;microservices-dashboard-ui&lt;/artifactId&gt;
+        &lt;groupId&gt;be.ordina&lt;/groupId&gt;
+       &lt;/exclusion&gt;
+    &lt;/exclusions&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="building-ui-from-source"><a class="anchor" href="#building-ui-from-source"></a>3.2.2. Building and running the UI from source</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>First a basic build should be done:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">$ npm install</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Then bower dependencies should be installed:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">$ bower install</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Use gulp to serve the resources using the configuration file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">$ gulp serve --standalone</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can configure the location of the dashboard server by modifying the <code>baseUrl</code> in <code>gulp/conf.js</code></p>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+If you want to run the UI on an existing server, with potentially another port, execute <code>$ gulp build --standalone</code> and deploy the <code>dist</code> folder on that server.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+The Microservices Dashboard server needs to be started to get any data in the dashboard.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="starting-from-sample"><a class="anchor" href="#starting-from-sample"></a>3.3. Starting from a sample</h3>
+<div class="paragraph">
+<p>Starting from a sample application is an easy and quick way to get up and running, without having to write any code yourself.
+This can be particulary useful for people not familiar with Java and who simply want to configure and run the application without any custom extensions.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+There are other samples available as well. See the <a href="#samples">Samples</a> section for more information on what they contain.
+</td>
+</tr>
+</table>
+</div>
+<div id="starting-from-sample-set-up" class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The first step is to clone the Git repository:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">$ git clone https://github.com/ordina-jworks/microservices-dashboard-server</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Once the clone is complete, you&#8217;re ready to get the service up and running:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">$ cd microservices-dashboard-server/samples/microservices-dashboard-simple
+$ ./mvnw spring-boot:run</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="aggregation-configuration"><a class="anchor" href="#aggregation-configuration"></a>4. Node retrieval configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Nodes are retrieved by node aggregators.
+Each of these aggregators calls certain resources which expose information that can be mapped to nodes.
+These nodes are then shown on the dashboard in one of the four columns.
+You can simply use the default aggregators and configure your ecosystem as we have intended it to be configured, or you can extend or override them.
+You can even write your own aggregators for resources we haven&#8217;t covered yet.
+Configuring the existing aggregators is explained below.
+If you wish to extend or override an aggregator, have a look at <a href="#aggregation-extending">Extending existing aggregators</a>.
+And finally writing your own aggregator is covered in the <a href="#aggregation-writing-your-own">Writing your own aggregator</a> section.</p>
+</div>
+<div class="sect2">
+<h3 id="aggregation-provided"><a class="anchor" href="#aggregation-provided"></a>4.1. Provided aggregators</h3>
+<div class="paragraph">
+<p>Currently four aggregators are provided out-of-the-box:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Health aggregator <em>(requires service discovery)</em></p>
+</li>
+<li>
+<p>Index aggregator <em>(requires service discovery)</em></p>
+</li>
+<li>
+<p>Mappings aggregator <em>(requires service discovery)</em></p>
+</li>
+<li>
+<p>Pact aggregator <em>(requires pact broker)</em></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Every aggregator has a set of properties available which can easily be changed in <code>application.yml</code> or <code>application.properties</code> in your Spring Boot application.
+Setting maps and lists in properties is less straightforward.</p>
+</div>
+<div class="paragraph">
+<p>Configuring a map can be done as follows:</p>
+</div>
+<div class="listingblock">
+<div class="title">Using yaml</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">msdashboard.health.requestHeaders:
+  headername1: headervalue1
+  headername2: headervalue2</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Using properties</div>
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">msdashboard.health.requestHeaders.headername1=headervalue1
+msdashboard.health.requestHeaders.headername2=headervalue2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configuring a list can be done as follows:</p>
+</div>
+<div class="listingblock">
+<div class="title">Using yaml</div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">msdashboard.health.filteredServices:
+  - hystrix
+  - diskSpace</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Using properties</div>
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">msdashboard.health.filteredServices[0]=hystrix
+msdashboard.health.filteredServices[1]=diskSpace</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="aggregation-health"><a class="anchor" href="#aggregation-health"></a>4.1.1. Health aggregator</h4>
+<div class="paragraph">
+<p>The health aggregator retrieves and aggregates nodes from health information exposed by <a href="http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready">Spring Boot&#8217;s Actuator</a>.</p>
+</div>
+<div class="sect4">
+<h5 id="prerequisites"><a class="anchor" href="#prerequisites"></a>Prerequisites</h5>
+<div class="paragraph">
+<p>This aggregator uses service discovery to find available services.
+More details on using service discovery is covered in section <a href="#aggregation-service-discovery">Using service discovery</a>.</p>
+</div>
+<div class="paragraph">
+<p>In case Spring Boot is not used in a microservice you would like to retrieve health information of, your service must comply to the health format exposed by Spring Boot under the <code>/health</code> endpoint.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of a health response</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "status": "UP",
+  "foo": "bar",
+  "serviceWhichThisServiceCalls": {
+    "status": "UNKNOWN",
+    "type": "SOAP",
+    "group": "SVCGROUP"
+  },
+  "anotherServiceWhichThisServiceCalls": {
+    "status": "DOWN",
+    "type": "REST",
+    "group": "SVCGROUP",
+    "foo": "bar"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The only required field is <code>status</code>.
+Any field which isn&#8217;t an array, is added to the details of the current node.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+The Spring Boot <code>/health</code> endpoint is part of its Actuator functionality.
+A detailed description of its purpose and characteristics can be found in the <a href="http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready">reference documentation</a>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="aggregation"><a class="anchor" href="#aggregation"></a>Aggregation</h5>
+<div class="paragraph">
+<p>For each service returned from the service discovery, a top level node is created.
+For each nested entity found in the response of each health response, a node is created and being linked from the top level node.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Health aggregator configuration options</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.health.requestHeaders</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Map of request header keys and values used for calling the services' health endpoint.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.health.filteredServices</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of names of services which should be ignored during health aggregation.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hystrix, diskSpace, configServer, discovery</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="aggregation-index"><a class="anchor" href="#aggregation-index"></a>4.1.2. Index aggregator</h4>
+<div class="paragraph">
+<p>The index aggregator retrieves and aggregates nodes from custom index endpoints implementing hypermedia.
+Currently only HAL is supported as mediatype.
+See <a href="http://projects.spring.io/spring-hateoas/">Spring HATEOAS</a> to easily implement said endpoints.</p>
+</div>
+<div class="sect4">
+<h5 id="prerequisites-2"><a class="anchor" href="#prerequisites-2"></a>Prerequisites</h5>
+<div class="paragraph">
+<p>This aggregator uses service discovery to find available services.
+More details on using service discovery is covered in section <a href="#aggregation-service-discovery">Using service discovery</a>.</p>
+</div>
+<div class="paragraph">
+<p>Your service must comply to the HAL format and expose an index under the root (<code>/</code>) endpoint.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of an index response</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "_links": {
+    "svc1:svc1rsc1": {
+        "href": "http://host0015.local:8301/svc1rsc1",
+        "templated": true
+    },
+    "svc1:svc1rsc2": {
+        "href": "http://host0015.local:8301/svc1rsc2",
+        "templated": true
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="aggregation-2"><a class="anchor" href="#aggregation-2"></a>Aggregation</h5>
+<div class="paragraph">
+<p>For each service returned from the service discovery, a top level node is created.
+For each unfiltered link found in the response of each index response, a node is created and being linked from the top level node.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Index aggregator configuration options</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.index.enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Index aggregator is enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.index.requestHeaders</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Map of request header keys and values used for calling the services' mappings endpoint.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.index.filteredServices</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of names of services which should be ignored during index aggregation.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hystrix, diskSpace, configServer, discovery</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="aggregation-mappings"><a class="anchor" href="#aggregation-mappings"></a>4.1.3. Mappings aggregator</h4>
+<div class="paragraph">
+<p>The mappings aggregator retrieves and aggregates nodes from mappings information exposed by <a href="http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready">Spring Boot&#8217;s Actuator</a>.</p>
+</div>
+<div class="sect4">
+<h5 id="prerequisites-3"><a class="anchor" href="#prerequisites-3"></a>Prerequisites</h5>
+<div class="paragraph">
+<p>This aggregator uses service discovery to find available services.
+More details on using service discovery is covered in section <a href="#aggregation-service-discovery">Using service discovery</a>.</p>
+</div>
+<div class="paragraph">
+<p>In case Spring Boot is not used in a microservice you would like to retrieve mappings of, your service must comply to the mappings format exposed by Spring Boot under the <code>/mappings</code> endpoint.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example of a mappings response</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+  "{[/endpoint1],methods=[GET],produces=[application/json]}" : {
+    "bean" : "requestMappingHandlerMapping",
+    "method" : "public java.util.Date be.ordina.controllers.Endpoint1Controller.retrieveDate(java.util.Date)"
+  },
+  "{[/endpoint2],methods=[GET, POST]}" : {
+    "bean" : "requestMappingHandlerMapping",
+    "method" : "public void be.ordina.controllers.Endpoint2Controller.createInformation(be.ordina.model.Information)"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The only required segment is the endpoint in the key.
+The endpoint should be relative (starting with a slash), between brackets and part of an array wrapped in quotes.
+The smallest accepted mapping key is the following:
+<code>"{[/]}"</code>.
+Consequentially, the smallest accepted mapping response is the following: <code>{"{[/]}" : {}}</code>.</p>
+</div>
+<div class="paragraph">
+<p>Any endpoint with a method signature containing <code>org.springframework</code> will be ignored.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+The Spring Boot <code>/health</code> endpoint is part of its Actuator functionality.
+A detailed description of its purpose and characteristics can be found in the <a href="http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready">reference documentation</a>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="aggregation-3"><a class="anchor" href="#aggregation-3"></a>Aggregation</h5>
+<div class="paragraph">
+<p>For each service returned from the service discovery, a top level node is created.
+For each unfiltered mapping found in the response of each mappings response, a node is created and being linked to the top level node.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Mappings aggregator configuration options</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.mappings.enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mappings aggregator is enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.mappings.requestHeaders</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Map of request header keys and values used for calling the services' mappings endpoint.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.mappings.filteredServices</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of names of services which should be ignored during health aggregation.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hystrix, diskSpace, configServer, discovery</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="aggregation-pact"><a class="anchor" href="#aggregation-pact"></a>4.1.4. Pact aggregator</h4>
+<div class="paragraph">
+<p>The pacts aggregator retrieves and aggregates nodes from information exposed by the <a href="https://github.com/bethesque/pact_broker">Pact broker</a>.
+The broker holds contracts between producers and consumers which describe their interactions.</p>
+</div>
+<div class="sect4">
+<h5 id="prerequisites-4"><a class="anchor" href="#prerequisites-4"></a>Prerequisites</h5>
+<div class="paragraph">
+<p>The Pact broker should expose a JSON resource containing links to the latest pacts.
+Out of this response, we extract all the links to the pacts with the following default jsonPath:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-jsonpath" data-lang="jsonpath">$.pacts[*]._links.self[0].href</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You can change many of these settings by using the properties.
+See below for the available properties and their default values.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Once the links to the pacts are retrieved, each pact will be called and processed.
+Please refer to the <a href="https://github.com/realestate-com-au/pact">Pact</a> documentation for in-depth details on what Pact contracts should look like.</p>
+</div>
+<div class="paragraph">
+<p>We expect only a couple fields to be present:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-jsonpath" data-lang="jsonpath">$.interactions[*].request.path
+$.provider.name
+$.consumer.name</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="aggregation-4"><a class="anchor" href="#aggregation-4"></a>Aggregation</h5>
+<div class="paragraph">
+<p>For each interaction found in each contract returned by the pact broker, nodes and links are being created for its consumer and producer.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 4. Pact aggregator configuration options</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.pact.requestHeaders</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Map of request header keys and values used for calling the services' mappings endpoint.</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.pact.filteredServices</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of names of services which should be ignored during health aggregation.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hystrix, diskSpace, configServer, discovery</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pact-broker.url</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The url to the pact broker.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://localhost:8089" class="bare">localhost:8089</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pact-broker.latest-url</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The relative url to the list of pacts.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/pacts/latest</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pact-broker.self-href-jsonPath</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The jsonPath to retrieve the links to the individual pact contracts.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">$.pacts[*]._links.self[0].href</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="aggregation-service-discovery"><a class="anchor" href="#aggregation-service-discovery"></a>4.2. Using service discovery</h3>
+<div class="paragraph">
+<p>We are using the <code>org.springframework.cloud.client.discovery.DiscoveryClient</code> abstraction, which means that we support any implementation of said interface.
+At the time of writing Eureka, Zookeeper and Consul.io are supported, although the Spring Cloud team might add more at any moment.</p>
+</div>
+<div class="sect3">
+<h4 id="enabling-service-discovery"><a class="anchor" href="#enabling-service-discovery"></a>4.2.1. Enabling service discovery</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add a discovery dependency to your <code>pom.xml</code> file:</p>
+<div class="listingblock primary">
+<div class="title">Eureka</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependencyManagement&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-netflix&lt;/artifactId&gt;
+            &lt;version&gt;1.1.2.RELEASE&lt;/version&gt;
+            &lt;type&gt;pom&lt;/type&gt;
+            &lt;scope&gt;import&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/dependencyManagement&gt;
+&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Consul</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependencyManagement&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-consul-dependencies&lt;/artifactId&gt;
+            &lt;version&gt;1.0.1.RELEASE&lt;/version&gt;
+            &lt;type&gt;pom&lt;/type&gt;
+            &lt;scope&gt;import&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/dependencyManagement&gt;
+&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-cloud-starter-consul-all&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock tertiary">
+<div class="title">Zookeeper</div>
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependencyManagement&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-zookeeper-dependencies&lt;/artifactId&gt;
+            &lt;version&gt;1.0.1.RELEASE&lt;/version&gt;
+            &lt;type&gt;pom&lt;/type&gt;
+            &lt;scope&gt;import&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-cloud-zookeeper-discovery&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>In case you haven&#8217;t used the default location for your service registry (see Spring Cloud documentation for defaults), you can specify a custom url to the registry:</p>
+<div class="paragraph">
+<div class="title">Eureka</div>
+<p><a href="http://cloud.spring.io/spring-cloud-static/spring-cloud.html#_registering_with_eureka">Registring with Eureka</a></p>
+</div>
+<div class="paragraph">
+<div class="title">Consul</div>
+<p><a href="http://cloud.spring.io/spring-cloud-consul/spring-cloud-consul.html#_registering_with_consul">Registring with Consul</a></p>
+</div>
+<div class="paragraph">
+<div class="title">Zookeeper</div>
+<p><a href="http://cloud.spring.io/spring-cloud-zookeeper/spring-cloud-zookeeper.html#_registering_with_zookeeper">Registring with Zookeeper</a></p>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>In case you&#8217;d like to register the dashboard in the service registry as well, simply add the <code>@EnableEurekaClient</code> annotation to the Microservices Dashboard Server application:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@EnableEurekaClient
+@SpringBootApplication
+@EnableMicroservicesDashboardServer
+public class MicroservicesDashboardServerApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="aggregation-extending"><a class="anchor" href="#aggregation-extending"></a>4.3. Extending existing aggregators</h3>
+<div class="paragraph">
+<p>More information will be added as soon as possible.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="aggregation-writing-your-own"><a class="anchor" href="#aggregation-writing-your-own"></a>4.4. Writing your own aggregator</h3>
+<div class="paragraph">
+<p>When writing your own aggregator, it is important to understand how <a href="http://reactivex.io/">ReactiveX</a> works.
+We use observables from <a href="https://github.com/ReactiveX/RxJava">RxJava</a> in order to make optimal use of the system resources the microservices-dashboard-server runs on.</p>
+</div>
+<div class="paragraph">
+<p>The <code>NodeAggregator</code> <a href="https://github.com/ordina-jworks/microservices-dashboard-server/blob/master/microservices-dashboard-server/src/main/java/be/ordina/msdashboard/aggregators/NodeAggregator.java">interface</a> exposes a single method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Observable&lt;Node&gt; aggregateNodes();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The easiest way to conform to this interface is to implement whichever logic you like, and in the end map the result to an observable as such:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">return Observable.from(nodes);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>While this may be the easiest way to implement an aggregator, it probably isn&#8217;t the most optimized way.
+Better would be to embrace observables from the start by using for instance <a href="https://github.com/ReactiveX/RxNetty">RxNetty</a> when you&#8217;re calling external resources to fetch node information.
+You can find examples in the existing out-of-the-box aggregators, and you can reuse the useful <code>NettyServiceCaller</code> <a href="https://github.com/ordina-jworks/microservices-dashboard-server/blob/master/microservices-dashboard-server/src/main/java/be/ordina/msdashboard/aggregators/NettyServiceCaller.java">class</a> to work with observables from the source.</p>
+</div>
+<div class="sect3">
+<h4 id="dealing-with-exceptions"><a class="anchor" href="#dealing-with-exceptions"></a>4.4.1. Dealing with exceptions</h4>
+<div class="paragraph">
+<p>When errors occur during the treatment of an observable, its default behaviour is to terminate the emission of more information.
+While this might be desirable when reading a continuous stream of information, in our experience it often doesn&#8217;t really match with our use case.</p>
+</div>
+<div class="paragraph">
+<p>Retrying the observable could seem the right course of action, if it wouldn&#8217;t be for the fact that on retry the observable starts emitting information from the start.
+In other words, in case your observable emitting ten nodes, throws an exception on the fifth node, retrying will re-emit node one until five where it will terminate for the same exception again.</p>
+</div>
+<div class="paragraph">
+<p>The solution to this problem is turning the observable into a hot observable with autoconnection of the first subscriber:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">RxNetty.createHttpRequest(request)
+                .publish()
+                .autoConnect()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or similarly:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">Observable.from(discoveryClient.getServices())
+                .subscribeOn(Schedulers.io())
+                .publish()
+                .autoConnect()</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="graph-configuration"><a class="anchor" href="#graph-configuration"></a>5. Graph configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>More information will be added as soon as possible.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="graph-configuration-lanes"><a class="anchor" href="#graph-configuration-lanes"></a>6. Lanes configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Currently we support 4 types of lane, based on the results the aggregators return.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>UI</p>
+</li>
+<li>
+<p>Resources</p>
+</li>
+<li>
+<p>Microservices</p>
+</li>
+<li>
+<p>Backends</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The last lane constains all the nodes that don&#8217;t belong to the previous 3.
+To change the label in the JSON output, you just need  to rename the corresponding property.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 5. Lane configuration options</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property name</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.graph.ui</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UI</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.graph.resources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Resources</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.graph.microservices</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Microservices</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.graph.backends</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Backends</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="samples"><a class="anchor" href="#samples"></a>7. Samples</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In case you simply want to get started with the Microservices Dashboard, you can use a sample to get up an running quickly.
+The basics - including getting them up and running - are described in the <a href="#starting-from-sample">Starting from a sample</a> section.</p>
+</div>
+<div class="paragraph">
+<p>Currently two working samples are available: simple and simple-mocks.</p>
+</div>
+<div class="sect2">
+<h3 id="samples-simple"><a class="anchor" href="#samples-simple"></a>7.1. Sample 1: microservices-dashboard-simple</h3>
+<div class="paragraph">
+<p>The simple sample is a great way to get up and running quickly without any mocks.
+You can use this as a base for your own version of the microservices-dashboard.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="samples-simple-mocks"><a class="anchor" href="#samples-simple-mocks"></a>7.2. Sample 2: microservices-dashboard-simple-mocks</h3>
+<div class="paragraph">
+<p>This sample builds on top of the simple sample, with mocks enabled.</p>
+</div>
+<div class="paragraph">
+<p>Currently it contains mocks for indexes, healths and pacts.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="extending"><a class="anchor" href="#extending"></a>8. Extending the Microservices Dashboard</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First have a look at the properties exposed by the server application for easy configuration.
+If properties won&#8217;t suffice, almost every bean of the Microservices Dashboard can be overridden by its conditional nature.
+Simply create a bean of the same type and/or name and add your own logic to it.</p>
+</div>
+<div class="paragraph">
+<p>More information will be added as soon as possible.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="troubleshooting"><a class="anchor" href="#troubleshooting"></a>9. Troubleshooting</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For remote debugging, run the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mvnw install
+$ java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 target/*.jar</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To enable Spring debug logging, add <code><code>--debug</code></code> to the command.</p>
+</div>
+<div class="paragraph">
+<p>Make sure to use actuator endpoints such as <code><code>/autoconfig</code></code> and <code><code>/beans</code></code> for validating the right beans have been loaded.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+</div>
+</div>
+</body>
+</html>
