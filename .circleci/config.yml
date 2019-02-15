@@ -53,7 +53,7 @@ jobs:
       - checkout
       - run:
           name: Updating GitHub Pages
-          command: bash docs/src/main/scripts/ghpages.sh
+          command: bash docs/src/main/scripts/ghpages.sh -b
 
 notify:
   webhooks:
