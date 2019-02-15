@@ -46,7 +46,7 @@ jobs:
           destination: testartifacts
   update-documentation:
     docker:
-      - image: circleci/buildpack-deps:bionic-scm
+      - image: circleci/openjdk:8-jdk
     environment:
       TERM: dumb
     working_directory: ~/ms-dashboard-server
