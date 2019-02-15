@@ -51,9 +51,18 @@ jobs:
     working_directory: ~/ms-dashboard-server
     steps:
       - checkout
+      - restore_cache:
+        key: ms-dashboard-server-documentation
       - run:
           name: Updating GitHub Pages
-          command: bash docs/src/main/scripts/ghpages.sh -b
+          command: |
+            git config --global user.email "buildmaster@ordina.be"
+            git config --global user.name "ordina-buildmaster"
+            ./docs/src/main/scripts/ghpages.sh -b
+      - save_cache:
+        key: ms-dashboard-server-documentation
+        paths:
+         - ~/.m2
 
 notify:
   webhooks:

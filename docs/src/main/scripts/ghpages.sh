@@ -191,7 +191,7 @@ function commit_changes_if_applicable() {
         ###################################################################
         if [[ "${COMMIT_SUCCESSFUL}" == "yes" ]] ; then
             add_oauth_token_to_remote_url
-            echo "git push origin gh-pages" #git push origin gh-pages
+            git push origin gh-pages
         fi
     fi
 }
