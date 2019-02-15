@@ -50,6 +50,9 @@ jobs:
       TERM: dumb
     working_directory: ~/ms-dashboard-server
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "d3:f4:e3:72:8d:47:79:f5:d9:7b:59:bc:06:80:e1:47"
       - checkout
       - restore_cache:
           key: ms-dashboard-server-documentation
