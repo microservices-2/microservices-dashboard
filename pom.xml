@@ -221,7 +221,9 @@ limitations under the License.
 							<configuration>
 								<configLocation>checkstyle/checkstyle.xml</configLocation>
 								<headerLocation>checkstyle/checkstyle-header.txt</headerLocation>
+								<suppressionsLocation>checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
 								<propertyExpansion>checkstyle.build.directory=${project.build.directory}</propertyExpansion>
+								<propertyExpansion>checkstyle.import.control.file=checkstyle/import-control.xml</propertyExpansion>
 								<consoleOutput>true</consoleOutput>
 								<includeTestSourceDirectory>false</includeTestSourceDirectory>
 								<!-- TODO: Start fixing the errors -->

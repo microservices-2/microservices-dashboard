@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN" "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 <module name="com.puppycrawl.tools.checkstyle.Checker">
+
+	<module name="SuppressionFilter">
+		<property name="file" value="${checkstyle.suppressions.file}"/>
+		<property name="optional" value="true"/>
+	</module>
+
 	<!-- Root Checks -->
 	<module name="com.puppycrawl.tools.checkstyle.checks.header.RegexpHeaderCheck">
 		<property name="headerFile" value="${checkstyle.header.file}" />
@@ -12,6 +18,12 @@
 
 	<!-- TreeWalker Checks -->
 	<module name="com.puppycrawl.tools.checkstyle.TreeWalker">
+		<!-- Ignore checkstyle -->
+		<module name="SuppressionCommentFilter">
+			<property name="offCommentFormat" value="@checkstyle:off"/>
+			<property name="onCommentFormat" value="@checkstyle:on"/>
+		</module>
+
 		<!-- Annotations -->
 		<module name="com.puppycrawl.tools.checkstyle.checks.annotation.AnnotationUseStyleCheck">
 			<property name="elementStyle" value="compact" />
@@ -163,22 +175,19 @@
 		<module name="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck" />
 	</module>
 	<module name="com.puppycrawl.tools.checkstyle.TreeWalker">
-		<module
-				name="com.puppycrawl.tools.checkstyle.checks.imports.IllegalImportCheck">
+		<module name="com.puppycrawl.tools.checkstyle.checks.imports.IllegalImportCheck">
 			<property name="regexp" value="true" />
 			<property name="illegalPkgs"
 					  value="^sun.*, ^org\.apache\.commons\.(?!compress|dbcp2|lang|lang3|logging|pool2|collections4).*, ^com\.google\.common.*, ^org\.flywaydb\.core\.internal.*" />
 			<property name="illegalClasses"
 					  value="^reactor\.core\.support\.Assert, ^org\.junit\.rules\.ExpectedException, ^org\.apache\.commons\.logging\.LogFactory" />
 		</module>
-		<module
-				name="com.puppycrawl.tools.checkstyle.checks.imports.ImportControlCheck">
+		<module name="com.puppycrawl.tools.checkstyle.checks.imports.ImportControlCheck">
 			<property name="file"
-					  value="checkstyle/import-control.xml" />
+					  value="${checkstyle.import.control.file}" />
 			<property name="path" value="^.*[\\/]src[\\/]main[\\/].*$" />
 		</module>
-		<module
-				name="com.puppycrawl.tools.checkstyle.checks.regexp.RegexpSinglelineJavaCheck">
+		<module name="com.puppycrawl.tools.checkstyle.checks.regexp.RegexpSinglelineJavaCheck">
 			<property name="maximum" value="0" />
 			<property name="format"
 					  value="assertThatExceptionOfType\((NullPointerException|IllegalArgumentException|IOException|IllegalStateException)\.class\)" />

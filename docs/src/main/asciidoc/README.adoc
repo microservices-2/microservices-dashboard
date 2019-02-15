@@ -4,6 +4,7 @@
 :github-repo: ordina-jworks/{project-name}
 
 :github-raw: https://raw.githubusercontent.com/{github-repo}/{github-tag}
+:github-raw-master: https://raw.githubusercontent.com/{github-repo}/master
 :github-code: https://github.com/{github-repo}/tree/{github-tag}
 
 :gitter-url: https://gitter.im/ordina-jworks/microservices-dashboard
@@ -14,9 +15,9 @@ image::https://api.bintray.com/packages/{github-repo}/{project-name}/images/down
 image::https://img.shields.io/badge/License-Apache%202-blue.svg["License", link="{github-raw}/LICENSE.txt"]
 image::https://badges.gitter.im/ordina-jworks/microservices-dashboard.svg[Gitter, link="{gitter-url}?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"]
 
-## Microservices Dashboard Server
+== Microservices Dashboard Server
 
-### Overview
+== Overview
 
 The primary goal of this project is to provide a server implementation for the Microservices Dashboard UI project.
 This implementation is for now only supporting Spring Boot microservices.
@@ -24,11 +25,11 @@ It will query other Spring Boot applications for their actuator endpoints (such 
 After gathering these details from all available applications, it will aggregate these into a single snapshot.
 This snapshot can be retrieved by the Microservices Dashboard UI application.
 
-### Reference documentation
+== Reference documentation
 
 To learn everything there is to know about the Microservices Dashboard Server, please consult the http://ordina-jworks.github.io/microservices-dashboard-server/[reference documentation].
 
-### Building from source
+== Building from source
 
 The Microservices Dashboard Server requires Java 8 or later and is built using maven:
 
@@ -36,16 +37,132 @@ The Microservices Dashboard Server requires Java 8 or later and is built using m
 ./mvnw install
 ```
 
-### Contributing
+== Contributing
 
-Contributors to this project agree to uphold its {github-raw}/CODE_OF_CONDUCT.md[code of conduct].
+Ordina's Microservices Dashboard Server is released under the non-restrictive Apache 2.0 license, and follows a very standard GitHub development process, using GitHub tracker for issues and merging pull requests into master.
+If you want to contribute even something trivial please do not hesitate, but follow the guidelines below.
 
-There are several ways in which you can contribute to the Microservices Dashboard Server:
+=== Code of Conduct
+This project adheres to the Contributor Covenant {github-raw}/CODE_OF_CONDUCT.md[code of conduct].
+By participating, you are expected to uphold this code.
+Please report unacceptable behavior to the maintainers.
 
- - File https://github.com/{github-repo}/issues/new/choose[an issue].
- - Open a https://help.github.com/articles/using-pull-requests/[pull request]. Please see the {github-raw}/CONTRIBUTING.md[contributor guidelines] for details.
- - Chat with fellow users {gitter-url}[on Gitter].
+=== Code Conventions and Housekeeping
+None of these is essential for a pull request, but they will all help.
+They can also be added after the original pull request but before a merge.
 
-### Licence
+* Use our code format conventions.
+  If you use Eclipse you can import {github-raw-master}/checkstyle/eclipse/eclipse-code-formatter.xml[the formatter settings] using the `eclipse-code-formatter.xml` file.
+  If using IntelliJ, you can use the http://plugins.jetbrains.com/plugin/6546[Eclipse Code Formatter Plugin] to import the same file.
+* Make sure all new `.java` files to have a simple Javadoc class comment with at least an `@author` tag identifying you, and preferably at least a paragraph on what the class is for.
+* Add the ASF license header comment to all new `.java` files (copy from existing files in the project)
+* Add yourself as an `@author` to the .java files that you modify substantially (more than cosmetic changes).
+* Add some Javadocs and, if you change the namespace, some XSD doc elements.
+* A few unit tests would help a lot as well -- someone has to do it.
+* If no-one else is using your branch, please rebase it against the current master (or other target branch in the main project).
+* When writing a commit message please follow http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html[these conventions].
+  If you are fixing an existing issue please add `Fixes gh-XXXX` at the end of the commit message (where XXXX is the issue number).
 
-Ordina's Microservices Dashboard Server is open source software released under the {github-raw}/LICENSE.txt[Apache 2.0 license].
+=== Checkstyle
+
+This project comes with a set of checkstyle rules.
+You can find them in the `checkstyle` directory.
+
+.projectRoot
+----
+└── checkstyle
+    ├── checkstyle.xml <1>
+    ├── checkstyle-header.txt <2>
+    ├── checkstyle-suppressions.xml <3>
+    ├── import-control.xml <4>
+----
+<1> Default Checkstyle rules
+<2> File header setup
+<3> Default suppression rules
+<4> Default import rules
+
+==== Checkstyle configuration
+
+Checkstyle rules are *enabled by default*, but the build will not fail when there are validation errors.
+However, to keep this project maintainable we will change this in the near future.
+
+If you need to suppress some rules, then it's enough for you to make changes to `checkstyle-suppressions.xml` with your suppressions. Example:
+
+.projectRoot/checkstyle/checkstyle-suppresions.xml
+----
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+		"-//Puppy Crawl//DTD Suppressions 1.1//EN"
+		"http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+<suppressions>
+	<suppress files=".+Application\.java" checks="HideUtilityClassConstructor" />
+	<suppress files=".+Configuration\.java" checks="HideUtilityClassConstructor" />
+	<suppress files="[\\/]src[\\/]test[\\/]java[\\/]" checks="Javadoc*" />
+	<suppress files="[\\/]autoconfigure[\\/]" checks="JavadocType" />
+	<suppress files="[\\/]autoconfigure[\\/]" checks="JavadocVariable" />
+</suppressions>
+----
+
+=== IDE setup
+
+==== IntelliJ IDEA
+
+In order to setup IntelliJ you should import our coding conventions, inspection profiles and set up the checkstyle plugin.
+
+.projectRoot
+----
+└── checkstyle
+    ├── checkstyle.xml <1>
+    ├── checkstyle-header.txt <2>
+    ├── checkstyle-suppressions.xml <3>
+    ├── import-control.xml <4>
+    └── intellij
+        ├── IntelliJ_Project_Defaults.xml <5>
+        └── IntelliJ_Ordina_OSS_Java_Conventions.xml <5>
+----
+<1> Default Checkstyle rules
+<2> File header setup
+<3> Default suppression rules
+<4> Default import control rules
+<5> Project defaults for IntelliJ that apply most of Checkstyle rules
+<6> Project style conventions for IntelliJ that apply most of Checkstyle rules
+
+.Code style
+
+image::{github-raw-master}/docs/src/main/asciidoc/images/intellij-code-style.png[Code style]
+
+Go to `File` -> `Settings` -> `Editor` -> `Code style`.
+There click on the icon next to the `Scheme` section.
+There, click on the `Import Scheme` value and pick the `IntelliJ IDEA code style XML` option.
+Import the `checkstyle/intellij/IntelliJ_Ordina_Java_Conventions.xml` file.
+
+.Inspection profiles
+
+image::{github-raw-master}/docs/src/main/asciidoc/images/intellij-inspections.png[Inspection profiles]
+
+Go to `File` -> `Settings` -> `Editor` -> `Inspections`.
+There click on the icon next to the `Profile` section.
+There, click on the `Import Profile` and import the `checkstyle/intellij/IntelliJ_Project_Defaults.xml` file.
+
+.Checkstyle
+
+To have IntelliJ work with Checkstyle, you have to install the `Checkstyle` plugin.
+It's advisable to also install the `Assertions2Assertj` to automatically convert the JUnit assertions
+
+image::{github-raw-master}/docs/src/main/asciidoc/images/intellij-checkstyle.png[Checkstyle]
+
+Go to `File` -> `Settings` -> `Other settings` -> `Checkstyle`.
+There click on the `+` icon in the `Configuration file` section.
+There, you'll have to define where the checkstyle rules should be picked from.
+In the image above, we've picked the rules from the cloned repository.
+However, you can point to the project's GitHub repository (e.g. for the `checkstyle.xml` : `{github-raw-master}/checstyle/checkstyle.xml`).
+We need to provide the following variables:
+
+- `checkstyle.header.file` - the ASF license header template
+  Please point it to the `checkstyle/checkstyle-header.txt` file either in your cloned repo or via the `{github-raw}/checkstyle/checkstyle-header.txt` URL.
+- `checkstyle.import.control.file` - import control rules.
+  Please point it to the `checkstyle/import-control.xml` file either in your cloned repo or via the `{github-raw-master}/checkstyle/import-control.xml` URL.
+- `checkstyle.suppressions.file` - checkstyle suppressions.
+  Please point it to the `checkstyle/checkstyle-suppressions.xml` file either in your cloned repo or via the `{github-raw-master}/checkstyle/checkstyle-suppressions.xml` URL.
+
+IMPORTANT: Remember to set the `Scan Scope` to `All sources` since we apply checkstyle rules for production and test sources.
