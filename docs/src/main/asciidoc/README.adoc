@@ -155,7 +155,7 @@ Go to `File` -> `Settings` -> `Other settings` -> `Checkstyle`.
 There click on the `+` icon in the `Configuration file` section.
 There, you'll have to define where the checkstyle rules should be picked from.
 In the image above, we've picked the rules from the cloned repository.
-However, you can point to the project's GitHub repository (e.g. for the `checkstyle.xml` : `{github-raw-master}/checstyle/checkstyle.xml`).
+However, you can point to the project's GitHub repository (e.g. for the `checkstyle.xml` : `{github-raw-master}/checkstyle/checkstyle.xml`).
 We need to provide the following variables:
 
 - `checkstyle.header.file` - the ASF license header template

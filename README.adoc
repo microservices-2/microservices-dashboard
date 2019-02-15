@@ -58,7 +58,7 @@ None of these is essential for a pull request, but they will all help.
 They can also be added after the original pull request but before a merge.
 
 * Use our code format conventions.
-  If you use Eclipse you can import {github-raw-master}/checkstyle/eclipse-code-formatter.xml[the formatter settings] using the `eclipse-code-formatter.xml` file.
+  If you use Eclipse you can import {github-raw-master}/checkstyle/eclipse/eclipse-code-formatter.xml[the formatter settings] using the `eclipse-code-formatter.xml` file.
   If using IntelliJ, you can use the http://plugins.jetbrains.com/plugin/6546[Eclipse Code Formatter Plugin] to import the same file.
 * Make sure all new `.java` files to have a simple Javadoc class comment with at least an `@author` tag identifying you, and preferably at least a paragraph on what the class is for.
 * Add the ASF license header comment to all new `.java` files (copy from existing files in the project)
@@ -161,7 +161,7 @@ Go to `File` -> `Settings` -> `Other settings` -> `Checkstyle`.
 There click on the `+` icon in the `Configuration file` section.
 There, you'll have to define where the checkstyle rules should be picked from.
 In the image above, we've picked the rules from the cloned repository.
-However, you can point to the project's GitHub repository (e.g. for the `checkstyle.xml` : `{github-raw-master}/checstyle/checkstyle.xml`).
+However, you can point to the project's GitHub repository (e.g. for the `checkstyle.xml` : `{github-raw-master}/checkstyle/checkstyle.xml`).
 We need to provide the following variables:
 
 - `checkstyle.header.file` - the ASF license header template
