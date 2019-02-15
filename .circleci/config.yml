@@ -52,7 +52,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-        key: ms-dashboard-server-documentation
+          key: ms-dashboard-server-documentation
       - run:
           name: Updating GitHub Pages
           command: |
@@ -60,9 +60,9 @@ jobs:
             git config --global user.name "ordina-buildmaster"
             ./docs/src/main/scripts/ghpages.sh -b
       - save_cache:
-        key: ms-dashboard-server-documentation
-        paths:
-         - ~/.m2
+          key: ms-dashboard-server-documentation
+          paths:
+            - ~/.m2
 
 notify:
   webhooks:
