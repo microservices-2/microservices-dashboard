@@ -45,7 +45,8 @@ jobs:
           path: junit/
           destination: testartifacts
   update-documentation:
-    machine: true
+    docker:
+      - image: circleci/buildpack-deps:bionic-scm
     environment:
       TERM: dumb
     working_directory: ~/ms-dashboard-server
