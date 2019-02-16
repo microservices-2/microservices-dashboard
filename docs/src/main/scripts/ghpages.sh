@@ -98,7 +98,9 @@ function retrieve_doc_properties() {
 
 # Stash any outstanding changes
 function stash_changes() {
-    git diff-index --quiet HEAD && dirty=$? || (echo "Failed to check if the current repo is dirty. Assuming that it is." && dirty="1")
+	# First update the index to filter out false-positives.
+	# git diff-index does a shallow comparison without checking the actual content.
+    git update-index --refresh > /dev/null 2>&1 && git diff-index --quiet HEAD && dirty=$? || (echo "Failed to check if the current repo is dirty. Assuming that it is." && dirty="1")
     if [ "$dirty" != "0" ]; then git stash; fi
 }
 
