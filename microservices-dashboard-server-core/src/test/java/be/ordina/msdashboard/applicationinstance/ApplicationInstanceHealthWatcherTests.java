@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2018 the original author or authors.
+ * Copyright 2015-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package be.ordina.msdashboard.aggregator.health;
+package be.ordina.msdashboard.applicationinstance;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -32,42 +32,39 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import reactor.core.publisher.Mono;
 
-import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
-import be.ordina.msdashboard.applicationinstance.ApplicationInstanceMother;
-import be.ordina.msdashboard.applicationinstance.ApplicationInstanceService;
-import be.ordina.msdashboard.events.HealthInfoRetrievalFailed;
-import be.ordina.msdashboard.events.HealthInfoRetrieved;
+import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrievalFailed;
+import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrieved;
 import be.ordina.msdashboard.events.NewServiceInstanceDiscovered;
+import be.ordina.msdashboard.events.NewServiceInstanceDiscoveredMother;
 
 import org.springframework.boot.actuate.health.Status;
 import org.springframework.boot.test.rule.OutputCapture;
-import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
 import static org.mockito.BDDMockito.when;
 
 /**
- * Unit test for the HealthAggregator.
+ * Unit tests for the {@link ApplicationInstanceHealthWatcher application instance health watcher}.
  *
  * @author Steve De Zitter
  * @author Tim Ysewyn
  */
 @RunWith(MockitoJUnitRunner.class)
-public class HealthAggregatorTest {
+public class ApplicationInstanceHealthWatcherTests {
 
 	@Rule
 	public OutputCapture outputCapture = new OutputCapture();
 
 	@Mock
-	private WebClient webClient;
-	@Mock
 	private ApplicationInstanceService applicationInstanceService;
+	@Mock
+	private WebClient webClient;
 	@Mock
 	private ApplicationEventPublisher applicationEventPublisher;
 
@@ -82,7 +79,7 @@ public class HealthAggregatorTest {
 	private ArgumentCaptor<ApplicationEvent> applicationEventArgumentCaptor;
 
 	@InjectMocks
-	private HealthAggregator healthAggregator;
+	private ApplicationInstanceHealthWatcher healthWatcher;
 
 	@Before
 	public void setupMocks() {
@@ -96,9 +93,10 @@ public class HealthAggregatorTest {
 		NewServiceInstanceDiscovered newServiceInstanceDiscovered =
 				NewServiceInstanceDiscoveredMother.defaultNewServiceInstanceDiscovered();
 
-		when(this.responseSpec.bodyToMono(HealthAggregator.HealthWrapper.class)).thenReturn(Mono.just(new HealthAggregator.HealthWrapper(Status.UP, new HashMap<>())));
+		when(this.responseSpec.bodyToMono(ApplicationInstanceHealthWatcher.HealthWrapper.class)).thenReturn(Mono
+				.just(new ApplicationInstanceHealthWatcher.HealthWrapper(Status.UP, new HashMap<>())));
 
-		this.healthAggregator.handleApplicationInstanceEvent(newServiceInstanceDiscovered);
+		this.healthWatcher.handleApplicationInstanceEvent(newServiceInstanceDiscovered);
 
 		assertHealthInfoRetrievalSucceeded((ApplicationInstance) newServiceInstanceDiscovered.getSource());
 	}
@@ -108,9 +106,10 @@ public class HealthAggregatorTest {
 		NewServiceInstanceDiscovered newServiceInstanceDiscovered =
 				NewServiceInstanceDiscoveredMother.defaultNewServiceInstanceDiscovered();
 
-		when(this.responseSpec.bodyToMono(HealthAggregator.HealthWrapper.class)).thenReturn(Mono.error(new RuntimeException("OOPSIE!")));
+		when(this.responseSpec.bodyToMono(ApplicationInstanceHealthWatcher.HealthWrapper.class))
+				.thenReturn(Mono.error(new RuntimeException("OOPSIE!")));
 
-		this.healthAggregator.handleApplicationInstanceEvent(newServiceInstanceDiscovered);
+		this.healthWatcher.handleApplicationInstanceEvent(newServiceInstanceDiscovered);
 
 		assertHealthInfoRetrievalFailed((ApplicationInstance) newServiceInstanceDiscovered.getSource());
 	}
@@ -121,7 +120,8 @@ public class HealthAggregatorTest {
 		assertThat(this.outputCapture.toString())
 				.contains(String.format("Retrieved health information for application instance [%s]", instance.getId()));
 
-		HealthInfoRetrieved healthInfoRetrieved = (HealthInfoRetrieved) this.applicationEventArgumentCaptor.getValue();
+		ApplicationInstanceHealthDataRetrieved healthInfoRetrieved =
+				(ApplicationInstanceHealthDataRetrieved) this.applicationEventArgumentCaptor.getValue();
 		assertThat(healthInfoRetrieved).isNotNull();
 		assertThat(healthInfoRetrieved.getHealth()).isNotNull();
 		assertThat(healthInfoRetrieved.getHealth().getStatus()).isEqualTo(Status.UP);
@@ -134,7 +134,8 @@ public class HealthAggregatorTest {
 		assertThat(this.outputCapture.toString()).contains(
 				String.format("Could not retrieve health information for [%s]", instance.getHealthEndpoint()));
 
-		HealthInfoRetrievalFailed healthInfoRetrievalFailed = (HealthInfoRetrievalFailed) this.applicationEventArgumentCaptor.getValue();
+		ApplicationInstanceHealthDataRetrievalFailed healthInfoRetrievalFailed =
+				(ApplicationInstanceHealthDataRetrievalFailed) this.applicationEventArgumentCaptor.getValue();
 		assertThat(healthInfoRetrievalFailed).isNotNull();
 		assertThat(healthInfoRetrievalFailed.getSource()).isEqualTo(instance);
 	}
@@ -146,20 +147,27 @@ public class HealthAggregatorTest {
 				ApplicationInstanceMother.instance("a-2"));
 
 		when(this.applicationInstanceService.getApplicationInstances()).thenReturn(applicationInstances);
-		when(this.responseSpec.bodyToMono(HealthAggregator.HealthWrapper.class)).thenReturn(Mono.just(new HealthAggregator.HealthWrapper(Status.UP, new HashMap<>())));
+		when(this.responseSpec.bodyToMono(ApplicationInstanceHealthWatcher.HealthWrapper.class))
+				.thenReturn(Mono.just(new ApplicationInstanceHealthWatcher.HealthWrapper(Status.UP, new HashMap<>())));
 
-		this.healthAggregator.aggregateHealthInformation();
+		this.healthWatcher.retrieveHealthDataForAllApplicationInstances();
 
 		assertHealthInfoRetrievalSucceeded(applicationInstances);
 	}
 
 	private void assertHealthInfoRetrievalSucceeded(List<ApplicationInstance> applicationInstances) {
-		assertThat(this.outputCapture.toString()).contains("Aggregating [HEALTH] information");
+		String logOutput = this.outputCapture.toString();
+		assertThat(logOutput).contains("Retrieving [HEALTH] data for all application instances");
+		applicationInstances.forEach((applicationInstance) ->
+			assertThat(logOutput).contains(String.format("Retrieved health information for application instance [%s]",
+					applicationInstance.getId()))
+		);
 
 		verify(this.applicationEventPublisher, times(applicationInstances.size()))
 				.publishEvent(this.applicationEventArgumentCaptor.capture());
 
-		List<HealthInfoRetrieved> healthInfoRetrievals = (List) this.applicationEventArgumentCaptor.getAllValues();
+		List<ApplicationInstanceHealthDataRetrieved> healthInfoRetrievals =
+				(List) this.applicationEventArgumentCaptor.getAllValues();
 
 		healthInfoRetrievals.forEach(healthInfoRetrieved -> {
 			ApplicationInstance instance = (ApplicationInstance) healthInfoRetrieved.getSource();

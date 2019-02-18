@@ -14,8 +14,23 @@
  * limitations under the License.
  */
 
+package be.ordina.msdashboard.events;
+
+import be.ordina.msdashboard.applicationinstance.ApplicationInstanceMother;
+
 /**
- * This is the root package for the microservices dashboard server application. It
- * contains the main annotation to enable the dashboard.
+ * Mother class to simplify instantiation of NewServiceInstanceDiscovered events for testing purposes.
+ *
+ * @author Steve De Zitter
+ * @author Tim Ysewyn
  */
-package be.ordina.msdashboard.aggregator.health;
+public final class NewServiceInstanceDiscoveredMother {
+
+	private NewServiceInstanceDiscoveredMother() {
+	}
+
+	public static NewServiceInstanceDiscovered defaultNewServiceInstanceDiscovered() {
+		return new NewServiceInstanceDiscovered(ApplicationInstanceMother.instance());
+	}
+
+}

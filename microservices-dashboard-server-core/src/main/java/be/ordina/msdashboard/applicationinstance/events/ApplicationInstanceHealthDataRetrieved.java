@@ -14,22 +14,29 @@
  * limitations under the License.
  */
 
-package be.ordina.msdashboard.events;
+package be.ordina.msdashboard.applicationinstance.events;
 
 import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
 
+import org.springframework.boot.actuate.health.Health;
 import org.springframework.context.ApplicationEvent;
 
 /**
- * An applicationEvent which signals a failure while retrieving HealthInfo.
+ * An {@link ApplicationEvent application event} which signals successful retrieval of an instance its health data.
  *
  * @author Dieter Hubau
- * @author Tim Ysewyn
  */
-public class HealthInfoRetrievalFailed extends ApplicationEvent {
+public class ApplicationInstanceHealthDataRetrieved extends ApplicationEvent {
 
-	public HealthInfoRetrievalFailed(ApplicationInstance instance) {
+	private Health health;
+
+	public ApplicationInstanceHealthDataRetrieved(ApplicationInstance instance, Health health) {
 		super(instance);
+		this.health = health;
+	}
+
+	public Health getHealth() {
+		return this.health;
 	}
 
 }

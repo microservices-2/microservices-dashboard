@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package be.ordina.msdashboard.aggregator.health;
+package be.ordina.msdashboard.applicationinstance.events;
 
-import be.ordina.msdashboard.applicationinstance.ApplicationInstanceMother;
-import be.ordina.msdashboard.events.NewServiceInstanceDiscovered;
+import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
+
+import org.springframework.context.ApplicationEvent;
 
 /**
- * Mother class to simplify instantiation of NewServiceInstanceDiscovered events for testing purposes.
+ * An {@link ApplicationEvent application event} which signals a failure while retrieving an instance its health data.
  *
- * @author Steve De Zitter
- * @author Tim Ysewyn
+ * @author Dieter Hubau
  */
-public final class NewServiceInstanceDiscoveredMother {
+public class ApplicationInstanceHealthDataRetrievalFailed extends ApplicationEvent {
 
-	private NewServiceInstanceDiscoveredMother() {
-	}
-
-	public static NewServiceInstanceDiscovered defaultNewServiceInstanceDiscovered() {
-		return new NewServiceInstanceDiscovered(ApplicationInstanceMother.instance());
+	public ApplicationInstanceHealthDataRetrievalFailed(ApplicationInstance instance) {
+		super(instance);
 	}
 
 }

@@ -17,7 +17,7 @@
 package be.ordina.msdashboard.autoconfigure;
 
 import be.ordina.msdashboard.LandscapeWatcher;
-import be.ordina.msdashboard.aggregator.health.HealthAggregator;
+import be.ordina.msdashboard.applicationinstance.ApplicationInstanceHealthWatcher;
 import be.ordina.msdashboard.applicationinstance.ApplicationInstanceService;
 import be.ordina.msdashboard.catalog.CatalogService;
 
@@ -54,13 +54,14 @@ public class MicroservicesDashboardServerAutoConfiguration {
 	}
 
 	@Bean
-	public WebClient webClient() {
-		return WebClient.create();
+	public ApplicationInstanceHealthWatcher applicationInstanceHealthWatcher(ApplicationInstanceService applicationInstanceService,
+			WebClient webClient, ApplicationEventPublisher publisher) {
+		return new ApplicationInstanceHealthWatcher(applicationInstanceService, webClient, publisher);
 	}
 
 	@Bean
-	public HealthAggregator msHealthAggregator(ApplicationInstanceService applicationInstanceService, WebClient webClient, ApplicationEventPublisher publisher) {
-		return new HealthAggregator(applicationInstanceService, webClient, publisher);
+	public WebClient webClient() {
+		return WebClient.create();
 	}
 
 }

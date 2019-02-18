@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2018 the original author or authors.
+ * Copyright 2015-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package be.ordina.msdashboard.aggregator.health;
+package be.ordina.msdashboard.applicationinstance;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -25,10 +25,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
-import be.ordina.msdashboard.applicationinstance.ApplicationInstanceService;
-import be.ordina.msdashboard.events.HealthInfoRetrievalFailed;
-import be.ordina.msdashboard.events.HealthInfoRetrieved;
+import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrievalFailed;
+import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrieved;
 import be.ordina.msdashboard.events.NewServiceInstanceDiscovered;
 
 import org.springframework.boot.actuate.health.Health;
@@ -39,20 +37,21 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
- * Aggregator for the /health endpoint of a regular Spring Boot application.
+ * Watcher that will check an application instance its health endpoint.
  *
  * @author Dieter Hubau
  * @author Tim Ysewyn
  */
-public class HealthAggregator {
+public class ApplicationInstanceHealthWatcher {
 
-	private static final Logger logger = LoggerFactory.getLogger(HealthAggregator.class);
+	private static final Logger logger = LoggerFactory.getLogger(ApplicationInstanceHealthWatcher.class);
 
 	private final WebClient webClient;
 	private final ApplicationInstanceService applicationInstanceService;
 	private final ApplicationEventPublisher publisher;
 
-	public HealthAggregator(ApplicationInstanceService applicationInstanceService, WebClient webClient, ApplicationEventPublisher publisher) {
+	public ApplicationInstanceHealthWatcher(ApplicationInstanceService applicationInstanceService,
+			WebClient webClient, ApplicationEventPublisher publisher) {
 		this.applicationInstanceService = applicationInstanceService;
 		this.webClient = webClient;
 		this.publisher = publisher;
@@ -64,9 +63,9 @@ public class HealthAggregator {
 		checkHealthInformation(serviceInstance);
 	}
 
-	@Scheduled(fixedRateString = "${aggregator.health.rate:10000}")
-	public void aggregateHealthInformation() {
-		logger.debug("Aggregating [HEALTH] information");
+	@Scheduled(fixedRateString = "${applicationinstance.healthwatcher.rate:10000}")
+	public void retrieveHealthDataForAllApplicationInstances() {
+		logger.debug("Retrieving [HEALTH] data for all application instances");
 		this.applicationInstanceService.getApplicationInstances()
 				.parallelStream()
 				.forEach(this::checkHealthInformation);
@@ -75,15 +74,15 @@ public class HealthAggregator {
 	private void checkHealthInformation(ApplicationInstance instance) {
 		URI uri = instance.getHealthEndpoint();
 		this.webClient.get().uri(uri).retrieve().bodyToMono(HealthWrapper.class)
-				.defaultIfEmpty(new HealthWrapper(Status.DOWN, new HashMap<>()))
+				.defaultIfEmpty(new HealthWrapper(Status.UNKNOWN, new HashMap<>()))
 				.map(HealthWrapper::getHealth)
 				.doOnError(exception -> {
 					logger.debug("Could not retrieve health information for [" + uri + "]", exception);
-					this.publisher.publishEvent(new HealthInfoRetrievalFailed(instance));
+					this.publisher.publishEvent(new ApplicationInstanceHealthDataRetrievalFailed(instance));
 				})
 				.subscribe(healthInfo -> {
 					logger.debug("Retrieved health information for application instance [{}]", instance.getId());
-					this.publisher.publishEvent(new HealthInfoRetrieved(instance, healthInfo));
+					this.publisher.publishEvent(new ApplicationInstanceHealthDataRetrieved(instance, healthInfo));
 				});
 	}
 
