@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2018 the original author or authors.
+ * Copyright 2015-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package be.ordina.msdashboard.events;
+package be.ordina.msdashboard.applicationinstance;
 
-import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
-
-import org.springframework.context.ApplicationEvent;
+import java.net.URI;
 
 /**
- * Event that is thrown whenever there is a new service instance discovered.
- *
  * @author Tim Ysewyn
  */
-public class NewServiceInstanceDiscovered extends ApplicationEvent {
+public final class ApplicationInstanceMother {
 
-	public NewServiceInstanceDiscovered(ApplicationInstance instance) {
-		super(instance);
+	private ApplicationInstanceMother() {
+		throw new RuntimeException("Not allowed");
 	}
 
+	public static ApplicationInstance instance() {
+		return instance("id");
+	}
+
+	public static ApplicationInstance instance(String id) {
+		return new ApplicationInstance(id, URI.create("http://127.0.0.1:8080"));
+	}
 }

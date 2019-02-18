@@ -18,6 +18,8 @@ package be.ordina.msdashboard.autoconfigure;
 
 import be.ordina.msdashboard.LandscapeWatcher;
 import be.ordina.msdashboard.aggregator.health.HealthAggregator;
+import be.ordina.msdashboard.applicationinstance.ApplicationInstanceService;
+import be.ordina.msdashboard.catalog.CatalogService;
 
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -37,8 +39,18 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class MicroservicesDashboardServerAutoConfiguration {
 
 	@Bean
-	LandscapeWatcher landscapeWatcher(DiscoveryClient discoveryClient, ApplicationEventPublisher publisher) {
-		return new LandscapeWatcher(discoveryClient, publisher);
+	LandscapeWatcher landscapeWatcher(DiscoveryClient discoveryClient, CatalogService catalogService, ApplicationInstanceService applicationInstanceService) {
+		return new LandscapeWatcher(discoveryClient, catalogService, applicationInstanceService);
+	}
+
+	@Bean
+	public CatalogService catalogService() {
+		return new CatalogService();
+	}
+
+	@Bean
+	public ApplicationInstanceService applicationInstanceService() {
+		return new ApplicationInstanceService();
 	}
 
 	@Bean
@@ -47,8 +59,8 @@ public class MicroservicesDashboardServerAutoConfiguration {
 	}
 
 	@Bean
-	public HealthAggregator msHealthAggregator(LandscapeWatcher landscapeWatcher, WebClient webClient, ApplicationEventPublisher publisher) {
-		return new HealthAggregator(landscapeWatcher, webClient, publisher);
+	public HealthAggregator msHealthAggregator(ApplicationInstanceService applicationInstanceService, WebClient webClient, ApplicationEventPublisher publisher) {
+		return new HealthAggregator(applicationInstanceService, webClient, publisher);
 	}
 
 }

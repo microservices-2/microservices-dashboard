@@ -16,14 +16,14 @@
 
 package be.ordina.msdashboard.aggregator.health;
 
+import be.ordina.msdashboard.applicationinstance.ApplicationInstanceMother;
 import be.ordina.msdashboard.events.NewServiceInstanceDiscovered;
-
-import org.springframework.cloud.client.DefaultServiceInstance;
 
 /**
  * Mother class to simplify instantiation of NewServiceInstanceDiscovered events for testing purposes.
  *
  * @author Steve De Zitter
+ * @author Tim Ysewyn
  */
 public final class NewServiceInstanceDiscoveredMother {
 
@@ -31,9 +31,7 @@ public final class NewServiceInstanceDiscoveredMother {
 	}
 
 	public static NewServiceInstanceDiscovered defaultNewServiceInstanceDiscovered() {
-		DefaultServiceInstance serviceInstance = new DefaultServiceInstance("a", "host", 8080, false);
-
-		return new NewServiceInstanceDiscovered(serviceInstance);
+		return new NewServiceInstanceDiscovered(ApplicationInstanceMother.instance());
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2018 the original author or authors.
+ * Copyright 2015-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-package be.ordina.msdashboard.events;
+package be.ordina.msdashboard.catalog;
+
+import java.util.List;
 
 import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
 
-import org.springframework.context.ApplicationEvent;
-
 /**
- * Event that is thrown whenever there is a new service instance discovered.
+ * Catalog that keeps track of all known applications and their instances in the environment.
  *
  * @author Tim Ysewyn
+ * @author Steve De Zitter
  */
-public class NewServiceInstanceDiscovered extends ApplicationEvent {
+class Catalog {
 
-	public NewServiceInstanceDiscovered(ApplicationInstance instance) {
-		super(instance);
+	public List<String> updateListOfApplications(List<String> applications) {
+		return applications;
 	}
 
+	public void updateListOfInstancesForApplication(String application, List<ApplicationInstance> applicationInstances) {
+
+	}
 }

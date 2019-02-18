@@ -16,17 +16,19 @@
 
 package be.ordina.msdashboard.events;
 
-import org.springframework.cloud.client.ServiceInstance;
+import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
+
 import org.springframework.context.ApplicationEvent;
 
 /**
  * An applicationEvent which signals a failure while retrieving HealthInfo.
  *
  * @author Dieter Hubau
+ * @author Tim Ysewyn
  */
 public class HealthInfoRetrievalFailed extends ApplicationEvent {
 
-	public HealthInfoRetrievalFailed(ServiceInstance instance) {
+	public HealthInfoRetrievalFailed(ApplicationInstance instance) {
 		super(instance);
 	}
 

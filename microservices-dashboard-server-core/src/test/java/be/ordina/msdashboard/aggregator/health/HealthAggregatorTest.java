@@ -20,7 +20,6 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -33,20 +32,20 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import reactor.core.publisher.Mono;
 
-import be.ordina.msdashboard.LandscapeWatcher;
+import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
+import be.ordina.msdashboard.applicationinstance.ApplicationInstanceMother;
+import be.ordina.msdashboard.applicationinstance.ApplicationInstanceService;
 import be.ordina.msdashboard.events.HealthInfoRetrievalFailed;
 import be.ordina.msdashboard.events.HealthInfoRetrieved;
 import be.ordina.msdashboard.events.NewServiceInstanceDiscovered;
 
 import org.springframework.boot.actuate.health.Status;
 import org.springframework.boot.test.rule.OutputCapture;
-import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.times;
@@ -57,6 +56,7 @@ import static org.mockito.BDDMockito.when;
  * Unit test for the HealthAggregator.
  *
  * @author Steve De Zitter
+ * @author Tim Ysewyn
  */
 @RunWith(MockitoJUnitRunner.class)
 public class HealthAggregatorTest {
@@ -67,7 +67,7 @@ public class HealthAggregatorTest {
 	@Mock
 	private WebClient webClient;
 	@Mock
-	private LandscapeWatcher landscapeWatcher;
+	private ApplicationInstanceService applicationInstanceService;
 	@Mock
 	private ApplicationEventPublisher applicationEventPublisher;
 
@@ -100,7 +100,7 @@ public class HealthAggregatorTest {
 
 		this.healthAggregator.handleApplicationInstanceEvent(newServiceInstanceDiscovered);
 
-		assertHealthInfoRetrievalSucceeded((ServiceInstance) newServiceInstanceDiscovered.getSource());
+		assertHealthInfoRetrievalSucceeded((ApplicationInstance) newServiceInstanceDiscovered.getSource());
 	}
 
 	@Test
@@ -112,76 +112,62 @@ public class HealthAggregatorTest {
 
 		this.healthAggregator.handleApplicationInstanceEvent(newServiceInstanceDiscovered);
 
-		assertHealthInfoRetrievalFailed((ServiceInstance) newServiceInstanceDiscovered.getSource());
+		assertHealthInfoRetrievalFailed((ApplicationInstance) newServiceInstanceDiscovered.getSource());
 	}
 
-	private void assertHealthInfoRetrievalSucceeded(ServiceInstance serviceInstance) {
+	private void assertHealthInfoRetrievalSucceeded(ApplicationInstance instance) {
 		verify(this.applicationEventPublisher).publishEvent(this.applicationEventArgumentCaptor.capture());
 
 		assertThat(this.outputCapture.toString())
-				.contains(String.format("Found health information for service [%s]", serviceInstance.getServiceId()));
+				.contains(String.format("Retrieved health information for application instance [%s]", instance.getId()));
 
 		HealthInfoRetrieved healthInfoRetrieved = (HealthInfoRetrieved) this.applicationEventArgumentCaptor.getValue();
 		assertThat(healthInfoRetrieved).isNotNull();
 		assertThat(healthInfoRetrieved.getHealth()).isNotNull();
 		assertThat(healthInfoRetrieved.getHealth().getStatus()).isEqualTo(Status.UP);
-		assertThat(healthInfoRetrieved.getSource()).isEqualTo(serviceInstance);
+		assertThat(healthInfoRetrieved.getSource()).isEqualTo(instance);
 	}
 
-	private void assertHealthInfoRetrievalFailed(ServiceInstance serviceInstance) {
+	private void assertHealthInfoRetrievalFailed(ApplicationInstance instance) {
 		verify(this.applicationEventPublisher).publishEvent(this.applicationEventArgumentCaptor.capture());
 
 		assertThat(this.outputCapture.toString()).contains(
-				String.format("Could not retrieve health information for [http://%s:%d/actuator/health]",
-						serviceInstance.getHost(), serviceInstance.getPort()));
+				String.format("Could not retrieve health information for [%s]", instance.getHealthEndpoint()));
 
 		HealthInfoRetrievalFailed healthInfoRetrievalFailed = (HealthInfoRetrievalFailed) this.applicationEventArgumentCaptor.getValue();
 		assertThat(healthInfoRetrievalFailed).isNotNull();
-		assertThat(healthInfoRetrievalFailed.getSource()).isEqualTo(serviceInstance);
+		assertThat(healthInfoRetrievalFailed.getSource()).isEqualTo(instance);
 	}
 
 	@Test
 	public void shouldAggregateHealthInformation() {
-		DefaultServiceInstance serviceInstanceA = new DefaultServiceInstance("a", "hosta", 8080, false);
-		DefaultServiceInstance serviceInstanceB = new DefaultServiceInstance("b", "hostb", 8080, false);
+		List<ApplicationInstance> applicationInstances = Arrays.asList(
+				ApplicationInstanceMother.instance("a-1"),
+				ApplicationInstanceMother.instance("a-2"));
 
-		DefaultServiceInstance serviceInstanceC = new DefaultServiceInstance("c", "hostc", 8080, false);
-		DefaultServiceInstance serviceInstanceD = new DefaultServiceInstance("d", "hostd", 8080, false);
-
-		Map<String, List<ServiceInstance>> services = new HashMap<>();
-		services.put("MovieService", Arrays.asList(serviceInstanceA, serviceInstanceB));
-		services.put("OtherService", Arrays.asList(serviceInstanceC, serviceInstanceD));
-
-		when(this.landscapeWatcher.getServiceInstances()).thenReturn(services);
+		when(this.applicationInstanceService.getApplicationInstances()).thenReturn(applicationInstances);
 		when(this.responseSpec.bodyToMono(HealthAggregator.HealthWrapper.class)).thenReturn(Mono.just(new HealthAggregator.HealthWrapper(Status.UP, new HashMap<>())));
 
 		this.healthAggregator.aggregateHealthInformation();
 
-		assertHealthInfoRetrievalSucceeded(services);
+		assertHealthInfoRetrievalSucceeded(applicationInstances);
 	}
 
-	private void assertHealthInfoRetrievalSucceeded(Map<String, List<ServiceInstance>> serviceInstances) {
-		List<ServiceInstance> allServiceInstances =
-				serviceInstances.entrySet().stream().flatMap(entry -> entry.getValue().stream()).collect(toList());
-
-		assertHealthInfoRetrievalSucceeded(allServiceInstances);
-	}
-
-	private void assertHealthInfoRetrievalSucceeded(List<ServiceInstance> serviceInstances) {
+	private void assertHealthInfoRetrievalSucceeded(List<ApplicationInstance> applicationInstances) {
 		assertThat(this.outputCapture.toString()).contains("Aggregating [HEALTH] information");
 
-		verify(this.applicationEventPublisher, times(serviceInstances.size()))
+		verify(this.applicationEventPublisher, times(applicationInstances.size()))
 				.publishEvent(this.applicationEventArgumentCaptor.capture());
 
 		List<HealthInfoRetrieved> healthInfoRetrievals = (List) this.applicationEventArgumentCaptor.getAllValues();
 
 		healthInfoRetrievals.forEach(healthInfoRetrieved -> {
-			ServiceInstance serviceInstance = (ServiceInstance) healthInfoRetrieved.getSource();
+			ApplicationInstance instance = (ApplicationInstance) healthInfoRetrieved.getSource();
 
 			assertThat(healthInfoRetrieved).isNotNull();
 			assertThat(healthInfoRetrieved.getHealth()).isNotNull();
 			assertThat(healthInfoRetrieved.getHealth().getStatus()).isEqualTo(Status.UP);
-			assertThat(serviceInstances).contains(serviceInstance);
+			assertThat(applicationInstances).contains(instance);
 		});
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2018 the original author or authors.
+ * Copyright 2015-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ package be.ordina.msdashboard;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -28,109 +28,84 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
-import be.ordina.msdashboard.events.NewServiceDiscovered;
-import be.ordina.msdashboard.events.NewServiceInstanceDiscovered;
-import be.ordina.msdashboard.events.ServiceDeregistered;
-import be.ordina.msdashboard.events.ServiceInstanceDeregistered;
+import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
+import be.ordina.msdashboard.applicationinstance.ApplicationInstanceMother;
+import be.ordina.msdashboard.applicationinstance.ApplicationInstanceService;
+import be.ordina.msdashboard.catalog.CatalogService;
 
-import org.springframework.boot.test.rule.OutputCapture;
 import org.springframework.cloud.client.DefaultServiceInstance;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationEventPublisher;
 
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.mockito.BDDMockito.times;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.verify;
-import static org.mockito.BDDMockito.verifyNoMoreInteractions;
 import static org.mockito.BDDMockito.when;
 
 /**
  * Landscape Watcher Test.
  *
  * @author Tim Ysewyn
+ * @author Steve De Zitter
  */
 @RunWith(MockitoJUnitRunner.class)
 public class LandscapeWatcherTest {
-
-	@Rule
-	public OutputCapture outputCapture = new OutputCapture();
 
 	@Mock
 	private DiscoveryClient discoveryClient;
 
 	@Mock
-	private ApplicationEventPublisher publisher;
+	private CatalogService catalogService;
+
+	@Mock
+	private ApplicationInstanceService applicationInstanceService;
 
 	@InjectMocks
 	private LandscapeWatcher landscapeWatcher;
 
 	@Captor
-	private ArgumentCaptor<ApplicationEvent> applicationEventArgumentCaptor;
+	private ArgumentCaptor<List<String>> applicationsArgumentCaptor;
+
+	@Captor
+	private ArgumentCaptor<ServiceInstance> serviceInstanceArgumentCaptor;
+
+	@Captor
+	private ArgumentCaptor<List<ApplicationInstance>> applicationInstancesArgumentCaptor;
 
 	@Test
-	public void shouldDispatchAllEvents() {
-		when(this.discoveryClient.getServices()).thenReturn(Arrays.asList("a", "c"));
-		when(this.discoveryClient.getInstances("a")).thenReturn(Collections.singletonList(new DefaultServiceInstance("a", "host", 8080, false)));
-		when(this.discoveryClient.getInstances("c")).thenReturn(Collections.singletonList(new DefaultServiceInstance("c", "host1", 8080, false)));
+	public void shouldAddNewApplicationInstanceToCatalogAtStartup() {
+		when(this.discoveryClient.getServices()).thenReturn(Arrays.asList("a"));
+		when(this.catalogService.updateListOfApplications(anyList())).thenAnswer((Answer<List<String>>) invocation -> invocation.getArgument(0));
+		when(this.discoveryClient.getInstances("a")).thenReturn(Collections.singletonList(new DefaultServiceInstance("a1", "a", "host", 8080, false)));
+		when(this.applicationInstanceService.getApplicationInstanceForServiceInstance(any(ServiceInstance.class)))
+				.thenReturn(Optional.empty());
+		ApplicationInstance returnedApplicationInstance = ApplicationInstanceMother.instance();
+		when(this.applicationInstanceService.createApplicationInstanceForServiceInstance(any(ServiceInstance.class)))
+				.thenReturn(returnedApplicationInstance);
 
 		this.landscapeWatcher.discoverLandscape();
 
-		when(this.discoveryClient.getServices()).thenReturn(Arrays.asList("b", "c"));
-		when(this.discoveryClient.getInstances("b")).thenReturn(Collections.singletonList(new DefaultServiceInstance("b", "host", 8080, false)));
-		when(this.discoveryClient.getInstances("c")).thenReturn(Collections.singletonList(new DefaultServiceInstance("c", "host2", 8080, false)));
+		verify(this.discoveryClient).getServices();
+		verify(this.catalogService).updateListOfApplications(this.applicationsArgumentCaptor.capture());
+		List<String> foundApplications = this.applicationsArgumentCaptor.getValue();
+		assertThat(foundApplications).containsExactly("a");
 
-		this.landscapeWatcher.checkForChangesInLandscape();
-
-		verify(this.discoveryClient, times(2)).getServices();
 		verify(this.discoveryClient).getInstances("a");
-		verify(this.discoveryClient).getInstances("b");
-		verify(this.discoveryClient, times(2)).getInstances("c");
-		verifyNoMoreInteractions(this.discoveryClient);
 
-		verify(this.publisher, times(10)).publishEvent(this.applicationEventArgumentCaptor.capture());
-		verifyNoMoreInteractions(this.publisher);
+		verify(this.applicationInstanceService).getApplicationInstanceForServiceInstance(this.serviceInstanceArgumentCaptor.capture());
+		ServiceInstance serviceInstance = this.serviceInstanceArgumentCaptor.getValue();
 
-		List<ApplicationEvent> applicationEvents = this.applicationEventArgumentCaptor.getAllValues();
+		verify(this.applicationInstanceService).createApplicationInstanceForServiceInstance(this.serviceInstanceArgumentCaptor.capture());
+		serviceInstance = this.serviceInstanceArgumentCaptor.getValue();
 
-		assertThat(applicationEvents).hasSize(10);
-
-		List<NewServiceDiscovered> newServiceDiscoveredEvents = applicationEvents.stream().filter(e -> e instanceof NewServiceDiscovered)
-				.map(e -> (NewServiceDiscovered) e)
-				.collect(toList());
-		List<NewServiceInstanceDiscovered> newServiceInstanceDiscoveredEvents = applicationEvents.stream().filter(e -> e instanceof NewServiceInstanceDiscovered)
-				.map(e -> (NewServiceInstanceDiscovered) e)
-				.collect(toList());
-		List<ServiceDeregistered> serviceDeregisteredEvents = applicationEvents.stream().filter(e -> e instanceof ServiceDeregistered)
-				.map(e -> (ServiceDeregistered) e)
-				.collect(toList());
-		List<ServiceInstanceDeregistered> serviceInstanceDeregisteredEvents = applicationEvents.stream().filter(e -> e instanceof ServiceInstanceDeregistered)
-				.map(e -> (ServiceInstanceDeregistered) e)
-				.collect(toList());
-
-		assertThat(newServiceDiscoveredEvents).hasSize(3);
-		assertThat(newServiceInstanceDiscoveredEvents).hasSize(4);
-		assertThat(serviceDeregisteredEvents).hasSize(1);
-		assertThat(serviceInstanceDeregisteredEvents).hasSize(2);
-
-		this.outputCapture.expect(containsString("Discovering landscape"));
-		this.outputCapture.expect(containsString("Discovering new services"));
-		this.outputCapture.expect(containsString("Registering new service 'a'"));
-		this.outputCapture.expect(containsString("Registering new service instance for 'a'"));
-		this.outputCapture.expect(containsString("Registering new service 'c'"));
-		this.outputCapture.expect(containsString("Registering new service instance for 'c'"));
-		this.outputCapture.expect(containsString("Checking for changes in landscape"));
-		this.outputCapture.expect(containsString("Registering new service 'b'"));
-		this.outputCapture.expect(containsString("Registering new service instance for 'b'"));
-		this.outputCapture.expect(containsString("Checking deregistered services"));
-		this.outputCapture.expect(containsString("Deregistering service 'a'"));
-		this.outputCapture.expect(containsString("Deregistering service instance for 'a'"));
-		this.outputCapture.expect(containsString("Checking for changes in known services"));
-		this.outputCapture.expect(containsString("Registering new service instance for 'c'"));
-		this.outputCapture.expect(containsString("Deregistering service instance for 'c'"));
+		verify(this.catalogService).updateListOfInstancesForApplication(eq("a"), this.applicationInstancesArgumentCaptor.capture());
+		List<ApplicationInstance> applicationInstances = this.applicationInstancesArgumentCaptor.getValue();
+		assertThat(applicationInstances).hasSize(1);
+		assertThat(applicationInstances).extracting(ApplicationInstance::hashCode).contains(returnedApplicationInstance.hashCode());
 	}
 
 }

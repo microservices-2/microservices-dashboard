@@ -16,20 +16,22 @@
 
 package be.ordina.msdashboard.events;
 
+import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
+
 import org.springframework.boot.actuate.health.Health;
-import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.context.ApplicationEvent;
 
 /**
  * An applicationEvent which signals successful retrieval of HealthInfo.
  *
  * @author Dieter Hubau
+ * @author Tim Ysewyn
  */
 public class HealthInfoRetrieved extends ApplicationEvent {
 
 	private Health health;
 
-	public HealthInfoRetrieved(ServiceInstance instance, Health health) {
+	public HealthInfoRetrieved(ApplicationInstance instance, Health health) {
 		super(instance);
 		this.health = health;
 	}
