@@ -32,10 +32,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import reactor.core.publisher.Mono;
 
+import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceCreated;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrievalFailed;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrieved;
-import be.ordina.msdashboard.events.NewServiceInstanceDiscovered;
-import be.ordina.msdashboard.events.NewServiceInstanceDiscoveredMother;
 
 import org.springframework.boot.actuate.health.Status;
 import org.springframework.boot.test.rule.OutputCapture;
@@ -89,29 +88,27 @@ public class ApplicationInstanceHealthWatcherTests {
 	}
 
 	@Test
-	public void shouldHandleApplicationInstanceEvent() {
-		NewServiceInstanceDiscovered newServiceInstanceDiscovered =
-				NewServiceInstanceDiscoveredMother.defaultNewServiceInstanceDiscovered();
+	public void shouldRetrieveTheHealthDataAfterAnApplicationInstanceHasBeenCreated() {
+		ApplicationInstanceCreated event = ApplicationInstanceEventMother.applicationInstanceCreated("a-1");
 
 		when(this.responseSpec.bodyToMono(ApplicationInstanceHealthWatcher.HealthWrapper.class)).thenReturn(Mono
 				.just(new ApplicationInstanceHealthWatcher.HealthWrapper(Status.UP, new HashMap<>())));
 
-		this.healthWatcher.handleApplicationInstanceEvent(newServiceInstanceDiscovered);
+		this.healthWatcher.retrieveHealthData(event);
 
-		assertHealthInfoRetrievalSucceeded((ApplicationInstance) newServiceInstanceDiscovered.getSource());
+		assertHealthInfoRetrievalSucceeded((ApplicationInstance) event.getSource());
 	}
 
 	@Test
 	public void shouldHandleApplicationInstanceEventHandlesError() {
-		NewServiceInstanceDiscovered newServiceInstanceDiscovered =
-				NewServiceInstanceDiscoveredMother.defaultNewServiceInstanceDiscovered();
+		ApplicationInstanceCreated event = ApplicationInstanceEventMother.applicationInstanceCreated("a-1");
 
 		when(this.responseSpec.bodyToMono(ApplicationInstanceHealthWatcher.HealthWrapper.class))
 				.thenReturn(Mono.error(new RuntimeException("OOPSIE!")));
 
-		this.healthWatcher.handleApplicationInstanceEvent(newServiceInstanceDiscovered);
+		this.healthWatcher.retrieveHealthData(event);
 
-		assertHealthInfoRetrievalFailed((ApplicationInstance) newServiceInstanceDiscovered.getSource());
+		assertHealthInfoRetrievalFailed((ApplicationInstance) event.getSource());
 	}
 
 	private void assertHealthInfoRetrievalSucceeded(ApplicationInstance instance) {
@@ -158,10 +155,11 @@ public class ApplicationInstanceHealthWatcherTests {
 	private void assertHealthInfoRetrievalSucceeded(List<ApplicationInstance> applicationInstances) {
 		String logOutput = this.outputCapture.toString();
 		assertThat(logOutput).contains("Retrieving [HEALTH] data for all application instances");
-		applicationInstances.forEach((applicationInstance) ->
+		applicationInstances.forEach((applicationInstance) -> {
+			assertThat(logOutput).contains(String.format("Retrieving [HEALTH] data for %s", applicationInstance.getId()));
 			assertThat(logOutput).contains(String.format("Retrieved health information for application instance [%s]",
-					applicationInstance.getId()))
-		);
+					applicationInstance.getId()));
+		});
 
 		verify(this.applicationEventPublisher, times(applicationInstances.size()))
 				.publishEvent(this.applicationEventArgumentCaptor.capture());

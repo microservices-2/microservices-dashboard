@@ -25,9 +25,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceCreated;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrievalFailed;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrieved;
-import be.ordina.msdashboard.events.NewServiceInstanceDiscovered;
 
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.Status;
@@ -57,10 +57,10 @@ public class ApplicationInstanceHealthWatcher {
 		this.publisher = publisher;
 	}
 
-	@EventListener({ NewServiceInstanceDiscovered.class })
-	public void handleApplicationInstanceEvent(NewServiceInstanceDiscovered event) {
+	@EventListener({ ApplicationInstanceCreated.class })
+	public void retrieveHealthData(ApplicationInstanceCreated event) {
 		ApplicationInstance serviceInstance = (ApplicationInstance) event.getSource();
-		checkHealthInformation(serviceInstance);
+		retrieveHealthData(serviceInstance);
 	}
 
 	@Scheduled(fixedRateString = "${applicationinstance.healthwatcher.rate:10000}")
@@ -68,10 +68,11 @@ public class ApplicationInstanceHealthWatcher {
 		logger.debug("Retrieving [HEALTH] data for all application instances");
 		this.applicationInstanceService.getApplicationInstances()
 				.parallelStream()
-				.forEach(this::checkHealthInformation);
+				.forEach(this::retrieveHealthData);
 	}
 
-	private void checkHealthInformation(ApplicationInstance instance) {
+	private void retrieveHealthData(ApplicationInstance instance) {
+		logger.debug("Retrieving [HEALTH] data for {}", instance.getId());
 		URI uri = instance.getHealthEndpoint();
 		this.webClient.get().uri(uri).retrieve().bodyToMono(HealthWrapper.class)
 				.defaultIfEmpty(new HealthWrapper(Status.UNKNOWN, new HashMap<>()))
