@@ -17,8 +17,13 @@
 package be.ordina.msdashboard.applicationinstance;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
+import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceCreated;
 
 import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
@@ -27,18 +32,21 @@ import org.springframework.web.util.UriComponentsBuilder;
  * @author Tim Ysewyn
  * @author Steve De Zitter
  */
-public class ApplicationInstance {
+public final class ApplicationInstance {
+
+	private List<ApplicationEvent> changes = new ArrayList<>();
 
 	private final String id;
 	private final UriComponentsBuilder uriComponentsBuilder;
 
-	protected ApplicationInstance(String id, URI baseUrl) {
+	private ApplicationInstance(String id, URI baseUrl) {
 		this.id = id;
 		this.uriComponentsBuilder = UriComponentsBuilder.fromUri(baseUrl);
 	}
 
-	private ApplicationInstance(ServiceInstance serviceInstance) {
-		this(serviceInstance.getInstanceId(), serviceInstance.getUri());
+	private ApplicationInstance(Builder builder) {
+		this(builder.id, builder.baseUri);
+		this.changes.add(new ApplicationInstanceCreated(this));
 	}
 
 	public String getId() {
@@ -49,7 +57,45 @@ public class ApplicationInstance {
 		return this.uriComponentsBuilder.cloneBuilder().path("/actuator/health").build().toUri();
 	}
 
+	public List<ApplicationEvent> getUncommittedChanges() {
+		return this.changes;
+	}
+
+	public ApplicationInstance markChangesAsCommitted() {
+		this.changes.clear();
+		return this;
+	}
+
 	static ApplicationInstance from(ServiceInstance serviceInstance) {
-		return new ApplicationInstance(serviceInstance);
+		return Builder.withId(serviceInstance.getInstanceId()).baseUri(serviceInstance.getUri()).build();
+	}
+
+	/**
+	 * Builder to create a new {@link ApplicationInstance application instance}.
+	 *
+	 * @author Tim Ysewyn
+	 */
+	static final class Builder {
+
+		private final String id;
+		private URI baseUri;
+
+		private Builder(String id) {
+			this.id = id;
+		}
+
+		static Builder withId(String id) {
+			return new Builder(id);
+		}
+
+		Builder baseUri(URI baseUri) {
+			this.baseUri = baseUri;
+			return this;
+		}
+
+		ApplicationInstance build() {
+			return new ApplicationInstance(this);
+		}
+
 	}
 }

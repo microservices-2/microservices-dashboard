@@ -16,22 +16,28 @@
 
 package be.ordina.msdashboard.applicationinstance;
 
-import java.net.URI;
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Tim Ysewyn
  */
-public final class ApplicationInstanceMother {
+public class ApplicationInstanceTests {
 
-	private ApplicationInstanceMother() {
-		throw new RuntimeException("Not allowed");
+	@Test
+	public void newlyCreatedInstanceShouldHaveOneUncommittedChange() {
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1");
+
+		assertThat(applicationInstance.getUncommittedChanges()).hasSize(1);
 	}
 
-	public static ApplicationInstance instance() {
-		return instance("id");
+	@Test
+	public void instanceShouldHaveNoUncommittedChangesAfterBeingMarkedAsCommitted() {
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1");
+		applicationInstance.markChangesAsCommitted();
+
+		assertThat(applicationInstance.getUncommittedChanges()).isEmpty();
 	}
 
-	public static ApplicationInstance instance(String id) {
-		return ApplicationInstance.Builder.withId(id).baseUri(URI.create("http://127.0.0.1:8080")).build();
-	}
 }

@@ -16,11 +16,16 @@
 
 package be.ordina.msdashboard.eventstore;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
 import be.ordina.msdashboard.applicationinstance.ApplicationInstanceRepository;
+
+import org.springframework.context.ApplicationEventPublisher;
 
 /**
  * In-memory event sourced {@link ApplicationInstanceRepository application instance repository}.
@@ -29,18 +34,29 @@ import be.ordina.msdashboard.applicationinstance.ApplicationInstanceRepository;
  */
 class EventSourcedApplicationInstanceRepository implements ApplicationInstanceRepository {
 
+	private final ApplicationEventPublisher applicationEventPublisher;
+	private final Map<String, ApplicationInstance> applicationInstances = new HashMap<>();
+
+	EventSourcedApplicationInstanceRepository(ApplicationEventPublisher applicationEventPublisher) {
+		this.applicationEventPublisher = applicationEventPublisher;
+	}
+
 	@Override
 	public List<ApplicationInstance> getAll() {
-		return Collections.emptyList();
+		return new ArrayList<>(this.applicationInstances.values());
 	}
 
 	@Override
 	public ApplicationInstance getById(String id) {
-		return null;
+		return this.applicationInstances.get(id);
 	}
 
 	@Override
 	public ApplicationInstance save(ApplicationInstance applicationInstance) {
-		return applicationInstance;
+		applicationInstance.getUncommittedChanges()
+				.forEach(this.applicationEventPublisher::publishEvent);
+		ApplicationInstance savedApplicationInstance = applicationInstance.markChangesAsCommitted();
+		this.applicationInstances.put(savedApplicationInstance.getId(), savedApplicationInstance);
+		return savedApplicationInstance;
 	}
 }

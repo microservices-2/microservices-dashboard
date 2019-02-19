@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package be.ordina.msdashboard.applicationinstance;
+package be.ordina.msdashboard.applicationinstance.events;
 
-import java.net.URI;
+import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
+
+import org.springframework.context.ApplicationEvent;
 
 /**
+ * An {@link ApplicationEvent application event} which signals the creation of an {@link ApplicationInstance application instamce}.
+ *
  * @author Tim Ysewyn
  */
-public final class ApplicationInstanceMother {
+public class ApplicationInstanceCreated extends ApplicationEvent {
 
-	private ApplicationInstanceMother() {
-		throw new RuntimeException("Not allowed");
+	public ApplicationInstanceCreated(ApplicationInstance instance) {
+		super(instance);
 	}
 
-	public static ApplicationInstance instance() {
-		return instance("id");
-	}
-
-	public static ApplicationInstance instance(String id) {
-		return ApplicationInstance.Builder.withId(id).baseUri(URI.create("http://127.0.0.1:8080")).build();
-	}
 }
