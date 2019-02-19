@@ -16,6 +16,8 @@
 
 package be.ordina.msdashboard.catalog;
 
+import java.util.List;
+
 import be.ordina.msdashboard.applicationinstance.ApplicationInstanceService;
 
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -31,8 +33,12 @@ import org.springframework.context.annotation.Configuration;
 public class CatalogConfiguration {
 
 	@Bean
-	LandscapeWatcher landscapeWatcher(DiscoveryClient discoveryClient, CatalogService catalogService, ApplicationInstanceService applicationInstanceService) {
-		return new LandscapeWatcher(discoveryClient, catalogService, applicationInstanceService);
+	LandscapeWatcher landscapeWatcher(DiscoveryClient discoveryClient, CatalogService catalogService,
+			ApplicationInstanceService applicationInstanceService,
+			List<LandscapeWatcher.ApplicationFilter> applicationFilters,
+			List<LandscapeWatcher.ApplicationInstanceFilter> applicationInstanceFilters) {
+		return new LandscapeWatcher(discoveryClient, catalogService,
+				applicationInstanceService, applicationFilters, applicationInstanceFilters);
 	}
 
 	@Bean

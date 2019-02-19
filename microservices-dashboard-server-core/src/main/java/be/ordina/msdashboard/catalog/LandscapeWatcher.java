@@ -18,6 +18,7 @@ package be.ordina.msdashboard.catalog;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,17 +50,26 @@ public class LandscapeWatcher {
 
 	private final ApplicationInstanceService applicationInstanceService;
 
+	private final List<ApplicationFilter> applicationFilters;
+
+	private final List<ApplicationInstanceFilter> applicationInstanceFilters;
+
 	LandscapeWatcher(DiscoveryClient discoveryClient, CatalogService catalogService,
-			ApplicationInstanceService applicationInstanceService) {
+			ApplicationInstanceService applicationInstanceService,
+			List<ApplicationFilter> applicationFilters,
+			List<ApplicationInstanceFilter> applicationInstanceFilters) {
 		this.discoveryClient = discoveryClient;
 		this.catalogService = catalogService;
 		this.applicationInstanceService = applicationInstanceService;
+		this.applicationFilters = applicationFilters;
+		this.applicationInstanceFilters = applicationInstanceFilters;
 	}
 
 	@EventListener({ ApplicationStartedEvent.class, HeartbeatEvent.class })
 	public void discoverLandscape() {
 		logger.debug("Discovering landscape");
 		List<String> applications = this.discoveryClient.getServices();
+		this.applicationFilters.forEach(applications::removeIf);
 		applications = this.catalogService.updateListOfApplications(applications);
 		processApplications(applications);
 	}
@@ -68,6 +78,7 @@ public class LandscapeWatcher {
 		applications.forEach(application -> {
 			logger.debug("Discovering application instances for {}", application);
 			List<ServiceInstance> instances = this.discoveryClient.getInstances(application);
+			this.applicationInstanceFilters.forEach(instances::removeIf);
 			List<ApplicationInstance> applicationInstances = processServiceInstances(instances);
 			this.catalogService.updateListOfInstancesForApplication(application, applicationInstances);
 		});
@@ -80,6 +91,24 @@ public class LandscapeWatcher {
 						.orElseGet(() -> this.applicationInstanceService
 								.createApplicationInstanceForServiceInstance(serviceInstance)))
 				.collect(toList());
+	}
+
+	/**
+	 * Predicate to filter out discovered applications.
+	 *
+	 * @author Tim Ysewyn
+	 */
+	public interface ApplicationFilter extends Predicate<String> {
+		// Nothing to do here
+	}
+
+	/**
+	 * Predicate to filter out discovered application instances.
+	 *
+	 * @author Tim Ysewyn
+	 */
+	public interface ApplicationInstanceFilter extends Predicate<ServiceInstance> {
+		// Nothing to do here
 	}
 
 }

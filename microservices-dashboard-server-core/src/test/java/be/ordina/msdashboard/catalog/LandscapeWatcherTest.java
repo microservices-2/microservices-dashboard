@@ -16,11 +16,14 @@
 
 package be.ordina.msdashboard.catalog;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -33,8 +36,6 @@ import org.mockito.stubbing.Answer;
 import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
 import be.ordina.msdashboard.applicationinstance.ApplicationInstanceMother;
 import be.ordina.msdashboard.applicationinstance.ApplicationInstanceService;
-import be.ordina.msdashboard.catalog.CatalogService;
-import be.ordina.msdashboard.catalog.LandscapeWatcher;
 
 import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;
@@ -46,6 +47,8 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.verify;
 import static org.mockito.BDDMockito.when;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 /**
  * Landscape Watcher Test.
@@ -65,9 +68,6 @@ public class LandscapeWatcherTest {
 	@Mock
 	private ApplicationInstanceService applicationInstanceService;
 
-	@InjectMocks
-	private LandscapeWatcher landscapeWatcher;
-
 	@Captor
 	private ArgumentCaptor<List<String>> applicationsArgumentCaptor;
 
@@ -77,9 +77,25 @@ public class LandscapeWatcherTest {
 	@Captor
 	private ArgumentCaptor<List<ApplicationInstance>> applicationInstancesArgumentCaptor;
 
+	private LandscapeWatcher landscapeWatcher;
+	private List<LandscapeWatcher.ApplicationFilter> applicationFilters = new ArrayList<>();
+	private List<LandscapeWatcher.ApplicationInstanceFilter> applicationInstanceFilters = new ArrayList<>();
+
+	@Before
+	public void setupTest() {
+		this.landscapeWatcher = new LandscapeWatcher(this.discoveryClient, this.catalogService,
+				this.applicationInstanceService, this.applicationFilters, this.applicationInstanceFilters);
+	}
+
+	@After
+	public void cleanupTest() {
+		this.applicationFilters.clear();
+		this.applicationInstanceFilters.clear();
+	}
+
 	@Test
 	public void shouldAddNewApplicationInstanceToCatalogAtStartup() {
-		when(this.discoveryClient.getServices()).thenReturn(Arrays.asList("a"));
+		when(this.discoveryClient.getServices()).thenReturn(new ArrayList<>(Arrays.asList("a")));
 		when(this.catalogService.updateListOfApplications(anyList())).thenAnswer((Answer<List<String>>) invocation -> invocation.getArgument(0));
 		when(this.discoveryClient.getInstances("a")).thenReturn(Collections.singletonList(new DefaultServiceInstance("a1", "a", "host", 8080, false)));
 		when(this.applicationInstanceService.getApplicationInstanceForServiceInstance(any(ServiceInstance.class)))
@@ -107,6 +123,47 @@ public class LandscapeWatcherTest {
 		List<ApplicationInstance> applicationInstances = this.applicationInstancesArgumentCaptor.getValue();
 		assertThat(applicationInstances).hasSize(1);
 		assertThat(applicationInstances).extracting(ApplicationInstance::hashCode).contains(returnedApplicationInstance.hashCode());
+	}
+
+	@Test
+	public void shouldNotAddFilteredApplicationsToCatalog() {
+		this.applicationFilters.add("a"::equalsIgnoreCase);
+		when(this.discoveryClient.getServices()).thenReturn(new ArrayList<>(Arrays.asList("a")));
+
+		this.landscapeWatcher.discoverLandscape();
+
+		verifyZeroInteractions(this.applicationInstanceService);
+		verify(this.discoveryClient).getServices();
+		verifyNoMoreInteractions(this.discoveryClient);
+		verify(this.catalogService).updateListOfApplications(this.applicationsArgumentCaptor.capture());
+		verifyNoMoreInteractions(this.catalogService);
+		List<String> foundApplications = this.applicationsArgumentCaptor.getValue();
+		assertThat(foundApplications).isEmpty();
+	}
+
+	@Test
+	public void shouldNotAddFilteredApplicationInstancesToCatalog() {
+		this.applicationInstanceFilters.add(serviceInstance -> "a-1".equalsIgnoreCase(serviceInstance.getInstanceId()));
+		when(this.discoveryClient.getServices()).thenReturn(new ArrayList<>(Arrays.asList("a")));
+		when(this.catalogService.updateListOfApplications(anyList())).thenAnswer((Answer<List<String>>) invocation -> invocation.getArgument(0));
+		when(this.discoveryClient.getInstances("a")).thenReturn(
+				new ArrayList<>(Collections.singletonList(new DefaultServiceInstance("a-1", "a", "host", 8080, false))));
+
+		this.landscapeWatcher.discoverLandscape();
+
+		verifyZeroInteractions(this.applicationInstanceService);
+		verify(this.discoveryClient).getServices();
+		verify(this.catalogService).updateListOfApplications(this.applicationsArgumentCaptor.capture());
+		List<String> foundApplications = this.applicationsArgumentCaptor.getValue();
+		assertThat(foundApplications).containsExactly("a");
+
+		verify(this.discoveryClient).getInstances("a");
+		verify(this.discoveryClient).getServices();
+
+		verify(this.catalogService).updateListOfInstancesForApplication(eq("a"), this.applicationInstancesArgumentCaptor.capture());
+		verifyNoMoreInteractions(this.catalogService);
+		List<ApplicationInstance> applicationInstances = this.applicationInstancesArgumentCaptor.getValue();
+		assertThat(applicationInstances).isEmpty();
 	}
 
 }
