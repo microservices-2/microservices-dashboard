@@ -226,9 +226,8 @@ limitations under the License.
 								<propertyExpansion>checkstyle.import.control.file=checkstyle/import-control.xml</propertyExpansion>
 								<consoleOutput>true</consoleOutput>
 								<includeTestSourceDirectory>false</includeTestSourceDirectory>
-								<!-- TODO: Start fixing the errors -->
-								<failsOnError>false</failsOnError>
-								<failOnViolation>false</failOnViolation>
+								<failsOnError>true</failsOnError>
+								<failOnViolation>true</failOnViolation>
 							</configuration>
 							<goals>
 								<goal>check</goal>
