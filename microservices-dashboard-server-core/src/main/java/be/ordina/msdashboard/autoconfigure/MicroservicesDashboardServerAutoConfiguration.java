@@ -16,21 +16,14 @@
 
 package be.ordina.msdashboard.autoconfigure;
 
-import be.ordina.msdashboard.applicationinstance.ApplicationInstanceHealthWatcher;
-import be.ordina.msdashboard.applicationinstance.ApplicationInstanceRepository;
-import be.ordina.msdashboard.applicationinstance.ApplicationInstanceService;
-import be.ordina.msdashboard.catalog.CatalogService;
-import be.ordina.msdashboard.catalog.LandscapeWatcher;
+import be.ordina.msdashboard.applicationinstance.ApplicationInstanceConfiguration;
+import be.ordina.msdashboard.catalog.CatalogConfiguration;
 import be.ordina.msdashboard.eventstore.InMemoryEventStoreConfiguration;
 
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.composite.CompositeDiscoveryClientAutoConfiguration;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.web.reactive.function.client.WebClient;
 
 /**
  * Auto-configuration for the microservices dashboard server.
@@ -39,33 +32,7 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 @Configuration
 @AutoConfigureAfter({ CompositeDiscoveryClientAutoConfiguration.class })
-@Import({ InMemoryEventStoreConfiguration.class })
+@Import({ApplicationInstanceConfiguration.class, CatalogConfiguration.class, InMemoryEventStoreConfiguration.class })
 public class MicroservicesDashboardServerAutoConfiguration {
-
-	@Bean
-	LandscapeWatcher landscapeWatcher(DiscoveryClient discoveryClient, CatalogService catalogService, ApplicationInstanceService applicationInstanceService) {
-		return new LandscapeWatcher(discoveryClient, catalogService, applicationInstanceService);
-	}
-
-	@Bean
-	public CatalogService catalogService() {
-		return new CatalogService();
-	}
-
-	@Bean
-	public ApplicationInstanceService applicationInstanceService(ApplicationInstanceRepository repository) {
-		return new ApplicationInstanceService(repository);
-	}
-
-	@Bean
-	public ApplicationInstanceHealthWatcher applicationInstanceHealthWatcher(ApplicationInstanceService applicationInstanceService,
-			WebClient webClient, ApplicationEventPublisher publisher) {
-		return new ApplicationInstanceHealthWatcher(applicationInstanceService, webClient, publisher);
-	}
-
-	@Bean
-	public WebClient webClient() {
-		return WebClient.create();
-	}
 
 }

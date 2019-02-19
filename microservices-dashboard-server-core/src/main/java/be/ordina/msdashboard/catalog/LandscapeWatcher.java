@@ -49,7 +49,7 @@ public class LandscapeWatcher {
 
 	private final ApplicationInstanceService applicationInstanceService;
 
-	public LandscapeWatcher(DiscoveryClient discoveryClient, CatalogService catalogService,
+	LandscapeWatcher(DiscoveryClient discoveryClient, CatalogService catalogService,
 			ApplicationInstanceService applicationInstanceService) {
 		this.discoveryClient = discoveryClient;
 		this.catalogService = catalogService;

@@ -50,7 +50,7 @@ public class ApplicationInstanceHealthWatcher {
 	private final ApplicationInstanceService applicationInstanceService;
 	private final ApplicationEventPublisher publisher;
 
-	public ApplicationInstanceHealthWatcher(ApplicationInstanceService applicationInstanceService,
+	ApplicationInstanceHealthWatcher(ApplicationInstanceService applicationInstanceService,
 			WebClient webClient, ApplicationEventPublisher publisher) {
 		this.applicationInstanceService = applicationInstanceService;
 		this.webClient = webClient;
