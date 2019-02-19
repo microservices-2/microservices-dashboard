@@ -16,30 +16,35 @@
 
 package be.ordina.msdashboard.applicationinstance;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.cloud.client.ServiceInstance;
 
 /**
- * Application service to interact with {@link ApplicationInstance}ApplicationInstance.
+ * Application service to interact with an {@link ApplicationInstance application instance}.
  *
  * @author Tim Ysewyn
  * @author Steve De Zitter
  */
 public class ApplicationInstanceService {
 
+	private final ApplicationInstanceRepository repository;
+
+	public ApplicationInstanceService(ApplicationInstanceRepository repository) {
+		this.repository = repository;
+	}
+
 	public Optional<ApplicationInstance> getApplicationInstanceForServiceInstance(ServiceInstance serviceInstance) {
-		return Optional.empty();
+		return Optional.ofNullable(this.repository.getById(serviceInstance.getInstanceId()));
 	}
 
 	public ApplicationInstance createApplicationInstanceForServiceInstance(ServiceInstance serviceInstance) {
-		return ApplicationInstance.from(serviceInstance);
+		return this.repository.save(ApplicationInstance.from(serviceInstance));
 	}
 
 	public List<ApplicationInstance> getApplicationInstances() {
-		return Collections.emptyList();
+		return this.repository.getAll();
 	}
 
 }

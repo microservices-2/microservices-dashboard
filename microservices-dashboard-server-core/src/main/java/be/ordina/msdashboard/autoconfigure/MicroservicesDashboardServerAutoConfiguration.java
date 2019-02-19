@@ -16,10 +16,12 @@
 
 package be.ordina.msdashboard.autoconfigure;
 
-import be.ordina.msdashboard.catalog.LandscapeWatcher;
 import be.ordina.msdashboard.applicationinstance.ApplicationInstanceHealthWatcher;
+import be.ordina.msdashboard.applicationinstance.ApplicationInstanceRepository;
 import be.ordina.msdashboard.applicationinstance.ApplicationInstanceService;
 import be.ordina.msdashboard.catalog.CatalogService;
+import be.ordina.msdashboard.catalog.LandscapeWatcher;
+import be.ordina.msdashboard.eventstore.InMemoryEventStoreConfiguration;
 
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -27,6 +29,7 @@ import org.springframework.cloud.client.discovery.composite.CompositeDiscoveryCl
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
@@ -36,6 +39,7 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 @Configuration
 @AutoConfigureAfter({ CompositeDiscoveryClientAutoConfiguration.class })
+@Import({ InMemoryEventStoreConfiguration.class })
 public class MicroservicesDashboardServerAutoConfiguration {
 
 	@Bean
@@ -49,8 +53,8 @@ public class MicroservicesDashboardServerAutoConfiguration {
 	}
 
 	@Bean
-	public ApplicationInstanceService applicationInstanceService() {
-		return new ApplicationInstanceService();
+	public ApplicationInstanceService applicationInstanceService(ApplicationInstanceRepository repository) {
+		return new ApplicationInstanceService(repository);
 	}
 
 	@Bean
