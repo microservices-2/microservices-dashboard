@@ -2,7 +2,7 @@ package be.ordina.msdashboard.autoconfigure;
 
 import org.junit.Test;
 
-import be.ordina.msdashboard.LandscapeWatcher;
+import be.ordina.msdashboard.catalog.LandscapeWatcher;
 import be.ordina.msdashboard.applicationinstance.ApplicationInstanceHealthWatcher;
 
 import org.springframework.boot.autoconfigure.AutoConfigurations;

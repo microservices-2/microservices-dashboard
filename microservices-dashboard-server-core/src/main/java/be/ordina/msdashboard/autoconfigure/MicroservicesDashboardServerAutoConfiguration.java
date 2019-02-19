@@ -16,7 +16,7 @@
 
 package be.ordina.msdashboard.autoconfigure;
 
-import be.ordina.msdashboard.LandscapeWatcher;
+import be.ordina.msdashboard.catalog.LandscapeWatcher;
 import be.ordina.msdashboard.applicationinstance.ApplicationInstanceHealthWatcher;
 import be.ordina.msdashboard.applicationinstance.ApplicationInstanceService;
 import be.ordina.msdashboard.catalog.CatalogService;

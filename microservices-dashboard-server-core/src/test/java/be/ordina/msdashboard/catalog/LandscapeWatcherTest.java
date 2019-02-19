@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package be.ordina.msdashboard;
+package be.ordina.msdashboard.catalog;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,6 +34,7 @@ import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
 import be.ordina.msdashboard.applicationinstance.ApplicationInstanceMother;
 import be.ordina.msdashboard.applicationinstance.ApplicationInstanceService;
 import be.ordina.msdashboard.catalog.CatalogService;
+import be.ordina.msdashboard.catalog.LandscapeWatcher;
 
 import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;

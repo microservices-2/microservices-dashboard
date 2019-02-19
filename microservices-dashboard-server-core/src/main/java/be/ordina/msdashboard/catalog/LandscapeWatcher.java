@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package be.ordina.msdashboard;
+package be.ordina.msdashboard.catalog;
 
 import java.util.Collection;
 import java.util.List;
@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
 import be.ordina.msdashboard.applicationinstance.ApplicationInstanceService;
-import be.ordina.msdashboard.catalog.CatalogService;
 
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.cloud.client.ServiceInstance;
