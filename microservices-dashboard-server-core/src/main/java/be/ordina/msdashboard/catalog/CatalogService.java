@@ -34,8 +34,16 @@ public class CatalogService {
 		this.catalog = new Catalog();
 	}
 
+	public List<String> getApplications() {
+		return this.catalog.getApplications();
+	}
+
 	public List<String> updateListOfApplications(List<String> applications) {
 		return this.catalog.updateListOfApplications(applications);
+	}
+
+	public List<String> getApplicationInstances() {
+		return this.catalog.getApplicationInstances();
 	}
 
 	public void updateListOfInstancesForApplication(String application, List<ApplicationInstance> applicationInstances) {
