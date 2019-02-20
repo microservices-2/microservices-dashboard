@@ -18,6 +18,9 @@ package be.ordina.msdashboard.applicationinstance;
 
 import org.junit.Test;
 
+import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrieved;
+import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthUpdated;
+
 import org.springframework.boot.actuate.health.Status;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,10 +61,14 @@ public class ApplicationInstanceTests {
 		applicationInstance.updateHealthStatus(Status.UP);
 		assertThat(applicationInstance.getHealthStatus()).isEqualTo(Status.UP);
 		assertThat(applicationInstance.getUncommittedChanges()).hasSize(1);
+		assertThat(applicationInstance.getUncommittedChanges().get(0))
+				.isInstanceOf(ApplicationInstanceHealthUpdated.class);
+
+		applicationInstance.markChangesAsCommitted();
 
 		applicationInstance.updateHealthStatus(Status.UP);
 		assertThat(applicationInstance.getHealthStatus()).isEqualTo(Status.UP);
-		assertThat(applicationInstance.getUncommittedChanges()).hasSize(1);
+		assertThat(applicationInstance.getUncommittedChanges()).isEmpty();
 	}
 
 }

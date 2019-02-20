@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceCreated;
+import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthUpdated;
 
 import org.springframework.boot.actuate.health.Status;
 import org.springframework.cloud.client.ServiceInstance;
@@ -39,12 +40,12 @@ public final class ApplicationInstance {
 
 	private final String id;
 	private final UriComponentsBuilder uriComponentsBuilder;
-	private Status healthstatus;
+	private Status healthStatus;
 
 	private ApplicationInstance(Builder builder) {
 		this.id = builder.id;
 		this.uriComponentsBuilder = UriComponentsBuilder.fromUri(builder.baseUri);
-		this.healthstatus = builder.healthstatus;
+		this.healthStatus = builder.healthStatus;
 		this.changes.add(new ApplicationInstanceCreated(this));
 	}
 
@@ -53,13 +54,13 @@ public final class ApplicationInstance {
 	}
 
 	public Status getHealthStatus() {
-		return this.healthstatus;
+		return this.healthStatus;
 	}
 
-	public void updateHealthStatus(Status healthstatus) {
-		if (this.healthstatus != healthstatus) {
-			this.healthstatus = healthstatus;
-			this.changes.add(new ApplicationInstanceCreated(this));
+	public void updateHealthStatus(Status healthStatus) {
+		if (this.healthStatus != healthStatus) {
+			this.healthStatus = healthStatus;
+			this.changes.add(new ApplicationInstanceHealthUpdated(this));
 		}
 	}
 
@@ -89,7 +90,7 @@ public final class ApplicationInstance {
 
 		private final String id;
 		private URI baseUri;
-		private Status healthstatus = Status.UNKNOWN;
+		private Status healthStatus = Status.UNKNOWN;
 
 		private Builder(String id) {
 			this.id = id;
@@ -104,8 +105,8 @@ public final class ApplicationInstance {
 			return this;
 		}
 
-		Builder healthStatus(Status healthstatus) {
-			this.healthstatus = healthstatus;
+		Builder healthStatus(Status healthStatus) {
+			this.healthStatus = healthStatus;
 			return this;
 		}
 
