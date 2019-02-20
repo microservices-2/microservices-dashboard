@@ -16,7 +16,6 @@
 
 package be.ordina.msdashboard.applicationinstance;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,23 +67,25 @@ public class ApplicationInstanceHealthWatcher {
 		logger.debug("Retrieving [HEALTH] data for all application instances");
 		this.applicationInstanceService.getApplicationInstances()
 				.parallelStream()
+				.filter(instance -> instance.hasActuatorEndpointFor("health"))
 				.forEach(this::retrieveHealthData);
 	}
 
 	private void retrieveHealthData(ApplicationInstance instance) {
-		logger.debug("Retrieving [HEALTH] data for {}", instance.getId());
-		URI uri = instance.getHealthEndpoint();
-		this.webClient.get().uri(uri).retrieve().bodyToMono(HealthWrapper.class)
-				.defaultIfEmpty(new HealthWrapper(Status.UNKNOWN, new HashMap<>()))
-				.map(HealthWrapper::getHealth)
-				.doOnError(exception -> {
-					logger.debug("Could not retrieve health information for [" + uri + "]", exception);
-					this.publisher.publishEvent(new ApplicationInstanceHealthDataRetrievalFailed(instance));
-				})
-				.subscribe(healthInfo -> {
-					logger.debug("Retrieved health information for application instance [{}]", instance.getId());
-					this.publisher.publishEvent(new ApplicationInstanceHealthDataRetrieved(instance, healthInfo));
-				});
+		instance.getActuatorEndpoint("health").ifPresent(uri -> {
+			logger.debug("Retrieving [HEALTH] data for {}", instance.getId());
+			this.webClient.get().uri(uri).retrieve().bodyToMono(HealthWrapper.class)
+					.defaultIfEmpty(new HealthWrapper(Status.UNKNOWN, new HashMap<>()))
+					.map(HealthWrapper::getHealth)
+					.doOnError(exception -> {
+						logger.debug("Could not retrieve health information for [" + uri + "]", exception);
+						this.publisher.publishEvent(new ApplicationInstanceHealthDataRetrievalFailed(instance));
+					})
+					.subscribe(healthInfo -> {
+						logger.debug("Retrieved health information for application instance [{}]", instance.getId());
+						this.publisher.publishEvent(new ApplicationInstanceHealthDataRetrieved(instance, healthInfo));
+					});
+		});
 	}
 
 	@EventListener({ ApplicationInstanceHealthDataRetrieved.class })

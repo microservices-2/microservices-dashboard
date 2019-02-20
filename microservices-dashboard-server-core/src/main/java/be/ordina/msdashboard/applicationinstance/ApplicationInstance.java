@@ -74,12 +74,12 @@ public final class ApplicationInstance {
 		return this.actuatorEndpoints;
 	}
 
-	public Optional<URI> getActuatorEndpoint(String endpoint) {
-		return Optional.ofNullable(this.actuatorEndpoints.get(endpoint));
+	public boolean hasActuatorEndpointFor(String endpoint) {
+		return this.actuatorEndpoints.containsKey(endpoint);
 	}
 
-	public URI getHealthEndpoint() {
-		return this.uriComponentsBuilder.cloneBuilder().path("/actuator/health").build().toUri();
+	public Optional<URI> getActuatorEndpoint(String endpoint) {
+		return Optional.ofNullable(this.actuatorEndpoints.get(endpoint));
 	}
 
 	public List<ApplicationEvent> getUncommittedChanges() {

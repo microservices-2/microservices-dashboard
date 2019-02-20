@@ -1,6 +1,7 @@
 package be.ordina.msdashboard.applicationinstance;
 
 import java.net.URI;
+import java.util.Map;
 
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceCreated;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrieved;
@@ -19,6 +20,15 @@ public final class ApplicationInstanceEventMother {
 		return (ApplicationInstanceCreated) ApplicationInstance.Builder
 				.withId(id)
 				.baseUri(URI.create("http://localhost:8080"))
+				.build()
+				.getUncommittedChanges().get(0);
+	}
+
+	public static ApplicationInstanceCreated applicationInstanceCreatedWithActuatorEndpoints(String id, Map<String, URI> actuatorEndpoints) {
+		return (ApplicationInstanceCreated) ApplicationInstance.Builder
+				.withId(id)
+				.baseUri(URI.create("http://localhost:8080"))
+				.actuatorEndpoints(actuatorEndpoints)
 				.build()
 				.getUncommittedChanges().get(0);
 	}

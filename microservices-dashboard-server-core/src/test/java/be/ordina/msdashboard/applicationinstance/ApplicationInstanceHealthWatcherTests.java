@@ -18,6 +18,7 @@ package be.ordina.msdashboard.applicationinstance;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -92,7 +93,9 @@ public class ApplicationInstanceHealthWatcherTests {
 
 	@Test
 	public void shouldRetrieveTheHealthDataAfterAnApplicationInstanceHasBeenCreated() {
-		ApplicationInstanceCreated event = ApplicationInstanceEventMother.applicationInstanceCreated("a-1");
+		ApplicationInstanceCreated event =
+				ApplicationInstanceEventMother.applicationInstanceCreatedWithActuatorEndpoints("a-1",
+				Collections.singletonMap("health", URI.create("http://localhost:8080/actuator/health")));
 
 		when(this.responseSpec.bodyToMono(ApplicationInstanceHealthWatcher.HealthWrapper.class)).thenReturn(Mono
 				.just(new ApplicationInstanceHealthWatcher.HealthWrapper(Status.UP, null)));
@@ -104,18 +107,51 @@ public class ApplicationInstanceHealthWatcherTests {
 
 	@Test
 	public void shouldHandleApplicationInstanceEventHandlesError() {
-		ApplicationInstanceCreated event = ApplicationInstanceEventMother.applicationInstanceCreated("a-1");
+		URI healthActuatorEndpoint = URI.create("http://localhost:8080/actuator/health");
+		ApplicationInstanceCreated event =
+				ApplicationInstanceEventMother.applicationInstanceCreatedWithActuatorEndpoints("a-1",
+				Collections.singletonMap("health", healthActuatorEndpoint));
 
 		when(this.responseSpec.bodyToMono(ApplicationInstanceHealthWatcher.HealthWrapper.class))
 				.thenReturn(Mono.error(new RuntimeException("OOPSIE!")));
 
 		this.healthWatcher.retrieveHealthData(event);
 
-		assertHealthInfoRetrievalFailed((ApplicationInstance) event.getSource());
+		assertHealthInfoRetrievalFailed((ApplicationInstance) event.getSource(), healthActuatorEndpoint);
+	}
+
+	@Test
+	public void shouldOnlyRetrieveHealthDataForInstancesWithAnHealthActuatorEndpoint() {
+		ApplicationInstance firstInstance = ApplicationInstanceMother.instance("a-1");
+		ApplicationInstance secondInstance = ApplicationInstanceMother.instance("a-2",
+				URI.create("http://localhost:8080"),
+				Collections.singletonMap("health", URI.create("http://localhost:8080/actuator/health")));
+		List<ApplicationInstance> applicationInstances = Arrays.asList(firstInstance, secondInstance);
+
+		when(this.applicationInstanceService.getApplicationInstances()).thenReturn(applicationInstances);
+		when(this.responseSpec.bodyToMono(ApplicationInstanceHealthWatcher.HealthWrapper.class))
+				.thenReturn(Mono.just(new ApplicationInstanceHealthWatcher.HealthWrapper(Status.UP, new HashMap<>())));
+
+		this.healthWatcher.retrieveHealthDataForAllApplicationInstances();
+
+		assertHealthInfoRetrievalSucceeded(Collections.singletonList(secondInstance));
+	}
+
+	@Test
+	public void shouldUpdateTheHealthOfAnApplicationInstanceWhenHealthDataRetrieved() {
+		ApplicationInstanceHealthDataRetrieved event = ApplicationInstanceEventMother
+				.applicationInstanceHealthDataRetrieved("a-1", Health.up().build());
+
+		this.healthWatcher.updateHealthForApplicationInstance(event);
+
+		verify(this.applicationInstanceService).updateHealthStatusForApplicationInstance("a-1", Status.UP);
+		verifyNoMoreInteractions(this.applicationInstanceService);
+		verifyZeroInteractions(this.applicationEventPublisher);
 	}
 
 	private void assertHealthInfoRetrievalSucceeded(ApplicationInstance instance) {
 		verify(this.applicationEventPublisher).publishEvent(this.applicationEventArgumentCaptor.capture());
+		verifyNoMoreInteractions(this.applicationEventPublisher);
 
 		assertThat(this.outputCapture.toString())
 				.contains(String.format("Retrieved health information for application instance [%s]", instance.getId()));
@@ -129,31 +165,17 @@ public class ApplicationInstanceHealthWatcherTests {
 		assertThat(healthInfoRetrieved.getSource()).isEqualTo(instance);
 	}
 
-	private void assertHealthInfoRetrievalFailed(ApplicationInstance instance) {
+	private void assertHealthInfoRetrievalFailed(ApplicationInstance instance, URI actuatorEndpoint) {
 		verify(this.applicationEventPublisher).publishEvent(this.applicationEventArgumentCaptor.capture());
+		verifyNoMoreInteractions(this.applicationEventPublisher);
 
 		assertThat(this.outputCapture.toString()).contains(
-				String.format("Could not retrieve health information for [%s]", instance.getHealthEndpoint()));
+				String.format("Could not retrieve health information for [%s]", actuatorEndpoint));
 
 		ApplicationInstanceHealthDataRetrievalFailed healthInfoRetrievalFailed =
 				(ApplicationInstanceHealthDataRetrievalFailed) this.applicationEventArgumentCaptor.getValue();
 		assertThat(healthInfoRetrievalFailed).isNotNull();
 		assertThat(healthInfoRetrievalFailed.getSource()).isEqualTo(instance);
-	}
-
-	@Test
-	public void shouldAggregateHealthInformation() {
-		List<ApplicationInstance> applicationInstances = Arrays.asList(
-				ApplicationInstanceMother.instance("a-1"),
-				ApplicationInstanceMother.instance("a-2"));
-
-		when(this.applicationInstanceService.getApplicationInstances()).thenReturn(applicationInstances);
-		when(this.responseSpec.bodyToMono(ApplicationInstanceHealthWatcher.HealthWrapper.class))
-				.thenReturn(Mono.just(new ApplicationInstanceHealthWatcher.HealthWrapper(Status.UP, new HashMap<>())));
-
-		this.healthWatcher.retrieveHealthDataForAllApplicationInstances();
-
-		assertHealthInfoRetrievalSucceeded(applicationInstances);
 	}
 
 	private void assertHealthInfoRetrievalSucceeded(List<ApplicationInstance> applicationInstances) {
@@ -167,6 +189,7 @@ public class ApplicationInstanceHealthWatcherTests {
 
 		verify(this.applicationEventPublisher, times(applicationInstances.size()))
 				.publishEvent(this.applicationEventArgumentCaptor.capture());
+		verifyNoMoreInteractions(this.applicationEventPublisher);
 
 		List<ApplicationInstanceHealthDataRetrieved> healthInfoRetrievals =
 				(List) this.applicationEventArgumentCaptor.getAllValues();
@@ -179,18 +202,6 @@ public class ApplicationInstanceHealthWatcherTests {
 			assertThat(healthInfoRetrieved.getHealth().getStatus()).isEqualTo(Status.UP);
 			assertThat(applicationInstances).contains(instance);
 		});
-	}
-
-	@Test
-	public void shouldUpdateTheHealthOfAnApplicationInstanceWhenHealthDataRetrieved() {
-		ApplicationInstanceHealthDataRetrieved event = ApplicationInstanceEventMother
-				.applicationInstanceHealthDataRetrieved("a-1", Health.up().build());
-
-		this.healthWatcher.updateHealthForApplicationInstance(event);
-
-		verify(this.applicationInstanceService).updateHealthStatusForApplicationInstance("a-1", Status.UP);
-		verifyNoMoreInteractions(this.applicationInstanceService);
-		verifyZeroInteractions(this.applicationEventPublisher);
 	}
 
 }

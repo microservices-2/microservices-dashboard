@@ -95,6 +95,7 @@ public class ApplicationInstanceTests {
 				URI.create("http://localhost:8080"),
 				Collections.singletonMap("health", URI.create("http://localhost:8080/actuator/health")));
 
+		assertThat(applicationInstance.hasActuatorEndpointFor("not-defined-endpoint")).isFalse();
 		assertThat(applicationInstance.getActuatorEndpoint("not-defined-endpoint")).isEmpty();
 	}
 
@@ -104,6 +105,7 @@ public class ApplicationInstanceTests {
 				URI.create("http://localhost:8080"),
 				Collections.singletonMap("health", URI.create("http://localhost:8080/actuator/health")));
 
+		assertThat(applicationInstance.hasActuatorEndpointFor("health")).isTrue();
 		assertThat(applicationInstance.getActuatorEndpoint("health")).isNotEmpty();
 		assertThat(applicationInstance.getActuatorEndpoint("health"))
 				.get().isEqualTo(URI.create("http://localhost:8080/actuator/health"));
