@@ -64,7 +64,7 @@ public final class ApplicationInstance {
 	}
 
 	public void updateHealthStatus(Status healthStatus) {
-		if (this.healthStatus != healthStatus) {
+		if (!this.healthStatus.equals(healthStatus)) {
 			this.healthStatus = healthStatus;
 			this.changes.add(new ApplicationInstanceHealthUpdated(this));
 		}
