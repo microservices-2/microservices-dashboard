@@ -16,9 +16,16 @@
 
 package be.ordina.msdashboard.catalog;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Catalog that keeps track of all known applications and their instances in the environment.
@@ -28,11 +35,31 @@ import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
  */
 class Catalog {
 
-	public List<String> updateListOfApplications(List<String> applications) {
-		return applications;
+	private Set<String> applications = new HashSet<>();
+	private Map<String, List<String>> applicationInstances = new HashMap<>();
+
+	List<String> getApplications() {
+		return new ArrayList<>(this.applications);
 	}
 
-	public void updateListOfInstancesForApplication(String application, List<ApplicationInstance> applicationInstances) {
+	List<String> updateListOfApplications(List<String> applications) {
+		this.applications = new HashSet<>(applications);
+		return this.getApplications();
+	}
 
+	List<String> getApplicationInstances() {
+		return this.applicationInstances.values().stream()
+				.flatMap(List::stream)
+				.collect(toList());
+	}
+
+	List<String> getApplicationInstancesForApplication(String application) {
+		return this.applicationInstances.getOrDefault(application, new ArrayList<>());
+	}
+
+	void updateListOfInstancesForApplication(String application, List<ApplicationInstance> applicationInstances) {
+		this.applications.add(application);
+		this.applicationInstances.put(application,
+				applicationInstances.stream().map(ApplicationInstance::getId).collect(toList()));
 	}
 }
