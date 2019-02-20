@@ -92,7 +92,7 @@ public class ApplicationInstanceHealthWatcherTests {
 		ApplicationInstanceCreated event = ApplicationInstanceEventMother.applicationInstanceCreated("a-1");
 
 		when(this.responseSpec.bodyToMono(ApplicationInstanceHealthWatcher.HealthWrapper.class)).thenReturn(Mono
-				.just(new ApplicationInstanceHealthWatcher.HealthWrapper(Status.UP, new HashMap<>())));
+				.just(new ApplicationInstanceHealthWatcher.HealthWrapper(Status.UP, null)));
 
 		this.healthWatcher.retrieveHealthData(event);
 
@@ -122,6 +122,7 @@ public class ApplicationInstanceHealthWatcherTests {
 		assertThat(healthInfoRetrieved).isNotNull();
 		assertThat(healthInfoRetrieved.getHealth()).isNotNull();
 		assertThat(healthInfoRetrieved.getHealth().getStatus()).isEqualTo(Status.UP);
+		assertThat(healthInfoRetrieved.getHealth().getDetails()).isNotNull();
 		assertThat(healthInfoRetrieved.getSource()).isEqualTo(instance);
 	}
 
