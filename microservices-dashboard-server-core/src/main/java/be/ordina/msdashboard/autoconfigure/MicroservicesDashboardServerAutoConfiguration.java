@@ -24,6 +24,8 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.cloud.client.discovery.composite.CompositeDiscoveryClientAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Auto-configuration for the microservices dashboard server.
@@ -32,7 +34,10 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @AutoConfigureAfter({ CompositeDiscoveryClientAutoConfiguration.class })
-@Import({ApplicationInstanceConfiguration.class, CatalogConfiguration.class, InMemoryEventStoreConfiguration.class })
+@EnableAsync
+@EnableScheduling
+@Import({ApplicationInstanceConfiguration.class, CatalogConfiguration.class,
+		InMemoryEventStoreConfiguration.class })
 public class MicroservicesDashboardServerAutoConfiguration {
 
 }
