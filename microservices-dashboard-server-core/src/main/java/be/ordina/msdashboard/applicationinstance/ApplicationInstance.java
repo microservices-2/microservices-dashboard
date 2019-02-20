@@ -18,7 +18,10 @@ package be.ordina.msdashboard.applicationinstance;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceCreated;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthUpdated;
@@ -39,12 +42,16 @@ public final class ApplicationInstance {
 	private List<ApplicationEvent> changes = new ArrayList<>();
 
 	private final String id;
+	private final URI baseUri;
 	private final UriComponentsBuilder uriComponentsBuilder;
 	private Status healthStatus = Status.UNKNOWN;
+	private Map<String, URI> actuatorEndpoints;
 
 	private ApplicationInstance(Builder builder) {
 		this.id = builder.id;
+		this.baseUri = builder.baseUri;
 		this.uriComponentsBuilder = UriComponentsBuilder.fromUri(builder.baseUri);
+		this.actuatorEndpoints = builder.actuatorEndpoints;
 		this.changes.add(new ApplicationInstanceCreated(this));
 	}
 
@@ -61,6 +68,14 @@ public final class ApplicationInstance {
 			this.healthStatus = healthStatus;
 			this.changes.add(new ApplicationInstanceHealthUpdated(this));
 		}
+	}
+
+	public Map<String, URI> getActuatorEndpoints() {
+		return this.actuatorEndpoints;
+	}
+
+	public Optional<URI> getActuatorEndpoint(String endpoint) {
+		return Optional.ofNullable(this.actuatorEndpoints.get(endpoint));
 	}
 
 	public URI getHealthEndpoint() {
@@ -89,6 +104,7 @@ public final class ApplicationInstance {
 
 		private final String id;
 		private URI baseUri;
+		private Map<String, URI> actuatorEndpoints = new HashMap<>();
 
 		private Builder(String id) {
 			this.id = id;
@@ -100,6 +116,12 @@ public final class ApplicationInstance {
 
 		Builder baseUri(URI baseUri) {
 			this.baseUri = baseUri;
+			return this;
+		}
+
+
+		Builder actuatorEndpoints(Map<String, URI> actuatorEndpoints) {
+			this.actuatorEndpoints = actuatorEndpoints;
 			return this;
 		}
 

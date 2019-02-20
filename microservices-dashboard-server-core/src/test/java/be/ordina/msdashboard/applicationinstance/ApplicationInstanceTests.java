@@ -16,9 +16,11 @@
 
 package be.ordina.msdashboard.applicationinstance;
 
+import java.net.URI;
+import java.util.Collections;
+
 import org.junit.Test;
 
-import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrieved;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthUpdated;
 
 import org.springframework.boot.actuate.health.Status;
@@ -69,6 +71,42 @@ public class ApplicationInstanceTests {
 		applicationInstance.updateHealthStatus(Status.UP);
 		assertThat(applicationInstance.getHealthStatus()).isEqualTo(Status.UP);
 		assertThat(applicationInstance.getUncommittedChanges()).isEmpty();
+	}
+
+	@Test
+	public void newlyCreatedInstanceWithoutActuatorEndpointsShouldReturnEmptyList() {
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1");
+
+		assertThat(applicationInstance.getActuatorEndpoints()).isEmpty();
+	}
+
+	@Test
+	public void newlyCreatedInstanceWithActuatorEndpointsShouldReturnListWithEndpoints() {
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1",
+				URI.create("http://localhost:8080"),
+				Collections.singletonMap("health", URI.create("http://localhost:8080/actuator/health")));
+
+		assertThat(applicationInstance.getActuatorEndpoints()).hasSize(1);
+	}
+
+	@Test
+	public void undefinedActuatorEndpointWillReturnEmptyOptional() {
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1",
+				URI.create("http://localhost:8080"),
+				Collections.singletonMap("health", URI.create("http://localhost:8080/actuator/health")));
+
+		assertThat(applicationInstance.getActuatorEndpoint("not-defined-endpoint")).isEmpty();
+	}
+
+	@Test
+	public void definedActuatorEndpointWillReturnURI() {
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1",
+				URI.create("http://localhost:8080"),
+				Collections.singletonMap("health", URI.create("http://localhost:8080/actuator/health")));
+
+		assertThat(applicationInstance.getActuatorEndpoint("health")).isNotEmpty();
+		assertThat(applicationInstance.getActuatorEndpoint("health"))
+				.get().isEqualTo(URI.create("http://localhost:8080/actuator/health"));
 	}
 
 }

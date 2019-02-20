@@ -17,6 +17,7 @@
 package be.ordina.msdashboard.applicationinstance;
 
 import java.net.URI;
+import java.util.Map;
 
 /**
  * @author Tim Ysewyn
@@ -32,6 +33,14 @@ public final class ApplicationInstanceMother {
 	}
 
 	public static ApplicationInstance instance(String id) {
-		return ApplicationInstance.Builder.withId(id).baseUri(URI.create("http://127.0.0.1:8080")).build();
+		return instance(id, URI.create("http://loclahost:8080"));
+	}
+
+	public static ApplicationInstance instance(String id, URI baseUri) {
+		return ApplicationInstance.Builder.withId(id).baseUri(baseUri).build();
+	}
+
+	public static ApplicationInstance instance(String id, URI baseUri, Map<String, URI> actuatorEndpoints) {
+		return ApplicationInstance.Builder.withId(id).baseUri(baseUri).actuatorEndpoints(actuatorEndpoints).build();
 	}
 }
