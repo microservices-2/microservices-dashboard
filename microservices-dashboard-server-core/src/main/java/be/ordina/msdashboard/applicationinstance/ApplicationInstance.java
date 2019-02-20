@@ -40,12 +40,11 @@ public final class ApplicationInstance {
 
 	private final String id;
 	private final UriComponentsBuilder uriComponentsBuilder;
-	private Status healthStatus;
+	private Status healthStatus = Status.UNKNOWN;
 
 	private ApplicationInstance(Builder builder) {
 		this.id = builder.id;
 		this.uriComponentsBuilder = UriComponentsBuilder.fromUri(builder.baseUri);
-		this.healthStatus = builder.healthStatus;
 		this.changes.add(new ApplicationInstanceCreated(this));
 	}
 
@@ -90,7 +89,6 @@ public final class ApplicationInstance {
 
 		private final String id;
 		private URI baseUri;
-		private Status healthStatus = Status.UNKNOWN;
 
 		private Builder(String id) {
 			this.id = id;
@@ -102,11 +100,6 @@ public final class ApplicationInstance {
 
 		Builder baseUri(URI baseUri) {
 			this.baseUri = baseUri;
-			return this;
-		}
-
-		Builder healthStatus(Status healthStatus) {
-			this.healthStatus = healthStatus;
 			return this;
 		}
 
