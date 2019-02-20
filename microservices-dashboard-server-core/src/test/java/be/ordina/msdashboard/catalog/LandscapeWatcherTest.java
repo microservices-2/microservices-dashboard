@@ -28,7 +28,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
@@ -94,7 +93,7 @@ public class LandscapeWatcherTest {
 	}
 
 	@Test
-	public void shouldAddNewApplicationInstanceToCatalogAtStartup() {
+	public void shouldAddNewApplicationInstanceToCatalogOnFirstHeartbeatEvent() {
 		when(this.discoveryClient.getServices()).thenReturn(new ArrayList<>(Arrays.asList("a")));
 		when(this.catalogService.updateListOfApplications(anyList())).thenAnswer((Answer<List<String>>) invocation -> invocation.getArgument(0));
 		when(this.discoveryClient.getInstances("a")).thenReturn(Collections.singletonList(new DefaultServiceInstance("a1", "a", "host", 8080, false)));

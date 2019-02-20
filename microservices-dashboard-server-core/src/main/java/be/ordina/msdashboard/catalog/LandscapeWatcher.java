@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
 import be.ordina.msdashboard.applicationinstance.ApplicationInstanceService;
 
-import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.event.HeartbeatEvent;
@@ -65,7 +64,7 @@ public class LandscapeWatcher {
 		this.applicationInstanceFilters = applicationInstanceFilters;
 	}
 
-	@EventListener({ ApplicationStartedEvent.class, HeartbeatEvent.class })
+	@EventListener({ HeartbeatEvent.class })
 	public void discoverLandscape() {
 		logger.debug("Discovering landscape");
 		List<String> applications = this.discoveryClient.getServices();
