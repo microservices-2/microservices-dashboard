@@ -22,6 +22,7 @@ import java.util.List;
 
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceCreated;
 
+import org.springframework.boot.actuate.health.Status;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -38,19 +39,28 @@ public final class ApplicationInstance {
 
 	private final String id;
 	private final UriComponentsBuilder uriComponentsBuilder;
-
-	private ApplicationInstance(String id, URI baseUrl) {
-		this.id = id;
-		this.uriComponentsBuilder = UriComponentsBuilder.fromUri(baseUrl);
-	}
+	private Status healthstatus;
 
 	private ApplicationInstance(Builder builder) {
-		this(builder.id, builder.baseUri);
+		this.id = builder.id;
+		this.uriComponentsBuilder = UriComponentsBuilder.fromUri(builder.baseUri);
+		this.healthstatus = builder.healthstatus;
 		this.changes.add(new ApplicationInstanceCreated(this));
 	}
 
 	public String getId() {
 		return this.id;
+	}
+
+	public Status getHealthStatus() {
+		return this.healthstatus;
+	}
+
+	public void updateHealthStatus(Status healthstatus) {
+		if (this.healthstatus != healthstatus) {
+			this.healthstatus = healthstatus;
+			this.changes.add(new ApplicationInstanceCreated(this));
+		}
 	}
 
 	public URI getHealthEndpoint() {
@@ -79,6 +89,7 @@ public final class ApplicationInstance {
 
 		private final String id;
 		private URI baseUri;
+		private Status healthstatus = Status.UNKNOWN;
 
 		private Builder(String id) {
 			this.id = id;
@@ -90,6 +101,11 @@ public final class ApplicationInstance {
 
 		Builder baseUri(URI baseUri) {
 			this.baseUri = baseUri;
+			return this;
+		}
+
+		Builder healthStatus(Status healthstatus) {
+			this.healthstatus = healthstatus;
 			return this;
 		}
 

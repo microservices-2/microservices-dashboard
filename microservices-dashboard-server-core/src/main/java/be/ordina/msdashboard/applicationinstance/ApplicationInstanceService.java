@@ -19,6 +19,7 @@ package be.ordina.msdashboard.applicationinstance;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.boot.actuate.health.Status;
 import org.springframework.cloud.client.ServiceInstance;
 
 /**
@@ -45,6 +46,12 @@ public class ApplicationInstanceService {
 
 	public List<ApplicationInstance> getApplicationInstances() {
 		return this.repository.getAll();
+	}
+
+	public void updateHealthStatusForApplicationInstance(String applicationInstanceId, Status healthStatus) {
+		ApplicationInstance instance = this.repository.getById(applicationInstanceId);
+		instance.updateHealthStatus(healthStatus);
+		this.repository.save(instance);
 	}
 
 }

@@ -29,6 +29,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
+import org.springframework.boot.actuate.health.Status;
 import org.springframework.cloud.client.ServiceInstance;
 
 import static java.util.Collections.singletonList;
@@ -88,6 +89,19 @@ public class ApplicationInstanceServiceTests {
 
 		verify(this.repository).getAll();
 		assertThat(applicationInstances).isNotEmpty();
+	}
+
+	@Test
+	public void shouldUpdateTheHealthOfAnApplicationInstance() {
+		when(this.repository.getById("a-1")).thenReturn(ApplicationInstanceMother.instance("a-1"));
+		when(this.repository.save(any(ApplicationInstance.class)))
+				.thenAnswer((Answer<ApplicationInstance>) invocation -> invocation.getArgument(0));
+
+		this.service.updateHealthStatusForApplicationInstance("a-1", Status.UP);
+
+		verify(this.repository).save(this.applicationInstanceArgumentCaptor.capture());
+		ApplicationInstance applicationInstance = this.applicationInstanceArgumentCaptor.getValue();
+		assertThat(applicationInstance.getId()).isEqualTo("a-1");
 	}
 
 }

@@ -87,6 +87,13 @@ public class ApplicationInstanceHealthWatcher {
 				});
 	}
 
+	@EventListener({ ApplicationInstanceHealthDataRetrieved.class })
+	public void updateHealthForApplicationInstance(ApplicationInstanceHealthDataRetrieved event) {
+		this.applicationInstanceService.updateHealthStatusForApplicationInstance(
+				((ApplicationInstance) event.getSource()).getId(),
+				event.getHealth().getStatus());
+	}
+
 	/**
 	 * Wrapper for the Health class since it doesn't have correct constructors for
 	 * Jackson.

@@ -18,6 +18,8 @@ package be.ordina.msdashboard.applicationinstance;
 
 import org.junit.Test;
 
+import org.springframework.boot.actuate.health.Status;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -38,6 +40,28 @@ public class ApplicationInstanceTests {
 		applicationInstance.markChangesAsCommitted();
 
 		assertThat(applicationInstance.getUncommittedChanges()).isEmpty();
+	}
+
+	@Test
+	public void newlyCreatedInstanceShouldHaveUnknownHealthStatus() {
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1");
+
+		assertThat(applicationInstance.getHealthStatus()).isEqualTo(Status.UNKNOWN);
+	}
+
+	@Test
+	public void instanceShouldNotUpdateItsHealthStatusAgainIfNotChanged() {
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1");
+		applicationInstance.markChangesAsCommitted();
+		assertThat(applicationInstance.getHealthStatus()).isEqualTo(Status.UNKNOWN);
+
+		applicationInstance.updateHealthStatus(Status.UP);
+		assertThat(applicationInstance.getHealthStatus()).isEqualTo(Status.UP);
+		assertThat(applicationInstance.getUncommittedChanges()).hasSize(1);
+
+		applicationInstance.updateHealthStatus(Status.UP);
+		assertThat(applicationInstance.getHealthStatus()).isEqualTo(Status.UP);
+		assertThat(applicationInstance.getUncommittedChanges()).hasSize(1);
 	}
 
 }

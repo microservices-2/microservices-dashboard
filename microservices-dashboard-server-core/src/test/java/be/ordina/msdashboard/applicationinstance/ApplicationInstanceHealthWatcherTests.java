@@ -36,6 +36,7 @@ import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceCreat
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrievalFailed;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrieved;
 
+import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.Status;
 import org.springframework.boot.test.rule.OutputCapture;
 import org.springframework.context.ApplicationEvent;
@@ -47,6 +48,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
 import static org.mockito.BDDMockito.when;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 /**
  * Unit tests for the {@link ApplicationInstanceHealthWatcher application instance health watcher}.
@@ -176,6 +179,18 @@ public class ApplicationInstanceHealthWatcherTests {
 			assertThat(healthInfoRetrieved.getHealth().getStatus()).isEqualTo(Status.UP);
 			assertThat(applicationInstances).contains(instance);
 		});
+	}
+
+	@Test
+	public void shouldUpdateTheHealthOfAnApplicationInstanceWhenHealthDataRetrieved() {
+		ApplicationInstanceHealthDataRetrieved event = ApplicationInstanceEventMother
+				.applicationInstanceHealthDataRetrieved("a-1", Health.up().build());
+
+		this.healthWatcher.updateHealthForApplicationInstance(event);
+
+		verify(this.applicationInstanceService).updateHealthStatusForApplicationInstance("a-1", Status.UP);
+		verifyNoMoreInteractions(this.applicationInstanceService);
+		verifyZeroInteractions(this.applicationEventPublisher);
 	}
 
 }
