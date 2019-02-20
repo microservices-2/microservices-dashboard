@@ -85,7 +85,7 @@ public class LandscapeWatcher {
 	}
 
 	private List<ApplicationInstance> processServiceInstances(Collection<ServiceInstance> serviceInstances) {
-		return serviceInstances.stream()
+		return serviceInstances.parallelStream()
 				.map((serviceInstance) -> this.applicationInstanceService
 						.getApplicationInstanceForServiceInstance(serviceInstance)
 						.orElseGet(() -> this.applicationInstanceService
