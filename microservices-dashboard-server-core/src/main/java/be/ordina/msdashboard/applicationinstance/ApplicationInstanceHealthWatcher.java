@@ -72,13 +72,13 @@ public class ApplicationInstanceHealthWatcher {
 	}
 
 	private void retrieveHealthData(ApplicationInstance instance) {
-		instance.getActuatorEndpoint("health").ifPresent(uri -> {
+		instance.getActuatorEndpoint("health").ifPresent(link -> {
 			logger.debug("Retrieving [HEALTH] data for {}", instance.getId());
-			this.webClient.get().uri(uri).retrieve().bodyToMono(HealthWrapper.class)
+			this.webClient.get().uri(link.getHref()).retrieve().bodyToMono(HealthWrapper.class)
 					.defaultIfEmpty(new HealthWrapper(Status.UNKNOWN, new HashMap<>()))
 					.map(HealthWrapper::getHealth)
 					.doOnError(exception -> {
-						logger.debug("Could not retrieve health information for [" + uri + "]", exception);
+						logger.debug("Could not retrieve health information for [{}]", link.getHref(), exception);
 						this.publisher.publishEvent(new ApplicationInstanceHealthDataRetrievalFailed(instance));
 					})
 					.subscribe(healthInfo -> {

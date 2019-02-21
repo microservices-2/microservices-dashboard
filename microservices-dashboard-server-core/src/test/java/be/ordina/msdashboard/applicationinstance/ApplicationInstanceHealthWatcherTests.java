@@ -42,6 +42,8 @@ import org.springframework.boot.actuate.health.Status;
 import org.springframework.boot.test.rule.OutputCapture;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Links;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -87,7 +89,8 @@ public class ApplicationInstanceHealthWatcherTests {
 	@Before
 	public void setupMocks() {
 		when(this.webClient.get()).thenReturn(this.requestHeadersUriSpec);
-		when(this.requestHeadersUriSpec.uri(any(URI.class))).thenReturn(this.requestHeadersSpec);
+		when(this.requestHeadersUriSpec.uri("http://localhost:8080/actuator/health"))
+				.thenReturn(this.requestHeadersSpec);
 		when(this.requestHeadersSpec.retrieve()).thenReturn(this.responseSpec);
 	}
 
@@ -95,7 +98,7 @@ public class ApplicationInstanceHealthWatcherTests {
 	public void shouldRetrieveTheHealthDataAfterAnApplicationInstanceHasBeenCreated() {
 		ApplicationInstanceCreated event =
 				ApplicationInstanceEventMother.applicationInstanceCreatedWithActuatorEndpoints("a-1",
-				Collections.singletonMap("health", URI.create("http://localhost:8080/actuator/health")));
+				new Links(new Link("http://localhost:8080/actuator/health", "health")));
 
 		when(this.responseSpec.bodyToMono(ApplicationInstanceHealthWatcher.HealthWrapper.class)).thenReturn(Mono
 				.just(new ApplicationInstanceHealthWatcher.HealthWrapper(Status.UP, null)));
@@ -110,7 +113,7 @@ public class ApplicationInstanceHealthWatcherTests {
 		URI healthActuatorEndpoint = URI.create("http://localhost:8080/actuator/health");
 		ApplicationInstanceCreated event =
 				ApplicationInstanceEventMother.applicationInstanceCreatedWithActuatorEndpoints("a-1",
-				Collections.singletonMap("health", healthActuatorEndpoint));
+				new Links(new Link("http://localhost:8080/actuator/health", "health")));
 
 		when(this.responseSpec.bodyToMono(ApplicationInstanceHealthWatcher.HealthWrapper.class))
 				.thenReturn(Mono.error(new RuntimeException("OOPSIE!")));
@@ -125,7 +128,7 @@ public class ApplicationInstanceHealthWatcherTests {
 		ApplicationInstance firstInstance = ApplicationInstanceMother.instance("a-1");
 		ApplicationInstance secondInstance = ApplicationInstanceMother.instance("a-2",
 				URI.create("http://localhost:8080"),
-				Collections.singletonMap("health", URI.create("http://localhost:8080/actuator/health")));
+				new Links(new Link("http://localhost:8080/actuator/health", "health")));
 		List<ApplicationInstance> applicationInstances = Arrays.asList(firstInstance, secondInstance);
 
 		when(this.applicationInstanceService.getApplicationInstances()).thenReturn(applicationInstances);

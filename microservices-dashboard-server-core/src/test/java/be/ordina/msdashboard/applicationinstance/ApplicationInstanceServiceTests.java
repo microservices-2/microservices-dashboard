@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -28,15 +29,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import reactor.core.publisher.Mono;
 
 import org.springframework.boot.actuate.health.Status;
 import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Links;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.verify;
+import static org.mockito.BDDMockito.when;
 
 /**
  * @author Tim Ysewyn
@@ -50,35 +55,74 @@ public class ApplicationInstanceServiceTests {
 	@Mock
 	private ApplicationInstanceRepository repository;
 
+	@Mock
+	private ActuatorEndpointsDiscovererService actuatorEndpointsDiscovererService;
+
 	@InjectMocks
 	private ApplicationInstanceService service;
 
 	@Captor
 	private ArgumentCaptor<ApplicationInstance> applicationInstanceArgumentCaptor;
 
+	@Before
+	public void setup() {
+		when(this.actuatorEndpointsDiscovererService.findActuatorEndpoints(this.serviceInstance))
+				.thenReturn(Mono.just(new Links()));
+	}
+
 	@Test
 	public void shouldRetrieveApplicationInstanceFromRepository() {
 		when(this.serviceInstance.getInstanceId()).thenReturn("a-1");
 		when(this.repository.getById("a-1")).thenReturn(ApplicationInstanceMother.instance("a-1"));
 
-		Optional<ApplicationInstance> applicationInstance = this.service.getApplicationInstanceForServiceInstance(this.serviceInstance);
+		Optional<String> applicationInstanceId = this.service.getApplicationInstanceIdForServiceInstance(this.serviceInstance);
 
 		verify(this.repository).getById("a-1");
-		assertThat(applicationInstance).isNotEmpty();
-		assertThat(applicationInstance).get().extracting(ApplicationInstance::getId).isEqualTo("a-1");
+		assertThat(applicationInstanceId).isNotEmpty();
+		assertThat(applicationInstanceId).get().isEqualTo("a-1");
 	}
 
 	@Test
-	public void shouldCreateApplicationInstanceAndSaveInRepository() {
+	public void shouldCreateApplicationInstanceWithoutActuatorEndpointsAndSaveInRepository() {
 		when(this.serviceInstance.getInstanceId()).thenReturn("a-1");
 		when(this.serviceInstance.getUri()).thenReturn(URI.create("http://localhost:8080"));
 		when(this.repository.save(any(ApplicationInstance.class)))
 				.thenAnswer((Answer<ApplicationInstance>) invocation -> invocation.getArgument(0));
 
-		ApplicationInstance applicationInstance = this.service.createApplicationInstanceForServiceInstance(this.serviceInstance);
+		String applicationInstanceId = this.service.createApplicationInstanceForServiceInstance(this.serviceInstance);
 
-		verify(this.repository).save(this.applicationInstanceArgumentCaptor.capture());
-		assertThat(applicationInstance.getId()).isEqualTo("a-1");
+		assertThat(applicationInstanceId).isEqualTo("a-1");
+
+		await().untilAsserted(() -> {
+			verify(this.repository).save(this.applicationInstanceArgumentCaptor.capture());
+			ApplicationInstance applicationInstance = this.applicationInstanceArgumentCaptor.getValue();
+			assertThat(applicationInstance).isNotNull();
+			assertThat(applicationInstance.getActuatorEndpoints()).isEmpty();
+		});
+	}
+
+	@Test
+	public void shouldCreateApplicationInstanceWithDiscoveredActuatorEndpointsAndSaveInRepository() {
+		when(this.serviceInstance.getInstanceId()).thenReturn("a-1");
+		when(this.serviceInstance.getUri()).thenReturn(URI.create("http://localhost:8080"));
+		when(this.actuatorEndpointsDiscovererService.findActuatorEndpoints(this.serviceInstance))
+				.thenReturn(Mono.just(new Links(new Link("http://localhost:8080/actuator/health", "health"))));
+		when(this.repository.save(any(ApplicationInstance.class)))
+				.thenAnswer((Answer<ApplicationInstance>) invocation -> invocation.getArgument(0));
+
+		String applicationInstanceId = this.service.createApplicationInstanceForServiceInstance(this.serviceInstance);
+
+		assertThat(applicationInstanceId).isEqualTo("a-1");
+
+		await().untilAsserted(() -> {
+			verify(this.repository).save(this.applicationInstanceArgumentCaptor.capture());
+			ApplicationInstance applicationInstance = this.applicationInstanceArgumentCaptor.getValue();
+			assertThat(applicationInstance).isNotNull();
+			assertThat(applicationInstance.getActuatorEndpoints()).isNotEmpty();
+			assertThat(applicationInstance.getActuatorEndpoints().hasLink("health")).isTrue();
+			assertThat(applicationInstance.getActuatorEndpoints().getLink("health").getHref())
+					.isEqualTo("http://localhost:8080/actuator/health");
+		});
 	}
 
 	@Test

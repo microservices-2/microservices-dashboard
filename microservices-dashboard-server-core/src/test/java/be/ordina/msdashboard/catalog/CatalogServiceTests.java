@@ -54,11 +54,9 @@ public class CatalogServiceTests {
 	@Test
 	public void shouldReturnUpdatedListOfInstancesWhenListOfInstancesForAnApplicationsIsUpdated() {
 		CatalogService catalogService = new CatalogService();
-		catalogService.updateListOfInstancesForApplication("a",
-				Collections.singletonList(ApplicationInstanceMother.instance("a-1")));
+		catalogService.updateListOfInstancesForApplication("a", Collections.singletonList("a-1"));
 		assertThat(catalogService.getApplicationInstances()).containsExactly("a-1");
-		catalogService.updateListOfInstancesForApplication("a",
-				Collections.singletonList(ApplicationInstanceMother.instance("a-2")));
+		catalogService.updateListOfInstancesForApplication("a", Collections.singletonList("a-2"));
 		assertThat(catalogService.getApplicationInstances()).containsExactly("a-2");
 	}
 

@@ -16,35 +16,23 @@
 
 package be.ordina.msdashboard.applicationinstance;
 
-import java.net.URI;
+import reactor.core.publisher.Mono;
 
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.hateoas.Links;
 
 /**
+ * Interface to allow discovering actuator endpoints.
+ *
  * @author Tim Ysewyn
  */
-public final class ApplicationInstanceMother {
+public interface ActuatorEndpointsDiscoverer {
 
-	private ApplicationInstanceMother() {
-		throw new RuntimeException("Not allowed");
-	}
-
-	public static ApplicationInstance instance() {
-		return instance("id");
-	}
-
-	public static ApplicationInstance instance(String id) {
-		return instance(id, URI.create("http://localhost:8080"));
-	}
-
-	public static ApplicationInstance instance(String id, URI baseUri) {
-		return ApplicationInstance.Builder.withId(id).baseUri(baseUri).build();
-	}
-
-	public static ApplicationInstance instance(String id, URI baseUri, Links actuatorEndpoints) {
-		return ApplicationInstance.Builder.withId(id)
-				.baseUri(baseUri)
-				.actuatorEndpoints(actuatorEndpoints)
-				.build();
-	}
+	/**
+	 * Returns all links found for the given {@link ServiceInstance service instance}.
+	 *
+	 * @param serviceInstance a service instance
+	 * @return {@link Mono} consisting out of the discovered actuator endpoint {@link Links}.
+	 */
+	Mono<Links> findActuatorEndpoints(ServiceInstance serviceInstance);
 }

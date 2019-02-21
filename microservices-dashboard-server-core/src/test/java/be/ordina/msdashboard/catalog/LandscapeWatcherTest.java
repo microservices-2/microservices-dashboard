@@ -74,7 +74,7 @@ public class LandscapeWatcherTest {
 	private ArgumentCaptor<ServiceInstance> serviceInstanceArgumentCaptor;
 
 	@Captor
-	private ArgumentCaptor<List<ApplicationInstance>> applicationInstancesArgumentCaptor;
+	private ArgumentCaptor<List<String>> applicationInstancesArgumentCaptor;
 
 	private LandscapeWatcher landscapeWatcher;
 	private List<LandscapeWatcher.ApplicationFilter> applicationFilters = new ArrayList<>();
@@ -97,11 +97,11 @@ public class LandscapeWatcherTest {
 		when(this.discoveryClient.getServices()).thenReturn(new ArrayList<>(Arrays.asList("a")));
 		when(this.catalogService.updateListOfApplications(anyList())).thenAnswer((Answer<List<String>>) invocation -> invocation.getArgument(0));
 		when(this.discoveryClient.getInstances("a")).thenReturn(Collections.singletonList(new DefaultServiceInstance("a1", "a", "host", 8080, false)));
-		when(this.applicationInstanceService.getApplicationInstanceForServiceInstance(any(ServiceInstance.class)))
+		when(this.applicationInstanceService.getApplicationInstanceIdForServiceInstance(any(ServiceInstance.class)))
 				.thenReturn(Optional.empty());
 		ApplicationInstance returnedApplicationInstance = ApplicationInstanceMother.instance();
 		when(this.applicationInstanceService.createApplicationInstanceForServiceInstance(any(ServiceInstance.class)))
-				.thenReturn(returnedApplicationInstance);
+				.thenReturn(returnedApplicationInstance.getId());
 
 		this.landscapeWatcher.discoverLandscape();
 
@@ -112,16 +112,16 @@ public class LandscapeWatcherTest {
 
 		verify(this.discoveryClient).getInstances("a");
 
-		verify(this.applicationInstanceService).getApplicationInstanceForServiceInstance(this.serviceInstanceArgumentCaptor.capture());
+		verify(this.applicationInstanceService).getApplicationInstanceIdForServiceInstance(this.serviceInstanceArgumentCaptor.capture());
 		ServiceInstance serviceInstance = this.serviceInstanceArgumentCaptor.getValue();
 
 		verify(this.applicationInstanceService).createApplicationInstanceForServiceInstance(this.serviceInstanceArgumentCaptor.capture());
 		serviceInstance = this.serviceInstanceArgumentCaptor.getValue();
 
 		verify(this.catalogService).updateListOfInstancesForApplication(eq("a"), this.applicationInstancesArgumentCaptor.capture());
-		List<ApplicationInstance> applicationInstances = this.applicationInstancesArgumentCaptor.getValue();
+		List<String> applicationInstances = this.applicationInstancesArgumentCaptor.getValue();
 		assertThat(applicationInstances).hasSize(1);
-		assertThat(applicationInstances).extracting(ApplicationInstance::hashCode).contains(returnedApplicationInstance.hashCode());
+		assertThat(applicationInstances).contains(returnedApplicationInstance.getId());
 	}
 
 	@Test
@@ -161,7 +161,7 @@ public class LandscapeWatcherTest {
 
 		verify(this.catalogService).updateListOfInstancesForApplication(eq("a"), this.applicationInstancesArgumentCaptor.capture());
 		verifyNoMoreInteractions(this.catalogService);
-		List<ApplicationInstance> applicationInstances = this.applicationInstancesArgumentCaptor.getValue();
+		List<String> applicationInstances = this.applicationInstancesArgumentCaptor.getValue();
 		assertThat(applicationInstances).isEmpty();
 	}
 

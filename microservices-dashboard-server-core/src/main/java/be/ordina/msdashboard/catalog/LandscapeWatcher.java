@@ -23,7 +23,6 @@ import java.util.function.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
 import be.ordina.msdashboard.applicationinstance.ApplicationInstanceService;
 
 import org.springframework.cloud.client.ServiceInstance;
@@ -78,15 +77,15 @@ public class LandscapeWatcher {
 			logger.debug("Discovering application instances for {}", application);
 			List<ServiceInstance> instances = this.discoveryClient.getInstances(application);
 			this.applicationInstanceFilters.forEach(instances::removeIf);
-			List<ApplicationInstance> applicationInstances = processServiceInstances(instances);
-			this.catalogService.updateListOfInstancesForApplication(application, applicationInstances);
+			List<String> applicationInstanceIds = processServiceInstances(instances);
+			this.catalogService.updateListOfInstancesForApplication(application, applicationInstanceIds);
 		});
 	}
 
-	private List<ApplicationInstance> processServiceInstances(Collection<ServiceInstance> serviceInstances) {
+	private List<String> processServiceInstances(Collection<ServiceInstance> serviceInstances) {
 		return serviceInstances.parallelStream()
 				.map((serviceInstance) -> this.applicationInstanceService
-						.getApplicationInstanceForServiceInstance(serviceInstance)
+						.getApplicationInstanceIdForServiceInstance(serviceInstance)
 						.orElseGet(() -> this.applicationInstanceService
 								.createApplicationInstanceForServiceInstance(serviceInstance)))
 				.collect(toList());

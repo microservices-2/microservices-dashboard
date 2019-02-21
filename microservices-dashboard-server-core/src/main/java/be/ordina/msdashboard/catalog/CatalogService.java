@@ -18,8 +18,6 @@ package be.ordina.msdashboard.catalog;
 
 import java.util.List;
 
-import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
-
 /**
  * Application service to interact with the catalog.
  *
@@ -46,7 +44,7 @@ public class CatalogService {
 		return this.catalog.getApplicationInstances();
 	}
 
-	public void updateListOfInstancesForApplication(String application, List<ApplicationInstance> applicationInstances) {
-		this.catalog.updateListOfInstancesForApplication(application, applicationInstances);
+	public void updateListOfInstancesForApplication(String application, List<String> applicationInstanceIds) {
+		this.catalog.updateListOfInstancesForApplication(application, applicationInstanceIds);
 	}
 }

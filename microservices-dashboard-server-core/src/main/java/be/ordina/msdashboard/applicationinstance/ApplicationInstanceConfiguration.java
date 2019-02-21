@@ -16,9 +16,17 @@
 
 package be.ordina.msdashboard.applicationinstance;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.hateoas.LinkDiscoverers;
+import org.springframework.hateoas.core.JsonPathLinkDiscoverer;
+import org.springframework.hateoas.hal.HalLinkDiscoverer;
+import org.springframework.http.MediaType;
+import org.springframework.plugin.core.OrderAwarePluginRegistry;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
@@ -30,8 +38,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class ApplicationInstanceConfiguration {
 
 	@Bean
-	public ApplicationInstanceService applicationInstanceService(ApplicationInstanceRepository repository) {
-		return new ApplicationInstanceService(repository);
+	public ApplicationInstanceService applicationInstanceService(ApplicationInstanceRepository repository,
+			ActuatorEndpointsDiscovererService actuatorEndpointsDiscovererService) {
+		return new ApplicationInstanceService(repository, actuatorEndpointsDiscovererService);
+	}
+
+	@Bean
+	ActuatorEndpointsDiscovererService actuatorEndpointsDiscovererService(List<ActuatorEndpointsDiscoverer> actuatorEndpointsDiscoverers) {
+		return new ActuatorEndpointsDiscovererService(halActuatorEndpointsDiscoverer(), actuatorEndpointsDiscoverers);
 	}
 
 	@Bean
@@ -43,6 +57,12 @@ public class ApplicationInstanceConfiguration {
 	@Bean
 	public WebClient webClient() {
 		return WebClient.create();
+	}
+
+	private HalActuatorEndpointsDiscoverer halActuatorEndpointsDiscoverer() {
+		return new HalActuatorEndpointsDiscoverer(webClient(),
+				new LinkDiscoverers(OrderAwarePluginRegistry.create(Arrays.asList(new HalLinkDiscoverer(),
+						new JsonPathLinkDiscoverer("$._links..['%s']..href", MediaType.parseMediaType("application/*+json"))))));
 	}
 
 }

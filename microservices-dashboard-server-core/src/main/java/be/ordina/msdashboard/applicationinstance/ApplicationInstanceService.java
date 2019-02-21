@@ -32,16 +32,30 @@ public class ApplicationInstanceService {
 
 	private final ApplicationInstanceRepository repository;
 
-	public ApplicationInstanceService(ApplicationInstanceRepository repository) {
+	private final ActuatorEndpointsDiscovererService actuatorEndpointsDiscovererService;
+
+	public ApplicationInstanceService(ApplicationInstanceRepository repository,
+			ActuatorEndpointsDiscovererService actuatorEndpointsDiscovererService) {
 		this.repository = repository;
+		this.actuatorEndpointsDiscovererService = actuatorEndpointsDiscovererService;
 	}
 
-	public Optional<ApplicationInstance> getApplicationInstanceForServiceInstance(ServiceInstance serviceInstance) {
-		return Optional.ofNullable(this.repository.getById(serviceInstance.getInstanceId()));
+	public Optional<String> getApplicationInstanceIdForServiceInstance(ServiceInstance serviceInstance) {
+		return Optional.ofNullable(this.repository.getById(serviceInstance.getInstanceId()))
+				.map(ApplicationInstance::getId);
 	}
 
-	public ApplicationInstance createApplicationInstanceForServiceInstance(ServiceInstance serviceInstance) {
-		return this.repository.save(ApplicationInstance.from(serviceInstance));
+	public String createApplicationInstanceForServiceInstance(final ServiceInstance serviceInstance) {
+		this.actuatorEndpointsDiscovererService.findActuatorEndpoints(serviceInstance)
+				.subscribe(actuatorEndpoints -> {
+					ApplicationInstance applicationInstance = ApplicationInstance.Builder
+							.withId(serviceInstance.getInstanceId())
+							.baseUri(serviceInstance.getUri())
+							.actuatorEndpoints(actuatorEndpoints)
+							.build();
+					this.repository.save(applicationInstance);
+				});
+		return serviceInstance.getInstanceId();
 	}
 
 	public List<ApplicationInstance> getApplicationInstances() {

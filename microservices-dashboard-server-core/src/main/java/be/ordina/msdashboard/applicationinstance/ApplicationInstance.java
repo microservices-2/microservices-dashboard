@@ -18,18 +18,16 @@ package be.ordina.msdashboard.applicationinstance;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceCreated;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthUpdated;
 
 import org.springframework.boot.actuate.health.Status;
-import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.context.ApplicationEvent;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Links;
 
 /**
  * The representation of an application's instance.
@@ -43,14 +41,12 @@ public final class ApplicationInstance {
 
 	private final String id;
 	private final URI baseUri;
-	private final UriComponentsBuilder uriComponentsBuilder;
 	private Status healthStatus = Status.UNKNOWN;
-	private Map<String, URI> actuatorEndpoints;
+	private Links actuatorEndpoints;
 
 	private ApplicationInstance(Builder builder) {
 		this.id = builder.id;
 		this.baseUri = builder.baseUri;
-		this.uriComponentsBuilder = UriComponentsBuilder.fromUri(builder.baseUri);
 		this.actuatorEndpoints = builder.actuatorEndpoints;
 		this.changes.add(new ApplicationInstanceCreated(this));
 	}
@@ -63,23 +59,23 @@ public final class ApplicationInstance {
 		return this.healthStatus;
 	}
 
-	public void updateHealthStatus(Status healthStatus) {
+	void updateHealthStatus(Status healthStatus) {
 		if (!this.healthStatus.equals(healthStatus)) {
 			this.healthStatus = healthStatus;
 			this.changes.add(new ApplicationInstanceHealthUpdated(this));
 		}
 	}
 
-	public Map<String, URI> getActuatorEndpoints() {
+	public Links getActuatorEndpoints() {
 		return this.actuatorEndpoints;
 	}
 
 	public boolean hasActuatorEndpointFor(String endpoint) {
-		return this.actuatorEndpoints.containsKey(endpoint);
+		return this.actuatorEndpoints.hasLink(endpoint);
 	}
 
-	public Optional<URI> getActuatorEndpoint(String endpoint) {
-		return Optional.ofNullable(this.actuatorEndpoints.get(endpoint));
+	public Optional<Link> getActuatorEndpoint(String endpoint) {
+		return Optional.ofNullable(this.actuatorEndpoints.getLink(endpoint));
 	}
 
 	public List<ApplicationEvent> getUncommittedChanges() {
@@ -91,10 +87,6 @@ public final class ApplicationInstance {
 		return this;
 	}
 
-	static ApplicationInstance from(ServiceInstance serviceInstance) {
-		return Builder.withId(serviceInstance.getInstanceId()).baseUri(serviceInstance.getUri()).build();
-	}
-
 	/**
 	 * Builder to create a new {@link ApplicationInstance application instance}.
 	 *
@@ -104,7 +96,7 @@ public final class ApplicationInstance {
 
 		private final String id;
 		private URI baseUri;
-		private Map<String, URI> actuatorEndpoints = new HashMap<>();
+		private Links actuatorEndpoints = new Links();
 
 		private Builder(String id) {
 			this.id = id;
@@ -120,7 +112,7 @@ public final class ApplicationInstance {
 		}
 
 
-		Builder actuatorEndpoints(Map<String, URI> actuatorEndpoints) {
+		Builder actuatorEndpoints(Links actuatorEndpoints) {
 			this.actuatorEndpoints = actuatorEndpoints;
 			return this;
 		}

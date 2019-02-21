@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
-
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -57,9 +55,8 @@ class Catalog {
 		return this.applicationInstances.getOrDefault(application, new ArrayList<>());
 	}
 
-	void updateListOfInstancesForApplication(String application, List<ApplicationInstance> applicationInstances) {
+	void updateListOfInstancesForApplication(String application, List<String> applicationInstanceIds) {
 		this.applications.add(application);
-		this.applicationInstances.put(application,
-				applicationInstances.stream().map(ApplicationInstance::getId).collect(toList()));
+		this.applicationInstances.put(application, applicationInstanceIds);
 	}
 }

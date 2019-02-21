@@ -21,8 +21,6 @@ import java.util.Collections;
 
 import org.junit.Test;
 
-import be.ordina.msdashboard.applicationinstance.ApplicationInstanceMother;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -61,8 +59,7 @@ public class CatalogTests {
 	@Test
 	public void unknownApplicationShouldBeAddedWhenListOfInstancesIsUpdated() {
 		Catalog catalog = new Catalog();
-		catalog.updateListOfInstancesForApplication("a",
-				Collections.singletonList(ApplicationInstanceMother.instance("a-1")));
+		catalog.updateListOfInstancesForApplication("a", Collections.singletonList("a-1"));
 		assertThat(catalog.getApplications()).hasSize(1);
 	}
 
@@ -75,27 +72,23 @@ public class CatalogTests {
 	@Test
 	public void catalogShouldReturnListOfInstancesForKnownApplication() {
 		Catalog catalog = new Catalog();
-		catalog.updateListOfInstancesForApplication("a",
-				Collections.singletonList(ApplicationInstanceMother.instance("a-1")));
+		catalog.updateListOfInstancesForApplication("a", Collections.singletonList("a-1"));
 		assertThat(catalog.getApplicationInstancesForApplication("a")).isNotEmpty();
 	}
 
 	@Test
 	public void catalogShouldReturnListOfInstancesWhenListOfInstancesIsUpdated() {
 		Catalog catalog = new Catalog();
-		catalog.updateListOfInstancesForApplication("a",
-				Collections.singletonList(ApplicationInstanceMother.instance("a-1")));
+		catalog.updateListOfInstancesForApplication("a", Collections.singletonList("a-1"));
 		assertThat(catalog.getApplicationInstances()).isNotEmpty();
 	}
 
 	@Test
 	public void catalogShouldReturnUpdatedListOfInstancesWhenListOfInstancesForAnApplicationIsUpdated() {
 		Catalog catalog = new Catalog();
-		catalog.updateListOfInstancesForApplication("a",
-				Collections.singletonList(ApplicationInstanceMother.instance("a-1")));
+		catalog.updateListOfInstancesForApplication("a", Collections.singletonList("a-1"));
 		assertThat(catalog.getApplicationInstances()).containsExactly("a-1");
-		catalog.updateListOfInstancesForApplication("a",
-				Collections.singletonList(ApplicationInstanceMother.instance("a-2")));
+		catalog.updateListOfInstancesForApplication("a", Collections.singletonList("a-2"));
 		assertThat(catalog.getApplicationInstances()).containsExactly("a-2");
 	}
 

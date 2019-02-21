@@ -17,13 +17,14 @@
 package be.ordina.msdashboard.applicationinstance;
 
 import java.net.URI;
-import java.util.Collections;
 
 import org.junit.Test;
 
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthUpdated;
 
 import org.springframework.boot.actuate.health.Status;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Links;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -84,7 +85,7 @@ public class ApplicationInstanceTests {
 	public void newlyCreatedInstanceWithActuatorEndpointsShouldReturnListWithEndpoints() {
 		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1",
 				URI.create("http://localhost:8080"),
-				Collections.singletonMap("health", URI.create("http://localhost:8080/actuator/health")));
+				new Links(new Link("http://localhost:8080/actuator/health", "health")));
 
 		assertThat(applicationInstance.getActuatorEndpoints()).hasSize(1);
 	}
@@ -93,22 +94,22 @@ public class ApplicationInstanceTests {
 	public void undefinedActuatorEndpointWillReturnEmptyOptional() {
 		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1",
 				URI.create("http://localhost:8080"),
-				Collections.singletonMap("health", URI.create("http://localhost:8080/actuator/health")));
+				new Links(new Link("http://localhost:8080/actuator/health", "health")));
 
 		assertThat(applicationInstance.hasActuatorEndpointFor("not-defined-endpoint")).isFalse();
 		assertThat(applicationInstance.getActuatorEndpoint("not-defined-endpoint")).isEmpty();
 	}
 
 	@Test
-	public void definedActuatorEndpointWillReturnURI() {
+	public void definedActuatorEndpointWillReturnLink() {
 		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1",
 				URI.create("http://localhost:8080"),
-				Collections.singletonMap("health", URI.create("http://localhost:8080/actuator/health")));
+				new Links(new Link("http://localhost:8080/actuator/health", "health")));
 
 		assertThat(applicationInstance.hasActuatorEndpointFor("health")).isTrue();
 		assertThat(applicationInstance.getActuatorEndpoint("health")).isNotEmpty();
 		assertThat(applicationInstance.getActuatorEndpoint("health"))
-				.get().isEqualTo(URI.create("http://localhost:8080/actuator/health"));
+				.get().extracting(Link::getHref).isEqualTo("http://localhost:8080/actuator/health");
 	}
 
 }
