@@ -122,6 +122,20 @@ public class HalActuatorEndpointsDiscovererTests {
 	}
 
 	@Test
+	public void shouldReturnEmptyListWhenNoLinkInResponse() {
+		when(this.clientResponse.toEntity(String.class))
+				.thenReturn(Mono.just(ResponseEntity.ok("{ }")));
+
+		this.discoverer.findActuatorEndpoints(this.serviceInstance)
+				.subscribe(actuatorEndpoints -> {
+					verify(this.webClient).get();
+					verifyNoMoreInteractions(this.webClient);
+
+					assertThat(actuatorEndpoints).isEmpty();
+				});
+	}
+
+	@Test
 	public void shouldReturnEmptyListWhenNoRelsInResponse() {
 		when(this.clientResponse.toEntity(String.class))
 				.thenReturn(Mono.just(ResponseEntity.ok("{ _links: [] }")));
