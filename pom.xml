@@ -49,7 +49,7 @@
 		<maven-source-plugin.version>3.0.1</maven-source-plugin.version>
 		<maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
 		<maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
-		<git-commit-value-plugin.version>2.2.4</git-commit-value-plugin.version>
+		<git-commit-id-plugin.version>2.2.4</git-commit-id-plugin.version>
 		<maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
 		<license-maven-plugin.version>1.16</license-maven-plugin.version>
 		<maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
@@ -277,8 +277,8 @@ limitations under the License.
 				</plugin>
 				<plugin>
 					<groupId>pl.project13.maven</groupId>
-					<artifactId>git-commit-value-plugin</artifactId>
-					<version>${git-commit-value-plugin.version}</version>
+					<artifactId>git-commit-id-plugin</artifactId>
+					<version>${git-commit-id-plugin.version}</version>
 					<executions>
 						<execution>
 							<goals>
@@ -629,7 +629,7 @@ limitations under the License.
 									</goals>
 									<configuration>
 										<target>
-											<fileset value="unresolved.file" dir="${basedir}/target/generated-docs/" includes="**/*.html">
+											<fileset id="unresolved.file" dir="${basedir}/target/generated-docs/" includes="**/*.html">
 												<contains text="Unresolved"/>
 											</fileset>
 											<fail message="[Unresolved] Found...failing">
