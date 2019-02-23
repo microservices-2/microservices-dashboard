@@ -123,7 +123,25 @@ public class ApplicationInstanceHealthWatcherTests {
 	}
 
 	@Test
-	public void shouldOnlyRetrieveHealthDataForInstancesWithAnHealthActuatorEndpoint() {
+	public void shouldOnlyRetrieveHealthDataForInstancesThatAreNotDeleted() {
+		ApplicationInstance firstInstance = ApplicationInstanceMother.instance("a-1", "a");
+		firstInstance.delete();
+		ApplicationInstance secondInstance = ApplicationInstanceMother.instance("a-2", "a",
+				URI.create("http://localhost:8080"),
+				new Links(new Link("http://localhost:8080/actuator/health", "health")));
+		List<ApplicationInstance> applicationInstances = Arrays.asList(firstInstance, secondInstance);
+
+		when(this.applicationInstanceService.getApplicationInstances()).thenReturn(applicationInstances);
+		when(this.responseSpec.bodyToMono(ApplicationInstanceHealthWatcher.HealthWrapper.class))
+				.thenReturn(Mono.just(new ApplicationInstanceHealthWatcher.HealthWrapper(Status.UP, new HashMap<>())));
+
+		this.healthWatcher.retrieveHealthDataForAllApplicationInstances();
+
+		assertHealthInfoRetrievalSucceeded(Collections.singletonList(secondInstance));
+	}
+
+	@Test
+	public void shouldOnlyRetrieveHealthDataForInstancesWithAHealthActuatorEndpoint() {
 		ApplicationInstance firstInstance = ApplicationInstanceMother.instance("a-1", "a");
 		ApplicationInstance secondInstance = ApplicationInstanceMother.instance("a-2", "a",
 				URI.create("http://localhost:8080"),

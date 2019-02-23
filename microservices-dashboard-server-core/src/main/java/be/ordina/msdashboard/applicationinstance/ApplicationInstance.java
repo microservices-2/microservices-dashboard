@@ -43,6 +43,7 @@ public final class ApplicationInstance {
 	private final String id;
 	private final String application;
 	private final URI baseUri;
+	private State state;
 	private Status healthStatus = Status.UNKNOWN;
 	private Links actuatorEndpoints;
 
@@ -50,6 +51,7 @@ public final class ApplicationInstance {
 		this.id = builder.id;
 		this.application = builder.application;
 		this.baseUri = builder.baseUri;
+		this.state = State.CREATED;
 		this.actuatorEndpoints = builder.actuatorEndpoints;
 		this.changes.add(new ApplicationInstanceCreated(this));
 	}
@@ -86,7 +88,14 @@ public final class ApplicationInstance {
 	}
 
 	public void delete() {
-		this.changes.add(new ApplicationInstanceDeleted(this));
+		if (this.state != State.DELETED) {
+			this.state = State.DELETED;
+			this.changes.add(new ApplicationInstanceDeleted(this));
+		}
+	}
+
+	public State getState() {
+		return this.state;
 	}
 
 	public List<ApplicationEvent> getUncommittedChanges() {
@@ -134,5 +143,19 @@ public final class ApplicationInstance {
 			return new ApplicationInstance(this);
 		}
 
+	}
+
+	/**
+	 * Indicator of the state of an {@link ApplicationInstance application instance}.
+	 */
+	public enum State {
+		/**
+		 * Indicates that the {@link ApplicationInstance application instance} has been created.
+		 */
+		CREATED,
+		/**
+		 * Indicates that the {@link ApplicationInstance application instance} has been deleted.
+		 */
+		DELETED
 	}
 }

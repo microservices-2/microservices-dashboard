@@ -67,6 +67,7 @@ public class ApplicationInstanceHealthWatcher {
 		logger.debug("Retrieving [HEALTH] data for all application instances");
 		this.applicationInstanceService.getApplicationInstances()
 				.parallelStream()
+				.filter(instance -> instance.getState() != ApplicationInstance.State.DELETED)
 				.filter(instance -> instance.hasActuatorEndpointFor("health"))
 				.forEach(this::retrieveHealthData);
 	}

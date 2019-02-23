@@ -20,6 +20,7 @@ import java.net.URI;
 
 import org.junit.Test;
 
+import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceDeleted;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthUpdated;
 
 import org.springframework.boot.actuate.health.Status;
@@ -37,6 +38,7 @@ public class ApplicationInstanceTests {
 	public void newlyCreatedInstanceShouldHaveOneUncommittedChange() {
 		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1", "a");
 
+		assertThat(applicationInstance.getState()).isEqualTo(ApplicationInstance.State.CREATED);
 		assertThat(applicationInstance.getUncommittedChanges()).hasSize(1);
 	}
 
@@ -110,6 +112,18 @@ public class ApplicationInstanceTests {
 		assertThat(applicationInstance.getActuatorEndpoint("health")).isNotEmpty();
 		assertThat(applicationInstance.getActuatorEndpoint("health"))
 				.get().extracting(Link::getHref).isEqualTo("http://localhost:8080/actuator/health");
+	}
+
+	@Test
+	public void canNotBeDeletedMoreThanOnce() {
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1", "a");
+		applicationInstance.markChangesAsCommitted();
+		applicationInstance.delete();
+		applicationInstance.delete();
+
+		assertThat(applicationInstance.getState()).isEqualTo(ApplicationInstance.State.DELETED);
+		assertThat(applicationInstance.getUncommittedChanges()).hasSize(1);
+		assertThat(applicationInstance.getUncommittedChanges().get(0)).isInstanceOf(ApplicationInstanceDeleted.class);
 	}
 
 }
