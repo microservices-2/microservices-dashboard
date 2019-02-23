@@ -134,6 +134,9 @@ public class ActuatorEndpointsDiscovererServiceTests {
 		this.service.findActuatorEndpoints(this.serviceInstance)
 				.subscribe(actuatorEndpoints -> {
 
+					verify(this.otherActuatorEndpointsDiscoverer).findActuatorEndpoints(this.serviceInstance);
+					verifyNoMoreInteractions(this.otherActuatorEndpointsDiscoverer);
+
 					verify(this.halActuatorEndpointsDiscoverer).findActuatorEndpoints(this.serviceInstance);
 					verifyNoMoreInteractions(this.halActuatorEndpointsDiscoverer);
 
@@ -143,6 +146,27 @@ public class ActuatorEndpointsDiscovererServiceTests {
 					assertThat(actuatorEndpoints.getLink("info").getHref()).isEqualTo("http://localhost:8081/actuator/info");
 					assertThat(actuatorEndpoints.hasLink("health")).isTrue();
 					assertThat(actuatorEndpoints.getLink("health").getHref()).isEqualTo("http://localhost:8080/actuator/health");
+				});
+	}
+
+	@Test
+	public void shouldReturnAnEmptyMonoWhenSomethingGoesWrong() {
+		when(this.otherActuatorEndpointsDiscoverer.findActuatorEndpoints(this.serviceInstance))
+				.thenReturn(Mono.just(new Links(new Link("http://localhost:8081/actuator/health", "health"),
+						new Link("http://localhost:8081/actuator/info", "info"))));
+		when(this.halActuatorEndpointsDiscoverer.findActuatorEndpoints(this.serviceInstance))
+				.thenReturn(Mono.error(new RuntimeException("OOPSIE")));
+
+		this.service.findActuatorEndpoints(this.serviceInstance)
+				.subscribe(actuatorEndpoints -> {
+
+					verify(this.otherActuatorEndpointsDiscoverer).findActuatorEndpoints(this.serviceInstance);
+					verifyNoMoreInteractions(this.otherActuatorEndpointsDiscoverer);
+
+					verify(this.halActuatorEndpointsDiscoverer).findActuatorEndpoints(this.serviceInstance);
+					verifyNoMoreInteractions(this.halActuatorEndpointsDiscoverer);
+
+					assertThat(actuatorEndpoints).isEmpty();
 				});
 	}
 }

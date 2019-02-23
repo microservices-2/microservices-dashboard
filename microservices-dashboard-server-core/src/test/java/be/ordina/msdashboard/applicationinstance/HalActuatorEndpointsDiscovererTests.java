@@ -30,6 +30,7 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.LinkDiscoverer;
 import org.springframework.hateoas.LinkDiscoverers;
+import org.springframework.hateoas.Links;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -187,6 +188,26 @@ public class HalActuatorEndpointsDiscovererTests {
 					verify(this.linkDiscoverer).findLinkWithRel("health", body);
 					verify(this.linkDiscoverer).findLinkWithRel("info", body);
 					verifyNoMoreInteractions(this.linkDiscoverer);
+				});
+	}
+
+	@Test
+	public void shouldReturnAnEmptyMonoWhenSomethingGoesWrong() {
+		when(this.clientResponse.toEntity(String.class))
+				.thenReturn(Mono.error(new RuntimeException("OOPSIE")));
+
+		this.discoverer.findActuatorEndpoints(this.serviceInstance)
+				.subscribe(actuatorEndpoints -> {
+					assertThat(actuatorEndpoints).isEmpty();
+
+					verify(this.webClient).get();
+					verifyNoMoreInteractions(this.webClient);
+					verify(this.requestHeadersSpec).exchange();
+					verifyNoMoreInteractions(this.requestHeadersSpec);
+					verify(this.requestHeadersUriSpec).uri(URI.create("http://localhost:8080/actuator"));
+					verifyNoMoreInteractions(this.requestHeadersUriSpec);
+					verify(this.clientResponse).toEntity(String.class);
+					verifyNoMoreInteractions(this.clientResponse);
 				});
 	}
 

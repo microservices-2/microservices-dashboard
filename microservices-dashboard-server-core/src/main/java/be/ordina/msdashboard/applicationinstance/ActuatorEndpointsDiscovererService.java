@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -33,6 +35,8 @@ import org.springframework.hateoas.Links;
  * @author Tim Ysewyn
  */
 class ActuatorEndpointsDiscovererService {
+
+	private static final Logger logger = LoggerFactory.getLogger(ActuatorEndpointsDiscovererService.class);
 
 	private final HalActuatorEndpointsDiscoverer halActuatorEndpointsDiscoverer;
 
@@ -48,7 +52,11 @@ class ActuatorEndpointsDiscovererService {
 		return Flux.fromIterable(this.actuatorEndpointsDiscoverers)
 				.flatMap(a -> a.findActuatorEndpoints(serviceInstance))
 				.concatWith(this.halActuatorEndpointsDiscoverer.findActuatorEndpoints(serviceInstance))
-				.reduce(reduceActuatorEndpoints());
+				.reduce(reduceActuatorEndpoints())
+				.onErrorResume(ex -> {
+					logger.error("Something went wrong while discovering the actuator endpoints", ex);
+					return Mono.empty();
+				});
 	}
 
 	private BiFunction<Links, Links, Links> reduceActuatorEndpoints() {

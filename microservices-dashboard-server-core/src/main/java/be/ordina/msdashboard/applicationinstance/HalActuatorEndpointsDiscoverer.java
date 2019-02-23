@@ -61,7 +61,11 @@ public class HalActuatorEndpointsDiscoverer implements ActuatorEndpointsDiscover
 		return this.webClient.get().uri(actuatorBaseUri)
 				.exchange()
 				.flatMap(c -> c.toEntity(String.class))
-				.map(this::discoverLinks);
+				.map(this::discoverLinks)
+				.onErrorResume(ex -> {
+					logger.error("Could not discover the actuator endpoints, skipping the HAL discoverer", ex);
+					return Mono.empty();
+				});
 	}
 
 	private Links discoverLinks(ResponseEntity<String> response) {
