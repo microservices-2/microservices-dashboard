@@ -14,33 +14,27 @@
  * limitations under the License.
  */
 
-package be.ordina.msdashboard.applicationinstance.events;
+package be.ordina.msdashboard.applicationinstance.commands;
 
 import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
 
-import org.springframework.boot.actuate.health.Health;
-import org.springframework.context.ApplicationEvent;
+import org.springframework.util.Assert;
 
 /**
- * An {@link ApplicationEvent application event} which signals successful retrieval of an instance its health data.
+ * A command to delete an {@link ApplicationInstance application instance}.
  *
- * @author Dieter Hubau
+ * @author Tim Ysewyn
  */
-public class ApplicationInstanceHealthDataRetrieved extends ApplicationEvent {
+public final class DeleteApplicationInstance {
 
-	private Health health;
+	private final String id;
 
-	public ApplicationInstanceHealthDataRetrieved(ApplicationInstance instance, Health health) {
-		super(instance);
-		this.health = health;
+	public DeleteApplicationInstance(String id) {
+		Assert.notNull(id, "id must not be null!");
+		this.id = id;
 	}
 
-	public ApplicationInstance getApplicationInstance() {
-		return (ApplicationInstance) this.source;
+	public String getId() {
+		return this.id;
 	}
-
-	public Health getHealth() {
-		return this.health;
-	}
-
 }

@@ -33,6 +33,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import reactor.core.publisher.Mono;
 
+import be.ordina.msdashboard.applicationinstance.commands.UpdateApplicationInstanceHealth;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceCreated;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrievalFailed;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrieved;
@@ -164,7 +165,11 @@ public class ApplicationInstanceHealthWatcherTests {
 
 		this.healthWatcher.updateHealthForApplicationInstance(event);
 
-		verify(this.applicationInstanceService).updateHealthStatusForApplicationInstance("a-1", Status.UP);
+		ArgumentCaptor<UpdateApplicationInstanceHealth> captor = ArgumentCaptor.forClass(UpdateApplicationInstanceHealth.class);
+		verify(this.applicationInstanceService).updateApplicationInstanceHealth(captor.capture());
+		UpdateApplicationInstanceHealth command = captor.getValue();
+		assertThat(command.getId()).isEqualTo("a-1");
+		assertThat(command.getHealthStatus()).isEqualTo(Status.UP);
 		verifyNoMoreInteractions(this.applicationInstanceService);
 		verifyZeroInteractions(this.applicationEventPublisher);
 	}

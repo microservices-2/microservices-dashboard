@@ -16,6 +16,8 @@
 
 package be.ordina.msdashboard.applicationinstance;
 
+import be.ordina.msdashboard.applicationinstance.commands.CreateApplicationInstance;
+import be.ordina.msdashboard.applicationinstance.commands.DeleteApplicationInstance;
 import be.ordina.msdashboard.discovery.events.ServiceInstanceDisappeared;
 import be.ordina.msdashboard.discovery.events.ServiceInstanceDiscovered;
 
@@ -36,11 +38,13 @@ class ApplicationInstanceUpdater {
 
 	@EventListener(ServiceInstanceDiscovered.class)
 	public void createNewApplicationInstance(ServiceInstanceDiscovered event) {
-		this.applicationInstanceService.createApplicationInstanceForServiceInstance(event.getServiceInstance());
+		CreateApplicationInstance command = new CreateApplicationInstance(event.getServiceInstance());
+		this.applicationInstanceService.createApplicationInstance(command);
 	}
 
 	@EventListener(ServiceInstanceDisappeared.class)
 	public void deleteApplicationInstance(ServiceInstanceDisappeared event) {
-		this.applicationInstanceService.deleteApplicationInstance(event.getServiceInstanceId());
+		DeleteApplicationInstance command = new DeleteApplicationInstance(event.getServiceInstanceId());
+		this.applicationInstanceService.deleteApplicationInstance(command);
 	}
 }

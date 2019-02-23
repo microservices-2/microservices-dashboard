@@ -24,6 +24,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import be.ordina.msdashboard.applicationinstance.commands.CreateApplicationInstance;
+import be.ordina.msdashboard.applicationinstance.commands.DeleteApplicationInstance;
 import be.ordina.msdashboard.discovery.ServiceDiscoveryEventMother;
 import be.ordina.msdashboard.discovery.events.ServiceInstanceDisappeared;
 import be.ordina.msdashboard.discovery.events.ServiceInstanceDiscovered;
@@ -33,6 +35,7 @@ import org.springframework.cloud.client.ServiceInstance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 /**
  * @author Tim Ysewyn
@@ -46,25 +49,27 @@ public class ApplicationInstanceUpdaterTests {
 	@InjectMocks
 	private ApplicationInstanceUpdater applicationInstanceUpdater;
 
-	@Captor
-	private ArgumentCaptor<ServiceInstance> serviceInstanceArgumentCaptor;
-
 	@Test
 	public void applicationInstanceShouldBeAddedToCatalogWhenNewServiceInstanceIsDiscovered() {
 		ServiceInstance discoveredServiceInstance = new DefaultServiceInstance("a-1", "a", "host", 8080, false);
 		ServiceInstanceDiscovered event = ServiceDiscoveryEventMother.newServiceInstanceDiscovered(discoveredServiceInstance);
 		this.applicationInstanceUpdater.createNewApplicationInstance(event);
-		verify(this.applicationInstanceService)
-				.createApplicationInstanceForServiceInstance(this.serviceInstanceArgumentCaptor.capture());
-		ServiceInstance serviceInstance = this.serviceInstanceArgumentCaptor.getValue();
-		assertThat(serviceInstance).isEqualTo(discoveredServiceInstance);
+		ArgumentCaptor<CreateApplicationInstance> captor = ArgumentCaptor.forClass(CreateApplicationInstance.class);
+		verify(this.applicationInstanceService).createApplicationInstance(captor.capture());
+		CreateApplicationInstance command = captor.getValue();
+		assertThat(command.getServiceInstance()).isEqualTo(discoveredServiceInstance);
+		verifyNoMoreInteractions(this.applicationInstanceService);
 	}
 
 	@Test
 	public void applicationInstanceShouldBeRemovedFromCatalogWhenServiceInstanceHasDisappeared() {
 		ServiceInstanceDisappeared event = ServiceDiscoveryEventMother.serviceInstanceDisappeared("a-1");
 		this.applicationInstanceUpdater.deleteApplicationInstance(event);
-		verify(this.applicationInstanceService).deleteApplicationInstance("a-1");
+		ArgumentCaptor<DeleteApplicationInstance> captor = ArgumentCaptor.forClass(DeleteApplicationInstance.class);
+		verify(this.applicationInstanceService).deleteApplicationInstance(captor.capture());
+		DeleteApplicationInstance command = captor.getValue();
+		assertThat(command.getId()).isEqualTo("a-1");
+		verifyNoMoreInteractions(this.applicationInstanceService);
 	}
 
 }

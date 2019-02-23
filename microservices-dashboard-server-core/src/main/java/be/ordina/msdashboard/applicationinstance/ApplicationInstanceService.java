@@ -19,7 +19,10 @@ package be.ordina.msdashboard.applicationinstance;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.boot.actuate.health.Status;
+import be.ordina.msdashboard.applicationinstance.commands.CreateApplicationInstance;
+import be.ordina.msdashboard.applicationinstance.commands.DeleteApplicationInstance;
+import be.ordina.msdashboard.applicationinstance.commands.UpdateApplicationInstanceHealth;
+
 import org.springframework.cloud.client.ServiceInstance;
 
 /**
@@ -45,7 +48,16 @@ public class ApplicationInstanceService {
 				.map(ApplicationInstance::getId);
 	}
 
-	public String createApplicationInstanceForServiceInstance(final ServiceInstance serviceInstance) {
+	public Optional<ApplicationInstance> getById(String id) {
+		return Optional.ofNullable(this.repository.getById(id));
+	}
+
+	public List<ApplicationInstance> getApplicationInstances() {
+		return this.repository.getAll();
+	}
+
+	public String createApplicationInstance(CreateApplicationInstance command) {
+		final ServiceInstance serviceInstance = command.getServiceInstance();
 		this.actuatorEndpointsDiscovererService.findActuatorEndpoints(serviceInstance)
 				.subscribe(actuatorEndpoints -> {
 					ApplicationInstance applicationInstance = ApplicationInstance.Builder
@@ -58,26 +70,20 @@ public class ApplicationInstanceService {
 		return serviceInstance.getInstanceId();
 	}
 
-	public void deleteApplicationInstance(String applicationInstanceId) {
-		this.getById(applicationInstanceId)
+	public void updateApplicationInstanceHealth(final UpdateApplicationInstanceHealth command) {
+		this.getById(command.getId())
 				.ifPresent(applicationInstance -> {
-					applicationInstance.delete();
+					applicationInstance.updateHealthStatus(command.getHealthStatus());
 					this.repository.save(applicationInstance);
 				});
 	}
 
-	public Optional<ApplicationInstance> getById(String id) {
-		return Optional.ofNullable(this.repository.getById(id));
-	}
-
-	public List<ApplicationInstance> getApplicationInstances() {
-		return this.repository.getAll();
-	}
-
-	public void updateHealthStatusForApplicationInstance(String applicationInstanceId, Status healthStatus) {
-		ApplicationInstance instance = this.repository.getById(applicationInstanceId);
-		instance.updateHealthStatus(healthStatus);
-		this.repository.save(instance);
+	public void deleteApplicationInstance(final DeleteApplicationInstance command) {
+		this.getById(command.getId())
+				.ifPresent(applicationInstance -> {
+					applicationInstance.delete();
+					this.repository.save(applicationInstance);
+				});
 	}
 
 }

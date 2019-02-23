@@ -14,33 +14,28 @@
  * limitations under the License.
  */
 
-package be.ordina.msdashboard.applicationinstance.events;
+package be.ordina.msdashboard.applicationinstance.commands;
 
 import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
 
-import org.springframework.boot.actuate.health.Health;
-import org.springframework.context.ApplicationEvent;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.util.Assert;
 
 /**
- * An {@link ApplicationEvent application event} which signals successful retrieval of an instance its health data.
+ * A command to create an {@link ApplicationInstance application instance}.
  *
- * @author Dieter Hubau
+ * @author Tim Ysewyn
  */
-public class ApplicationInstanceHealthDataRetrieved extends ApplicationEvent {
+public final class CreateApplicationInstance {
 
-	private Health health;
+	private final ServiceInstance serviceInstance;
 
-	public ApplicationInstanceHealthDataRetrieved(ApplicationInstance instance, Health health) {
-		super(instance);
-		this.health = health;
+	public CreateApplicationInstance(ServiceInstance serviceInstance) {
+		Assert.notNull(serviceInstance, "serviceInstance must not be null!");
+		this.serviceInstance = serviceInstance;
 	}
 
-	public ApplicationInstance getApplicationInstance() {
-		return (ApplicationInstance) this.source;
+	public ServiceInstance getServiceInstance() {
+		return this.serviceInstance;
 	}
-
-	public Health getHealth() {
-		return this.health;
-	}
-
 }

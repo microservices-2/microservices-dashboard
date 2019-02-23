@@ -31,6 +31,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import reactor.core.publisher.Mono;
 
+import be.ordina.msdashboard.applicationinstance.commands.CreateApplicationInstance;
+import be.ordina.msdashboard.applicationinstance.commands.DeleteApplicationInstance;
+import be.ordina.msdashboard.applicationinstance.commands.UpdateApplicationInstanceHealth;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceDeleted;
 
 import org.springframework.boot.actuate.health.Status;
@@ -91,7 +94,8 @@ public class ApplicationInstanceServiceTests {
 		when(this.repository.save(any(ApplicationInstance.class)))
 				.thenAnswer((Answer<ApplicationInstance>) invocation -> invocation.getArgument(0));
 
-		String applicationInstanceId = this.service.createApplicationInstanceForServiceInstance(this.serviceInstance);
+		CreateApplicationInstance command = new CreateApplicationInstance(this.serviceInstance);
+		String applicationInstanceId = this.service.createApplicationInstance(command);
 
 		assertThat(applicationInstanceId).isEqualTo("a-1");
 
@@ -112,7 +116,8 @@ public class ApplicationInstanceServiceTests {
 		when(this.repository.save(any(ApplicationInstance.class)))
 				.thenAnswer((Answer<ApplicationInstance>) invocation -> invocation.getArgument(0));
 
-		String applicationInstanceId = this.service.createApplicationInstanceForServiceInstance(this.serviceInstance);
+		CreateApplicationInstance command = new CreateApplicationInstance(this.serviceInstance);
+		String applicationInstanceId = this.service.createApplicationInstance(command);
 
 		assertThat(applicationInstanceId).isEqualTo("a-1");
 
@@ -143,7 +148,8 @@ public class ApplicationInstanceServiceTests {
 		when(this.repository.save(any(ApplicationInstance.class)))
 				.thenAnswer((Answer<ApplicationInstance>) invocation -> invocation.getArgument(0));
 
-		this.service.updateHealthStatusForApplicationInstance("a-1", Status.UP);
+		UpdateApplicationInstanceHealth command = new UpdateApplicationInstanceHealth("a-1", Status.UP);
+		this.service.updateApplicationInstanceHealth(command);
 
 		verify(this.repository).save(this.applicationInstanceArgumentCaptor.capture());
 		ApplicationInstance applicationInstance = this.applicationInstanceArgumentCaptor.getValue();
@@ -156,7 +162,8 @@ public class ApplicationInstanceServiceTests {
 		applicationInstance.markChangesAsCommitted();
 		when(this.repository.getById("a-1")).thenReturn(applicationInstance);
 
-		this.service.deleteApplicationInstance("a-1");
+		DeleteApplicationInstance command = new DeleteApplicationInstance("a-1");
+		this.service.deleteApplicationInstance(command);
 
 		verify(this.repository).save(this.applicationInstanceArgumentCaptor.capture());
 		ApplicationInstance applicationInstanceToBeSaved = this.applicationInstanceArgumentCaptor.getValue();

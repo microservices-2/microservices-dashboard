@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import be.ordina.msdashboard.applicationinstance.commands.UpdateApplicationInstanceHealth;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceCreated;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrievalFailed;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrieved;
@@ -91,9 +92,10 @@ public class ApplicationInstanceHealthWatcher {
 
 	@EventListener({ ApplicationInstanceHealthDataRetrieved.class })
 	public void updateHealthForApplicationInstance(ApplicationInstanceHealthDataRetrieved event) {
-		this.applicationInstanceService.updateHealthStatusForApplicationInstance(
-				((ApplicationInstance) event.getSource()).getId(),
-				event.getHealth().getStatus());
+		UpdateApplicationInstanceHealth command =
+				new UpdateApplicationInstanceHealth(event.getApplicationInstance().getId(),
+						event.getHealth().getStatus());
+		this.applicationInstanceService.updateApplicationInstanceHealth(command);
 	}
 
 	/**
