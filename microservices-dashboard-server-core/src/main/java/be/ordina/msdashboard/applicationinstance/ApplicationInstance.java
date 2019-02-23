@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceCreated;
+import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceDeleted;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthUpdated;
 
 import org.springframework.boot.actuate.health.Status;
@@ -40,12 +41,14 @@ public final class ApplicationInstance {
 	private List<ApplicationEvent> changes = new ArrayList<>();
 
 	private final String id;
+	private final String application;
 	private final URI baseUri;
 	private Status healthStatus = Status.UNKNOWN;
 	private Links actuatorEndpoints;
 
 	private ApplicationInstance(Builder builder) {
 		this.id = builder.id;
+		this.application = builder.application;
 		this.baseUri = builder.baseUri;
 		this.actuatorEndpoints = builder.actuatorEndpoints;
 		this.changes.add(new ApplicationInstanceCreated(this));
@@ -53,6 +56,10 @@ public final class ApplicationInstance {
 
 	public String getId() {
 		return this.id;
+	}
+
+	public String getApplication() {
+		return this.application;
 	}
 
 	public Status getHealthStatus() {
@@ -78,6 +85,10 @@ public final class ApplicationInstance {
 		return Optional.ofNullable(this.actuatorEndpoints.getLink(endpoint));
 	}
 
+	public void delete() {
+		this.changes.add(new ApplicationInstanceDeleted(this));
+	}
+
 	public List<ApplicationEvent> getUncommittedChanges() {
 		return this.changes;
 	}
@@ -95,15 +106,17 @@ public final class ApplicationInstance {
 	static final class Builder {
 
 		private final String id;
+		private final String application;
 		private URI baseUri;
 		private Links actuatorEndpoints = new Links();
 
-		private Builder(String id) {
+		private Builder(String id, String application) {
 			this.id = id;
+			this.application = application;
 		}
 
-		static Builder withId(String id) {
-			return new Builder(id);
+		static Builder forApplicationWithId(String application, String id) {
+			return new Builder(id, application);
 		}
 
 		Builder baseUri(URI baseUri) {

@@ -49,13 +49,21 @@ public class ApplicationInstanceService {
 		this.actuatorEndpointsDiscovererService.findActuatorEndpoints(serviceInstance)
 				.subscribe(actuatorEndpoints -> {
 					ApplicationInstance applicationInstance = ApplicationInstance.Builder
-							.withId(serviceInstance.getInstanceId())
+							.forApplicationWithId(serviceInstance.getServiceId(), serviceInstance.getInstanceId())
 							.baseUri(serviceInstance.getUri())
 							.actuatorEndpoints(actuatorEndpoints)
 							.build();
 					this.repository.save(applicationInstance);
 				});
 		return serviceInstance.getInstanceId();
+	}
+
+	public void deleteApplicationInstance(String applicationInstanceId) {
+		Optional.ofNullable(this.repository.getById(applicationInstanceId))
+				.ifPresent(applicationInstance -> {
+					applicationInstance.delete();
+					this.repository.save(applicationInstance);
+				});
 	}
 
 	public List<ApplicationInstance> getApplicationInstances() {

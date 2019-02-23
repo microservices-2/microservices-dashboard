@@ -14,25 +14,19 @@
  * limitations under the License.
  */
 
-package be.ordina.msdashboard.applicationinstance.events;
+package be.ordina.msdashboard.discovery;
 
-import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
-
-import org.springframework.context.ApplicationEvent;
+import java.util.function.Predicate;
 
 /**
- * An {@link ApplicationEvent application event} which signals the creation of an {@link ApplicationInstance application instance}.
+ * Predicate to filter out discovered applications.
+ * Elements that match the given predicate will be kept.
  *
  * @author Tim Ysewyn
  */
-public class ApplicationInstanceCreated extends ApplicationEvent {
+@FunctionalInterface
+public interface ApplicationFilter extends Predicate<String> {
 
-	public ApplicationInstanceCreated(ApplicationInstance instance) {
-		super(instance);
-	}
-
-	public ApplicationInstance getApplicationInstance() {
-		return (ApplicationInstance) this.source;
-	}
+	// No additional methods
 
 }

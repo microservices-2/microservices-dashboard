@@ -35,14 +35,14 @@ public class ApplicationInstanceTests {
 
 	@Test
 	public void newlyCreatedInstanceShouldHaveOneUncommittedChange() {
-		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1");
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1", "a");
 
 		assertThat(applicationInstance.getUncommittedChanges()).hasSize(1);
 	}
 
 	@Test
 	public void instanceShouldHaveNoUncommittedChangesAfterBeingMarkedAsCommitted() {
-		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1");
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1", "a");
 		applicationInstance.markChangesAsCommitted();
 
 		assertThat(applicationInstance.getUncommittedChanges()).isEmpty();
@@ -50,14 +50,14 @@ public class ApplicationInstanceTests {
 
 	@Test
 	public void newlyCreatedInstanceShouldHaveUnknownHealthStatus() {
-		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1");
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1", "a");
 
 		assertThat(applicationInstance.getHealthStatus()).isEqualTo(Status.UNKNOWN);
 	}
 
 	@Test
 	public void instanceShouldNotUpdateItsHealthStatusAgainIfNotChanged() {
-		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1");
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1", "a");
 		applicationInstance.markChangesAsCommitted();
 		assertThat(applicationInstance.getHealthStatus()).isEqualTo(Status.UNKNOWN);
 
@@ -76,14 +76,14 @@ public class ApplicationInstanceTests {
 
 	@Test
 	public void newlyCreatedInstanceWithoutActuatorEndpointsShouldReturnEmptyList() {
-		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1");
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1", "a");
 
 		assertThat(applicationInstance.getActuatorEndpoints()).isEmpty();
 	}
 
 	@Test
 	public void newlyCreatedInstanceWithActuatorEndpointsShouldReturnListWithEndpoints() {
-		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1",
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1", "a",
 				URI.create("http://localhost:8080"),
 				new Links(new Link("http://localhost:8080/actuator/health", "health")));
 
@@ -92,7 +92,7 @@ public class ApplicationInstanceTests {
 
 	@Test
 	public void undefinedActuatorEndpointWillReturnEmptyOptional() {
-		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1",
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1", "a",
 				URI.create("http://localhost:8080"),
 				new Links(new Link("http://localhost:8080/actuator/health", "health")));
 
@@ -102,7 +102,7 @@ public class ApplicationInstanceTests {
 
 	@Test
 	public void definedActuatorEndpointWillReturnLink() {
-		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1",
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1", "a",
 				URI.create("http://localhost:8080"),
 				new Links(new Link("http://localhost:8080/actuator/health", "health")));
 

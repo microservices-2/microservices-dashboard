@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
+
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -31,18 +33,34 @@ import static java.util.stream.Collectors.toList;
  * @author Tim Ysewyn
  * @author Steve De Zitter
  */
-class Catalog {
+public class Catalog {
 
 	private Set<String> applications = new HashSet<>();
 	private Map<String, List<String>> applicationInstances = new HashMap<>();
 
-	List<String> getApplications() {
+	public List<String> getApplications() {
 		return new ArrayList<>(this.applications);
 	}
 
-	List<String> updateListOfApplications(List<String> applications) {
-		this.applications = new HashSet<>(applications);
-		return this.getApplications();
+	void addApplication(String application) {
+		this.applications.add(application);
+	}
+
+	void removeApplication(String application) {
+		this.applications.remove(application);
+	}
+
+	void addApplicationInstance(ApplicationInstance applicationInstance) {
+		this.addApplication(applicationInstance.getApplication());
+		List<String> instances = this.applicationInstances.getOrDefault(applicationInstance.getApplication(), new ArrayList<>());
+		instances.add(applicationInstance.getId());
+		this.applicationInstances.put(applicationInstance.getApplication(), instances);
+	}
+
+	void removeApplicationInstance(ApplicationInstance applicationInstance) {
+		List<String> instances = this.applicationInstances.getOrDefault(applicationInstance.getApplication(), new ArrayList<>());
+		instances.remove(applicationInstance.getId());
+		this.applicationInstances.put(applicationInstance.getApplication(), instances);
 	}
 
 	List<String> getApplicationInstances() {
@@ -51,12 +69,7 @@ class Catalog {
 				.collect(toList());
 	}
 
-	List<String> getApplicationInstancesForApplication(String application) {
+	public List<String> getApplicationInstancesForApplication(String application) {
 		return this.applicationInstances.getOrDefault(application, new ArrayList<>());
-	}
-
-	void updateListOfInstancesForApplication(String application, List<String> applicationInstanceIds) {
-		this.applications.add(application);
-		this.applicationInstances.put(application, applicationInstanceIds);
 	}
 }

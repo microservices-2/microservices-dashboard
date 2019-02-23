@@ -31,6 +31,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import reactor.core.publisher.Mono;
 
+import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceDeleted;
+
 import org.springframework.boot.actuate.health.Status;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.hateoas.Link;
@@ -73,7 +75,7 @@ public class ApplicationInstanceServiceTests {
 	@Test
 	public void shouldRetrieveApplicationInstanceFromRepository() {
 		when(this.serviceInstance.getInstanceId()).thenReturn("a-1");
-		when(this.repository.getById("a-1")).thenReturn(ApplicationInstanceMother.instance("a-1"));
+		when(this.repository.getById("a-1")).thenReturn(ApplicationInstanceMother.instance("a-1", "a"));
 
 		Optional<String> applicationInstanceId = this.service.getApplicationInstanceIdForServiceInstance(this.serviceInstance);
 
@@ -127,7 +129,7 @@ public class ApplicationInstanceServiceTests {
 
 	@Test
 	public void shouldRetrieveAllApplicationInstancesFromRepository() {
-		when(this.repository.getAll()).thenReturn(singletonList(ApplicationInstanceMother.instance("a-1")));
+		when(this.repository.getAll()).thenReturn(singletonList(ApplicationInstanceMother.instance("a-1", "a")));
 
 		List<ApplicationInstance> applicationInstances = this.service.getApplicationInstances();
 
@@ -137,7 +139,7 @@ public class ApplicationInstanceServiceTests {
 
 	@Test
 	public void shouldUpdateTheHealthOfAnApplicationInstance() {
-		when(this.repository.getById("a-1")).thenReturn(ApplicationInstanceMother.instance("a-1"));
+		when(this.repository.getById("a-1")).thenReturn(ApplicationInstanceMother.instance("a-1", "a"));
 		when(this.repository.save(any(ApplicationInstance.class)))
 				.thenAnswer((Answer<ApplicationInstance>) invocation -> invocation.getArgument(0));
 
@@ -146,6 +148,22 @@ public class ApplicationInstanceServiceTests {
 		verify(this.repository).save(this.applicationInstanceArgumentCaptor.capture());
 		ApplicationInstance applicationInstance = this.applicationInstanceArgumentCaptor.getValue();
 		assertThat(applicationInstance.getId()).isEqualTo("a-1");
+	}
+
+	@Test
+	public void shouldDeleteApplicationInstanceAndSaveInRepository() {
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1", "a");
+		applicationInstance.markChangesAsCommitted();
+		when(this.repository.getById("a-1")).thenReturn(applicationInstance);
+
+		this.service.deleteApplicationInstance("a-1");
+
+		verify(this.repository).save(this.applicationInstanceArgumentCaptor.capture());
+		ApplicationInstance applicationInstanceToBeSaved = this.applicationInstanceArgumentCaptor.getValue();
+		assertThat(applicationInstanceToBeSaved.getId()).isEqualTo("a-1");
+		assertThat(applicationInstanceToBeSaved.getUncommittedChanges()).hasSize(1);
+		assertThat(applicationInstanceToBeSaved.getUncommittedChanges().get(0))
+				.isInstanceOf(ApplicationInstanceDeleted.class);
 	}
 
 }

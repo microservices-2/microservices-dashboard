@@ -3,7 +3,6 @@ package be.ordina.msdashboard.autoconfigure;
 import org.junit.Test;
 
 import be.ordina.msdashboard.applicationinstance.ApplicationInstanceHealthWatcher;
-import be.ordina.msdashboard.catalog.LandscapeWatcher;
 
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -25,7 +24,6 @@ public class AutoConfigurationTests {
 	@Test
 	public void shouldLoadContext() {
 		this.contextRunner.run(context -> {
-			assertThat(context.getBean(LandscapeWatcher.class)).isNotNull();
 			assertThat(context.getBean(WebClient.class)).isNotNull();
 			assertThat(context.getBean(ApplicationInstanceHealthWatcher.class)).isNotNull();
 		});

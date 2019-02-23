@@ -21,13 +21,13 @@ import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
 import org.springframework.context.ApplicationEvent;
 
 /**
- * An {@link ApplicationEvent application event} which signals the creation of an {@link ApplicationInstance application instance}.
+ * An {@link ApplicationEvent application event} which signals the deletion of an {@link ApplicationInstance application instance}.
  *
  * @author Tim Ysewyn
  */
-public class ApplicationInstanceCreated extends ApplicationEvent {
+public class ApplicationInstanceDeleted extends ApplicationEvent {
 
-	public ApplicationInstanceCreated(ApplicationInstance instance) {
+	public ApplicationInstanceDeleted(ApplicationInstance instance) {
 		super(instance);
 	}
 

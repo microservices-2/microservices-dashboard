@@ -16,11 +16,9 @@
 
 package be.ordina.msdashboard.catalog;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 import org.junit.Test;
 
+import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
 import be.ordina.msdashboard.applicationinstance.ApplicationInstanceMother;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,31 +31,69 @@ public class CatalogServiceTests {
 	@Test
 	public void shouldReturnEmptyListOfApplicationsForEmptyCatalog() {
 		CatalogService catalogService = new CatalogService();
-		assertThat(catalogService.getApplications()).isEmpty();
+		Catalog catalog = catalogService.getCatalog();
+		assertThat(catalog.getApplications()).isEmpty();
 	}
 
 	@Test
 	public void shouldReturnEmptyListOfApplicationInstancesForEmptyCatalog() {
 		CatalogService catalogService = new CatalogService();
-		assertThat(catalogService.getApplicationInstances()).isEmpty();
+		Catalog catalog = catalogService.getCatalog();
+		assertThat(catalog.getApplicationInstances()).isEmpty();
 	}
 
 	@Test
-	public void shouldReturnUpdatedListOfApplicationsWhenListOfApplicationsIsUpdated() {
+	public void shouldAddApplicationToEmptyCatalog() {
 		CatalogService catalogService = new CatalogService();
-		catalogService.updateListOfApplications(Arrays.asList("a", "b"));
-		assertThat(catalogService.getApplications()).containsExactly("a", "b");
-		catalogService.updateListOfApplications(Arrays.asList("b", "c"));
-		assertThat(catalogService.getApplications()).containsExactly("b", "c");
+		catalogService.addApplicationToCatalog("a");
+		Catalog catalog = catalogService.getCatalog();
+		assertThat(catalog.getApplications()).hasSize(1);
+		assertThat(catalog.getApplications()).contains("a");
 	}
 
 	@Test
-	public void shouldReturnUpdatedListOfInstancesWhenListOfInstancesForAnApplicationsIsUpdated() {
+	public void shouldNotAddKnownApplicationToCatalog() {
 		CatalogService catalogService = new CatalogService();
-		catalogService.updateListOfInstancesForApplication("a", Collections.singletonList("a-1"));
-		assertThat(catalogService.getApplicationInstances()).containsExactly("a-1");
-		catalogService.updateListOfInstancesForApplication("a", Collections.singletonList("a-2"));
-		assertThat(catalogService.getApplicationInstances()).containsExactly("a-2");
+		catalogService.addApplicationToCatalog("a");
+		catalogService.addApplicationToCatalog("a");
+		Catalog catalog = catalogService.getCatalog();
+		assertThat(catalog.getApplications()).hasSize(1);
+		assertThat(catalog.getApplications()).contains("a");
+	}
+
+	@Test
+	public void shouldRemoveKnownApplicationFromCatalog() {
+		CatalogService catalogService = new CatalogService();
+		catalogService.addApplicationToCatalog("a");
+		catalogService.removeApplicationFromCatalog("a");
+		Catalog catalog = catalogService.getCatalog();
+		assertThat(catalog.getApplications()).isEmpty();
+	}
+
+	@Test
+	public void shouldAddApplicationAndInstanceToEmptyCatalog() {
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1", "a");
+		CatalogService catalogService = new CatalogService();
+		catalogService.addApplicationInstanceToCatalog(applicationInstance);
+		Catalog catalog = catalogService.getCatalog();
+		assertThat(catalog.getApplications()).hasSize(1);
+		assertThat(catalog.getApplications()).contains("a");
+		assertThat(catalog.getApplicationInstances()).hasSize(1);
+		assertThat(catalog.getApplicationInstancesForApplication("a")).hasSize(1);
+		assertThat(catalog.getApplicationInstancesForApplication("a")).contains("a-1");
+	}
+
+	@Test
+	public void shouldRemoveApplicationAndInstanceFromCatalog() {
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1", "a");
+		CatalogService catalogService = new CatalogService();
+		catalogService.addApplicationInstanceToCatalog(applicationInstance);
+		catalogService.removeApplicationInstanceFromCatalog(applicationInstance);
+		Catalog catalog = catalogService.getCatalog();
+		assertThat(catalog.getApplications()).hasSize(1);
+		assertThat(catalog.getApplications()).contains("a");
+		assertThat(catalog.getApplicationInstances()).hasSize(0);
+		assertThat(catalog.getApplicationInstancesForApplication("a")).hasSize(0);
 	}
 
 }

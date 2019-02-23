@@ -60,7 +60,7 @@ public class EventSourcedApplicationInstanceRepositoryTests {
 
 	@Test
 	public void shouldReturnListWithSavedApplicationInstances() {
-		this.repository.save(ApplicationInstanceMother.instance("a-1"));
+		this.repository.save(ApplicationInstanceMother.instance("a-1", "a"));
 
 		List<ApplicationInstance> applicationInstances = this.repository.getAll();
 
@@ -76,7 +76,7 @@ public class EventSourcedApplicationInstanceRepositoryTests {
 
 	@Test
 	public void shouldReturnInstanceWhenApplicationInstanceHasBeenFound() {
-		this.repository.save(ApplicationInstanceMother.instance("a-1"));
+		this.repository.save(ApplicationInstanceMother.instance("a-1", "a"));
 
 		ApplicationInstance applicationInstance = this.repository.getById("a-1");
 
@@ -86,7 +86,7 @@ public class EventSourcedApplicationInstanceRepositoryTests {
 
 	@Test
 	public void shouldDispatchEventsAndMarkChangesAsCommittedAfterSaving() {
-		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1");
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1", "a");
 
 		applicationInstance = this.repository.save(applicationInstance);
 

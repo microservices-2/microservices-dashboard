@@ -18,6 +18,7 @@ package be.ordina.msdashboard.autoconfigure;
 
 import be.ordina.msdashboard.applicationinstance.ApplicationInstanceConfiguration;
 import be.ordina.msdashboard.catalog.CatalogConfiguration;
+import be.ordina.msdashboard.discovery.DiscoveryConfiguration;
 import be.ordina.msdashboard.eventstore.InMemoryEventStoreConfiguration;
 
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -37,7 +38,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAsync
 @EnableScheduling
 @Import({ApplicationInstanceConfiguration.class, CatalogConfiguration.class,
-		InMemoryEventStoreConfiguration.class })
+		DiscoveryConfiguration.class, InMemoryEventStoreConfiguration.class })
 public class MicroservicesDashboardServerAutoConfiguration {
 
 }

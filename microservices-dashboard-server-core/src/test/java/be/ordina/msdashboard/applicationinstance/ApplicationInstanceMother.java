@@ -30,19 +30,19 @@ public final class ApplicationInstanceMother {
 	}
 
 	public static ApplicationInstance instance() {
-		return instance("id");
+		return instance("a-1", "a");
 	}
 
-	public static ApplicationInstance instance(String id) {
-		return instance(id, URI.create("http://localhost:8080"));
+	public static ApplicationInstance instance(String id, String application) {
+		return instance(id, application, URI.create("http://localhost:8080"));
 	}
 
-	public static ApplicationInstance instance(String id, URI baseUri) {
-		return ApplicationInstance.Builder.withId(id).baseUri(baseUri).build();
+	public static ApplicationInstance instance(String id, String application, URI baseUri) {
+		return ApplicationInstance.Builder.forApplicationWithId(application, id).baseUri(baseUri).build();
 	}
 
-	public static ApplicationInstance instance(String id, URI baseUri, Links actuatorEndpoints) {
-		return ApplicationInstance.Builder.withId(id)
+	public static ApplicationInstance instance(String id, String application, URI baseUri, Links actuatorEndpoints) {
+		return ApplicationInstance.Builder.forApplicationWithId(application, id)
 				.baseUri(baseUri)
 				.actuatorEndpoints(actuatorEndpoints)
 				.build();

@@ -47,7 +47,6 @@ import org.springframework.hateoas.Links;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
 import static org.mockito.BDDMockito.when;
@@ -97,7 +96,7 @@ public class ApplicationInstanceHealthWatcherTests {
 	@Test
 	public void shouldRetrieveTheHealthDataAfterAnApplicationInstanceHasBeenCreated() {
 		ApplicationInstanceCreated event =
-				ApplicationInstanceEventMother.applicationInstanceCreatedWithActuatorEndpoints("a-1",
+				ApplicationInstanceEventMother.applicationInstanceCreatedWithActuatorEndpoints("a-1", "a",
 				new Links(new Link("http://localhost:8080/actuator/health", "health")));
 
 		when(this.responseSpec.bodyToMono(ApplicationInstanceHealthWatcher.HealthWrapper.class)).thenReturn(Mono
@@ -112,7 +111,7 @@ public class ApplicationInstanceHealthWatcherTests {
 	public void shouldHandleApplicationInstanceEventHandlesError() {
 		URI healthActuatorEndpoint = URI.create("http://localhost:8080/actuator/health");
 		ApplicationInstanceCreated event =
-				ApplicationInstanceEventMother.applicationInstanceCreatedWithActuatorEndpoints("a-1",
+				ApplicationInstanceEventMother.applicationInstanceCreatedWithActuatorEndpoints("a-1", "a",
 				new Links(new Link("http://localhost:8080/actuator/health", "health")));
 
 		when(this.responseSpec.bodyToMono(ApplicationInstanceHealthWatcher.HealthWrapper.class))
@@ -125,8 +124,8 @@ public class ApplicationInstanceHealthWatcherTests {
 
 	@Test
 	public void shouldOnlyRetrieveHealthDataForInstancesWithAnHealthActuatorEndpoint() {
-		ApplicationInstance firstInstance = ApplicationInstanceMother.instance("a-1");
-		ApplicationInstance secondInstance = ApplicationInstanceMother.instance("a-2",
+		ApplicationInstance firstInstance = ApplicationInstanceMother.instance("a-1", "a");
+		ApplicationInstance secondInstance = ApplicationInstanceMother.instance("a-2", "a",
 				URI.create("http://localhost:8080"),
 				new Links(new Link("http://localhost:8080/actuator/health", "health")));
 		List<ApplicationInstance> applicationInstances = Arrays.asList(firstInstance, secondInstance);
@@ -143,7 +142,7 @@ public class ApplicationInstanceHealthWatcherTests {
 	@Test
 	public void shouldUpdateTheHealthOfAnApplicationInstanceWhenHealthDataRetrieved() {
 		ApplicationInstanceHealthDataRetrieved event = ApplicationInstanceEventMother
-				.applicationInstanceHealthDataRetrieved("a-1", Health.up().build());
+				.applicationInstanceHealthDataRetrieved("a-1", "a", Health.up().build());
 
 		this.healthWatcher.updateHealthForApplicationInstance(event);
 

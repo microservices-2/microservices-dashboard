@@ -14,22 +14,32 @@
  * limitations under the License.
  */
 
-package be.ordina.msdashboard.catalog;
+package be.ordina.msdashboard.discovery;
 
+import java.util.List;
+
+import be.ordina.msdashboard.catalog.CatalogService;
+
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Configuration for the catalog.
+ * Configuration for the discovery of the environment.
  *
  * @author Tim Ysewyn
  */
 @Configuration
-public class CatalogConfiguration {
+public class DiscoveryConfiguration {
 
 	@Bean
-	public CatalogService catalogService() {
-		return new CatalogService();
+	LandscapeWatcher landscapeWatcher(DiscoveryClient discoveryClient, CatalogService catalogService,
+			List<ApplicationFilter> applicationFilters,
+			List<ApplicationInstanceFilter> applicationInstanceFilters,
+			ApplicationEventPublisher publisher) {
+		return new LandscapeWatcher(discoveryClient, catalogService,
+				applicationFilters, applicationInstanceFilters, publisher);
 	}
 
 }

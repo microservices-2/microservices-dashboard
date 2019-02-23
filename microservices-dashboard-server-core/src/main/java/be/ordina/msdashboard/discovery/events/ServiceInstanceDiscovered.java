@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package be.ordina.msdashboard.applicationinstance.events;
+package be.ordina.msdashboard.discovery.events;
 
-import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
-
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.context.ApplicationEvent;
 
 /**
- * An {@link ApplicationEvent application event} which signals the creation of an {@link ApplicationInstance application instance}.
+ * An {@link ApplicationEvent application event} which signals the discovery of a new {@link ServiceInstance service instance}.
  *
  * @author Tim Ysewyn
  */
-public class ApplicationInstanceCreated extends ApplicationEvent {
+public class ServiceInstanceDiscovered extends ApplicationEvent {
 
-	public ApplicationInstanceCreated(ApplicationInstance instance) {
-		super(instance);
+	public ServiceInstanceDiscovered(ServiceInstance serviceInstance) {
+		super(serviceInstance);
 	}
 
-	public ApplicationInstance getApplicationInstance() {
-		return (ApplicationInstance) this.source;
+	public ServiceInstance getServiceInstance() {
+		return (ServiceInstance) this.source;
 	}
 
 }
