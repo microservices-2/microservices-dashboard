@@ -41,7 +41,7 @@ public class ApplicationInstanceService {
 	}
 
 	public Optional<String> getApplicationInstanceIdForServiceInstance(ServiceInstance serviceInstance) {
-		return Optional.ofNullable(this.repository.getById(serviceInstance.getInstanceId()))
+		return this.getById(serviceInstance.getInstanceId())
 				.map(ApplicationInstance::getId);
 	}
 
@@ -59,11 +59,15 @@ public class ApplicationInstanceService {
 	}
 
 	public void deleteApplicationInstance(String applicationInstanceId) {
-		Optional.ofNullable(this.repository.getById(applicationInstanceId))
+		this.getById(applicationInstanceId)
 				.ifPresent(applicationInstance -> {
 					applicationInstance.delete();
 					this.repository.save(applicationInstance);
 				});
+	}
+
+	public Optional<ApplicationInstance> getById(String id) {
+		return Optional.ofNullable(this.repository.getById(id));
 	}
 
 	public List<ApplicationInstance> getApplicationInstances() {

@@ -16,31 +16,26 @@
 
 package be.ordina.msdashboard.catalog;
 
-import org.junit.Test;
+import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
 
 /**
  * @author Tim Ysewyn
  */
-public class CatalogTests {
+public final class CatalogMother {
 
-	@Test
-	public void newCatalogShouldReturnEmptyListOfApplications() {
-		Catalog catalog = CatalogMother.emptyCatalog();
-		assertThat(catalog.getApplications()).isEmpty();
+	private CatalogMother() {
 	}
 
-	@Test
-	public void newCatalogShouldReturnEmptyListOfApplicationInstances() {
-		Catalog catalog = CatalogMother.emptyCatalog();
-		assertThat(catalog.getApplicationInstances()).isEmpty();
+	public static Catalog emptyCatalog() {
+		return new Catalog();
 	}
 
-	@Test
-	public void catalogShouldReturnEmptyListOfInstancesForUnknownApplication() {
-		Catalog catalog = CatalogMother.emptyCatalog();
-		assertThat(catalog.getApplicationInstancesForApplication("a")).isEmpty();
+	public static Catalog catalogWith(List<ApplicationInstance> applicationInstances) {
+		Catalog catalog = emptyCatalog();
+		applicationInstances.forEach(catalog::addApplicationInstance);
+		return catalog;
 	}
 
 }

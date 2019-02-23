@@ -38,6 +38,9 @@ public class Catalog {
 	private Set<String> applications = new HashSet<>();
 	private Map<String, List<String>> applicationInstances = new HashMap<>();
 
+	Catalog() {
+	}
+
 	public List<String> getApplications() {
 		return new ArrayList<>(this.applications);
 	}
