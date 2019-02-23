@@ -32,4 +32,9 @@ public class CatalogConfiguration {
 		return new CatalogService();
 	}
 
+	@Bean
+	CatalogUpdater catalogUpdater(CatalogService catalogService) {
+		return new CatalogUpdater(catalogService);
+	}
+
 }

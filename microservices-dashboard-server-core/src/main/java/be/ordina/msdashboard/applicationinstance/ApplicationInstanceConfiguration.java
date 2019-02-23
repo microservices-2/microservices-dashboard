@@ -65,4 +65,9 @@ public class ApplicationInstanceConfiguration {
 						new JsonPathLinkDiscoverer("$._links..['%s']..href", MediaType.parseMediaType("application/*+json"))))));
 	}
 
+	@Bean
+	ApplicationInstanceUpdater applicationInstanceUpdater(ApplicationInstanceService service) {
+		return new ApplicationInstanceUpdater(service);
+	}
+
 }
