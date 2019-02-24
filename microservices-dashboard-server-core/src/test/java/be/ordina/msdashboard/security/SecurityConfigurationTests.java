@@ -18,12 +18,11 @@ package be.ordina.msdashboard.security;
 
 import org.junit.Test;
 
-import be.ordina.msdashboard.autoconfigure.MicroservicesDashboardServerAutoConfiguration;
+import be.ordina.msdashboard.configuration.CommonConfiguration;
 
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.cloud.client.discovery.composite.CompositeDiscoveryClientAutoConfiguration;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,14 +37,16 @@ public class SecurityConfigurationTests {
 
 	private ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 			.withConfiguration(AutoConfigurations.of(
-					MicroservicesDashboardServerAutoConfiguration.class,
-					CompositeDiscoveryClientAutoConfiguration.class));
+					SecurityConfiguration.class,
+					CommonConfiguration.class));
 
 	@Test
-	public void shouldConfigureBeanWithoutSecurity() {
+	public void shouldNotConfigureAnyAuthFilter() {
 		this.contextRunner.run(context -> {
 			assertThat(context.containsBean("machine-to-machine-web-client")).isTrue();
-			assertThat(context.getBean(WebClient.class)).isNotNull();
+			assertThat(context.containsBean("ms-dashboard-m2m-basic-filter")).isFalse();
+			assertThat(context.containsBean("ms-dashboard-m2m-oauth-filter")).isFalse();
+			assertThat(context.getBeansOfType(ReactiveClientRegistrationRepository.class)).isEmpty();
 		});
 	}
 
@@ -55,37 +56,39 @@ public class SecurityConfigurationTests {
 			.withPropertyValues(BASIC_PREFIX + ".username=user", BASIC_PREFIX + ".password=password")
 			.run(context -> {
 				assertThat(context.containsBean("machine-to-machine-web-client")).isTrue();
-				assertThat(context.getBean(WebClient.class)).isNotNull();
-		});
+				assertThat(context.containsBean("ms-dashboard-m2m-basic-filter")).isTrue();
+			});
 	}
 
 	@Test
 	public void shouldConfigureBeanWithOAuthUsingGitHubAsProvider() {
 		this.contextRunner
-			.withPropertyValues(REGISTRATION_PREFIX + ".client-id=ms-dashboard",
-					REGISTRATION_PREFIX + ".client-secret=secret",
-					REGISTRATION_PREFIX + ".provider=github")
-			.run(context -> {
-				assertThat(context.containsBean("machine-to-machine-web-client")).isTrue();
-				assertThat(context.getBean(WebClient.class)).isNotNull();
-		});
+				.withPropertyValues(REGISTRATION_PREFIX + ".client-id=ms-dashboard",
+						REGISTRATION_PREFIX + ".client-secret=secret",
+						REGISTRATION_PREFIX + ".provider=github")
+				.run(context -> {
+					assertThat(context.containsBean("machine-to-machine-web-client")).isTrue();
+					assertThat(context.containsBean("ms-dashboard-m2m-oauth-filter")).isTrue();
+					assertThat(context.getBeansOfType(ReactiveClientRegistrationRepository.class)).isNotEmpty();
+				});
 	}
 
 	@Test
 	public void shouldConfigureBeanWithOAuthUsingCustomProvider() {
 		this.contextRunner
-			.withPropertyValues(REGISTRATION_PREFIX + ".client-id=ms-dashboard",
-					REGISTRATION_PREFIX + ".client-secret=secret",
-					REGISTRATION_PREFIX + ".provider=keycloak",
-					REGISTRATION_PREFIX + ".authorization-grant-type=client_credentials",
-					PROVIDER_PREFIX + ".keycloak.authorization-uri=http://authorization-uri.com",
-					PROVIDER_PREFIX + ".keycloak.token-uri=http://token-uri.com",
-					PROVIDER_PREFIX + ".keycloak.user-info-uri=userInfoUri",
-					PROVIDER_PREFIX + ".keycloak.user-name-attribute-name=login")
-			.run(context -> {
-				assertThat(context.containsBean("machine-to-machine-web-client")).isTrue();
-				assertThat(context.getBean(WebClient.class)).isNotNull();
-		});
+				.withPropertyValues(REGISTRATION_PREFIX + ".client-id=ms-dashboard",
+						REGISTRATION_PREFIX + ".client-secret=secret",
+						REGISTRATION_PREFIX + ".provider=keycloak",
+						REGISTRATION_PREFIX + ".authorization-grant-type=client_credentials",
+						PROVIDER_PREFIX + ".keycloak.authorization-uri=http://authorization-uri.com",
+						PROVIDER_PREFIX + ".keycloak.token-uri=http://token-uri.com",
+						PROVIDER_PREFIX + ".keycloak.user-info-uri=userInfoUri",
+						PROVIDER_PREFIX + ".keycloak.user-name-attribute-name=login")
+				.run(context -> {
+					assertThat(context.containsBean("machine-to-machine-web-client")).isTrue();
+					assertThat(context.containsBean("ms-dashboard-m2m-oauth-filter")).isTrue();
+					assertThat(context.getBeansOfType(ReactiveClientRegistrationRepository.class)).isNotEmpty();
+				});
 	}
 
 }

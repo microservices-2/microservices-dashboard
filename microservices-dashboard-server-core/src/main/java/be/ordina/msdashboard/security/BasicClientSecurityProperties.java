@@ -16,14 +16,18 @@
 
 package be.ordina.msdashboard.security;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.StringUtils;
 
 /**
- * Properties for basic authentication.
+ * Properties regarding basic authentication for outgoing HTTP calls.
  *
  * @author Tim Ysewyn
  */
+@ConfigurationProperties(BasicClientSecurityProperties.PREFIX)
 public final class BasicClientSecurityProperties {
+
+	static final String PREFIX = "ms-dashboard.security.client.basic";
 
 	private String username;
 	private String password;

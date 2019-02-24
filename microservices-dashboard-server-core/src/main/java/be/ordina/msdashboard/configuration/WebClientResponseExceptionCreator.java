@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package be.ordina.msdashboard.security;
+package be.ordina.msdashboard.configuration;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

@@ -1,4 +1,4 @@
-package be.ordina.msdashboard.security;
+package be.ordina.msdashboard.configuration;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -10,6 +10,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import reactor.core.publisher.Flux;
+
+import be.ordina.msdashboard.configuration.WebClientResponseExceptionCreator;
 
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;

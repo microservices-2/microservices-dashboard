@@ -19,22 +19,22 @@ package be.ordina.msdashboard.security;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import be.ordina.msdashboard.configuration.MachineToMachineWebClientConfigurer;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.security.oauth2.client.ClientsConfiguredCondition;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientPropertiesRegistrationAdapter;
-import org.springframework.boot.autoconfigure.security.oauth2.client.reactive.ReactiveOAuth2ClientAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.InMemoryReactiveClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
 import org.springframework.security.oauth2.client.web.server.UnAuthenticatedServerOAuth2AuthorizedClientRepository;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
-import org.springframework.web.reactive.function.client.WebClient;
 
 /**
  * Class that contains all security related configuration.
@@ -42,57 +42,40 @@ import org.springframework.web.reactive.function.client.WebClient;
  * @author Tim Ysewyn
  */
 @Configuration
-@EnableConfigurationProperties({ OAuth2ClientProperties.class, SecurityProperties.class })
-@Import(ReactiveOAuth2ClientAutoConfiguration.class)
+@EnableConfigurationProperties({ BasicClientSecurityProperties.class, OAuth2ClientProperties.class })
 public class SecurityConfiguration {
 
-	private static final String CLIENT_NAME = "ms-dashboard";
+	private static final String CLIENT_NAME = "ms-dashboard-m2m";
 
-	@Autowired
-	private SecurityProperties securityProperties;
-
-	@Autowired
-	private OAuth2ClientProperties oauth2ClientProperties;
-
-	@Bean("machine-to-machine-web-client")
-	public WebClient m2mWebClient() {
-		return WebClient.builder()
-				.apply(this::applyBasicFilter)
-				.apply(this::applyOAuthFilter)
-				.apply(this::applyWebClientResponseExceptionFilter)
-				.build();
+	@Bean("ms-dashboard-m2m-basic-filter")
+	@Conditional(BasicClientSecurityConfigured.class)
+	MachineToMachineWebClientConfigurer basicFilter(BasicClientSecurityProperties properties) {
+		return builder -> builder.filter(ExchangeFilterFunctions.basicAuthentication(
+				properties.getUsername(), properties.getPassword()));
 	}
 
-	private void applyOAuthFilter(WebClient.Builder builder) {
-		if (!this.oauth2ClientProperties.getRegistration().containsKey(CLIENT_NAME)) {
-			return;
-		}
-
-		ServerOAuth2AuthorizedClientExchangeFilterFunction oauthFilter =
-				new ServerOAuth2AuthorizedClientExchangeFilterFunction(
-						clientRegistrationRepository(this.oauth2ClientProperties),
-						new UnAuthenticatedServerOAuth2AuthorizedClientRepository());
-		oauthFilter.setDefaultClientRegistrationId(CLIENT_NAME);
-		builder.filter(oauthFilter);
+	@Bean("ms-dashboard-m2m-oauth-filter")
+	@Conditional(ClientsConfiguredCondition.class)
+	MachineToMachineWebClientConfigurer oauthFilter(
+			ReactiveClientRegistrationRepository reactiveClientRegistrationRepository) {
+		return builder -> {
+			ServerOAuth2AuthorizedClientExchangeFilterFunction oauthFilter =
+					new ServerOAuth2AuthorizedClientExchangeFilterFunction(
+							reactiveClientRegistrationRepository,
+							new UnAuthenticatedServerOAuth2AuthorizedClientRepository());
+			oauthFilter.setDefaultClientRegistrationId(CLIENT_NAME);
+			builder.filter(oauthFilter);
+		};
 	}
 
-	private ReactiveClientRegistrationRepository clientRegistrationRepository(OAuth2ClientProperties properties) {
+	@Bean
+	@ConditionalOnMissingBean
+	@Conditional(ClientsConfiguredCondition.class)
+	public ReactiveClientRegistrationRepository clientRegistrationRepository(OAuth2ClientProperties properties) {
 		List<ClientRegistration> registrations = new ArrayList<>(
 				OAuth2ClientPropertiesRegistrationAdapter
 						.getClientRegistrations(properties).values());
 		return new InMemoryReactiveClientRegistrationRepository(registrations);
 	}
 
-	private void applyBasicFilter(WebClient.Builder builder) {
-		SecurityProperties.Client client = this.securityProperties.getClient();
-		if (client.isBasicConfigured()) {
-			builder.filter(ExchangeFilterFunctions.basicAuthentication(
-					client.getBasic().getUsername(), client.getBasic().getPassword()));
-		}
-	}
-
-	private void applyWebClientResponseExceptionFilter(WebClient.Builder builder) {
-		builder.filter(ExchangeFilterFunctions.statusError(HttpStatus::isError,
-				WebClientResponseExceptionCreator::createResponseException));
-	}
 }
