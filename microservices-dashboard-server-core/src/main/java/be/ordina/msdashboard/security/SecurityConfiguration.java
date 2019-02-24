@@ -27,6 +27,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.InMemoryReactiveClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
@@ -58,6 +59,7 @@ public class SecurityConfiguration {
 		return WebClient.builder()
 				.apply(this::applyBasicFilter)
 				.apply(this::applyOAuthFilter)
+				.apply(this::applyWebClientResponseExceptionFilter)
 				.build();
 	}
 
@@ -87,5 +89,10 @@ public class SecurityConfiguration {
 			builder.filter(ExchangeFilterFunctions.basicAuthentication(
 					client.getBasic().getUsername(), client.getBasic().getPassword()));
 		}
+	}
+
+	private void applyWebClientResponseExceptionFilter(WebClient.Builder builder) {
+		builder.filter(ExchangeFilterFunctions.statusError(HttpStatus::isError,
+				WebClientResponseExceptionCreator::createResponseException));
 	}
 }

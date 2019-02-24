@@ -55,7 +55,7 @@ class ActuatorEndpointsDiscovererService {
 				.reduce(reduceActuatorEndpoints())
 				.onErrorResume(ex -> {
 					logger.error("Something went wrong while discovering the actuator endpoints", ex);
-					return Mono.empty();
+					return Mono.just(new Links());
 				});
 	}
 

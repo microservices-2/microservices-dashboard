@@ -64,7 +64,7 @@ public class HalActuatorEndpointsDiscoverer implements ActuatorEndpointsDiscover
 				.map(this::discoverLinks)
 				.onErrorResume(ex -> {
 					logger.error("Could not discover the actuator endpoints, skipping the HAL discoverer", ex);
-					return Mono.empty();
+					return Mono.just(new Links());
 				});
 	}
 
