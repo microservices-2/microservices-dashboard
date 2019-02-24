@@ -19,6 +19,7 @@ package be.ordina.msdashboard.applicationinstance;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,25 +45,25 @@ public class ApplicationInstanceConfiguration {
 	}
 
 	@Bean
-	ActuatorEndpointsDiscovererService actuatorEndpointsDiscovererService(List<ActuatorEndpointsDiscoverer> actuatorEndpointsDiscoverers) {
-		return new ActuatorEndpointsDiscovererService(halActuatorEndpointsDiscoverer(), actuatorEndpointsDiscoverers);
+	ActuatorEndpointsDiscovererService actuatorEndpointsDiscovererService(
+			@Qualifier("machine-to-machine-web-client") WebClient webClient,
+			List<ActuatorEndpointsDiscoverer> actuatorEndpointsDiscoverers) {
+		return new ActuatorEndpointsDiscovererService(halActuatorEndpointsDiscoverer(webClient),
+				actuatorEndpointsDiscoverers);
 	}
 
 	@Bean
-	public ApplicationInstanceHealthWatcher applicationInstanceHealthWatcher(ApplicationInstanceService applicationInstanceService,
-			WebClient webClient, ApplicationEventPublisher publisher) {
+	public ApplicationInstanceHealthWatcher applicationInstanceHealthWatcher(
+			ApplicationInstanceService applicationInstanceService,
+			@Qualifier("machine-to-machine-web-client") WebClient webClient, ApplicationEventPublisher publisher) {
 		return new ApplicationInstanceHealthWatcher(applicationInstanceService, webClient, publisher);
 	}
 
-	@Bean
-	public WebClient webClient() {
-		return WebClient.create();
-	}
-
-	private HalActuatorEndpointsDiscoverer halActuatorEndpointsDiscoverer() {
-		return new HalActuatorEndpointsDiscoverer(webClient(),
+	private HalActuatorEndpointsDiscoverer halActuatorEndpointsDiscoverer(WebClient webClient) {
+		return new HalActuatorEndpointsDiscoverer(webClient,
 				new LinkDiscoverers(OrderAwarePluginRegistry.create(Arrays.asList(new HalLinkDiscoverer(),
-						new JsonPathLinkDiscoverer("$._links..['%s']..href", MediaType.parseMediaType("application/*+json"))))));
+						new JsonPathLinkDiscoverer("$._links..['%s']..href",
+								MediaType.parseMediaType("application/*+json"))))));
 	}
 
 	@Bean
