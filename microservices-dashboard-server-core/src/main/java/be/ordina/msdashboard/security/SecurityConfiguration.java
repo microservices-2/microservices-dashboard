@@ -41,7 +41,7 @@ import org.springframework.web.reactive.function.client.WebClient;
  * @author Tim Ysewyn
  */
 @Configuration
-@EnableConfigurationProperties({ SecurityProperties.class })
+@EnableConfigurationProperties({ OAuth2ClientProperties.class, SecurityProperties.class })
 @Import(ReactiveOAuth2ClientAutoConfiguration.class)
 public class SecurityConfiguration {
 
