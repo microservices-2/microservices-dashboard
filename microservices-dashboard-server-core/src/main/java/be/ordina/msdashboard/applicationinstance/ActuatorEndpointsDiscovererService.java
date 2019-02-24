@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Links;
 
@@ -48,10 +47,10 @@ class ActuatorEndpointsDiscovererService {
 		this.actuatorEndpointsDiscoverers = actuatorEndpointsDiscoverers;
 	}
 
-	Mono<Links> findActuatorEndpoints(ServiceInstance serviceInstance) {
+	Mono<Links> findActuatorEndpoints(ApplicationInstance applicationInstance) {
 		return Flux.fromIterable(this.actuatorEndpointsDiscoverers)
-				.flatMap(a -> a.findActuatorEndpoints(serviceInstance))
-				.concatWith(this.halActuatorEndpointsDiscoverer.findActuatorEndpoints(serviceInstance))
+				.flatMap(a -> a.findActuatorEndpoints(applicationInstance))
+				.concatWith(this.halActuatorEndpointsDiscoverer.findActuatorEndpoints(applicationInstance))
 				.reduce(reduceActuatorEndpoints())
 				.onErrorResume(ex -> {
 					logger.error("Something went wrong while discovering the actuator endpoints", ex);

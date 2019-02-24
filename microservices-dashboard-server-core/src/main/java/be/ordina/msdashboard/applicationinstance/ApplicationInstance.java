@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import be.ordina.msdashboard.applicationinstance.events.ActuatorEndpointsUpdated;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceCreated;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceDeleted;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthUpdated;
@@ -45,14 +46,13 @@ public final class ApplicationInstance {
 	private final URI baseUri;
 	private State state;
 	private Status healthStatus = Status.UNKNOWN;
-	private Links actuatorEndpoints;
+	private Links actuatorEndpoints = new Links();
 
 	private ApplicationInstance(Builder builder) {
 		this.id = builder.id;
 		this.application = builder.application;
 		this.baseUri = builder.baseUri;
 		this.state = State.CREATED;
-		this.actuatorEndpoints = builder.actuatorEndpoints;
 		this.changes.add(new ApplicationInstanceCreated(this));
 	}
 
@@ -62,6 +62,10 @@ public final class ApplicationInstance {
 
 	public String getApplication() {
 		return this.application;
+	}
+
+	public URI getBaseUri() {
+		return this.baseUri;
 	}
 
 	public Status getHealthStatus() {
@@ -85,6 +89,13 @@ public final class ApplicationInstance {
 
 	public Optional<Link> getActuatorEndpoint(String endpoint) {
 		return Optional.ofNullable(this.actuatorEndpoints.getLink(endpoint));
+	}
+
+	void updateActuatorEndpoints(Links actuatorEndpoints) {
+		if (!this.actuatorEndpoints.equals(actuatorEndpoints)) {
+			this.actuatorEndpoints = actuatorEndpoints;
+			this.changes.add(new ActuatorEndpointsUpdated(this));
+		}
 	}
 
 	public void delete() {
@@ -117,7 +128,6 @@ public final class ApplicationInstance {
 		private final String id;
 		private final String application;
 		private URI baseUri;
-		private Links actuatorEndpoints = new Links();
 
 		private Builder(String id, String application) {
 			this.id = id;
@@ -130,12 +140,6 @@ public final class ApplicationInstance {
 
 		Builder baseUri(URI baseUri) {
 			this.baseUri = baseUri;
-			return this;
-		}
-
-
-		Builder actuatorEndpoints(Links actuatorEndpoints) {
-			this.actuatorEndpoints = actuatorEndpoints;
 			return this;
 		}
 

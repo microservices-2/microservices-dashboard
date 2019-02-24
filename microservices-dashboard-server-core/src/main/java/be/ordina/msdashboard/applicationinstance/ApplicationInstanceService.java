@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import be.ordina.msdashboard.applicationinstance.commands.CreateApplicationInstance;
 import be.ordina.msdashboard.applicationinstance.commands.DeleteApplicationInstance;
+import be.ordina.msdashboard.applicationinstance.commands.UpdateActuatorEndpoints;
 import be.ordina.msdashboard.applicationinstance.commands.UpdateApplicationInstanceHealth;
 
 import org.springframework.cloud.client.ServiceInstance;
@@ -35,12 +36,8 @@ public class ApplicationInstanceService {
 
 	private final ApplicationInstanceRepository repository;
 
-	private final ActuatorEndpointsDiscovererService actuatorEndpointsDiscovererService;
-
-	public ApplicationInstanceService(ApplicationInstanceRepository repository,
-			ActuatorEndpointsDiscovererService actuatorEndpointsDiscovererService) {
+	public ApplicationInstanceService(ApplicationInstanceRepository repository) {
 		this.repository = repository;
-		this.actuatorEndpointsDiscovererService = actuatorEndpointsDiscovererService;
 	}
 
 	public Optional<String> getApplicationInstanceIdForServiceInstance(ServiceInstance serviceInstance) {
@@ -58,22 +55,25 @@ public class ApplicationInstanceService {
 
 	public String createApplicationInstance(CreateApplicationInstance command) {
 		final ServiceInstance serviceInstance = command.getServiceInstance();
-		this.actuatorEndpointsDiscovererService.findActuatorEndpoints(serviceInstance)
-				.subscribe(actuatorEndpoints -> {
-					ApplicationInstance applicationInstance = ApplicationInstance.Builder
-							.forApplicationWithId(serviceInstance.getServiceId(), serviceInstance.getInstanceId())
-							.baseUri(serviceInstance.getUri())
-							.actuatorEndpoints(actuatorEndpoints)
-							.build();
-					this.repository.save(applicationInstance);
-				});
-		return serviceInstance.getInstanceId();
+		ApplicationInstance applicationInstance = ApplicationInstance.Builder
+				.forApplicationWithId(serviceInstance.getServiceId(), serviceInstance.getInstanceId())
+				.baseUri(serviceInstance.getUri())
+				.build();
+		return this.repository.save(applicationInstance).getId();
 	}
 
 	public void updateApplicationInstanceHealth(final UpdateApplicationInstanceHealth command) {
 		this.getById(command.getId())
 				.ifPresent(applicationInstance -> {
 					applicationInstance.updateHealthStatus(command.getHealthStatus());
+					this.repository.save(applicationInstance);
+				});
+	}
+
+	public void updateActuatorEndpoints(final UpdateActuatorEndpoints command) {
+		this.getById(command.getId())
+				.ifPresent(applicationInstance -> {
+					applicationInstance.updateActuatorEndpoints(command.getActuatorEndpoints());
 					this.repository.save(applicationInstance);
 				});
 	}

@@ -14,24 +14,26 @@
  * limitations under the License.
  */
 
-package be.ordina.msdashboard.applicationinstance;
+package be.ordina.msdashboard.applicationinstance.events;
 
-import reactor.core.publisher.Mono;
+import be.ordina.msdashboard.applicationinstance.ApplicationInstance;
 
-import org.springframework.hateoas.Links;
+import org.springframework.context.ApplicationEvent;
 
 /**
- * Interface to allow discovering actuator endpoints.
+ * An {@link ApplicationEvent application event} which signals a change
+ * in the {@link ApplicationInstance application instance}'s actuator endpoints.
  *
  * @author Tim Ysewyn
  */
-public interface ActuatorEndpointsDiscoverer {
+public class ActuatorEndpointsUpdated extends ApplicationEvent {
 
-	/**
-	 * Returns all links found for the given {@link ApplicationInstance application instance}.
-	 *
-	 * @param applicationInstance an application instance
-	 * @return {@link Mono} consisting out of the discovered actuator endpoint {@link Links}.
-	 */
-	Mono<Links> findActuatorEndpoints(ApplicationInstance applicationInstance);
+	public ActuatorEndpointsUpdated(ApplicationInstance instance) {
+		super(instance);
+	}
+
+	public ApplicationInstance getApplicationInstance() {
+		return (ApplicationInstance) this.source;
+	}
+
 }

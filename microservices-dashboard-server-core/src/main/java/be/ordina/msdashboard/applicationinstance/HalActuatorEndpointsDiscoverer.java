@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
-import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.hateoas.LinkDiscoverers;
 import org.springframework.hateoas.Links;
 import org.springframework.hateoas.MediaTypes;
@@ -56,8 +55,8 @@ public class HalActuatorEndpointsDiscoverer implements ActuatorEndpointsDiscover
 	}
 
 	@Override
-	public Mono<Links> findActuatorEndpoints(ServiceInstance serviceInstance) {
-		URI actuatorBaseUri = serviceInstance.getUri().resolve("/actuator");
+	public Mono<Links> findActuatorEndpoints(ApplicationInstance applicationInstance) {
+		URI actuatorBaseUri = applicationInstance.getBaseUri().resolve("/actuator");
 		return this.webClient.get().uri(actuatorBaseUri)
 				.exchange()
 				.flatMap(c -> c.toEntity(String.class))

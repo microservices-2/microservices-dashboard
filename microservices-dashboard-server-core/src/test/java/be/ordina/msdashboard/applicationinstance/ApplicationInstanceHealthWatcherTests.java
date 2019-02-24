@@ -34,7 +34,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import reactor.core.publisher.Mono;
 
 import be.ordina.msdashboard.applicationinstance.commands.UpdateApplicationInstanceHealth;
-import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceCreated;
+import be.ordina.msdashboard.applicationinstance.events.ActuatorEndpointsUpdated;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrievalFailed;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrieved;
 
@@ -96,8 +96,8 @@ public class ApplicationInstanceHealthWatcherTests {
 
 	@Test
 	public void shouldRetrieveTheHealthDataAfterAnApplicationInstanceHasBeenCreated() {
-		ApplicationInstanceCreated event =
-				ApplicationInstanceEventMother.applicationInstanceCreatedWithActuatorEndpoints("a-1", "a",
+		ActuatorEndpointsUpdated event =
+				ApplicationInstanceEventMother.actuatorEndpointsUpdated("a-1", "a",
 				new Links(new Link("http://localhost:8080/actuator/health", "health")));
 
 		when(this.responseSpec.bodyToMono(ApplicationInstanceHealthWatcher.HealthWrapper.class)).thenReturn(Mono
@@ -111,9 +111,9 @@ public class ApplicationInstanceHealthWatcherTests {
 	@Test
 	public void shouldHandleApplicationInstanceEventHandlesError() {
 		URI healthActuatorEndpoint = URI.create("http://localhost:8080/actuator/health");
-		ApplicationInstanceCreated event =
-				ApplicationInstanceEventMother.applicationInstanceCreatedWithActuatorEndpoints("a-1", "a",
-				new Links(new Link("http://localhost:8080/actuator/health", "health")));
+		ActuatorEndpointsUpdated event =
+				ApplicationInstanceEventMother.actuatorEndpointsUpdated("a-1", "a",
+				new Links(new Link(healthActuatorEndpoint.toString(), "health")));
 
 		when(this.responseSpec.bodyToMono(ApplicationInstanceHealthWatcher.HealthWrapper.class))
 				.thenReturn(Mono.error(new RuntimeException("OOPSIE!")));

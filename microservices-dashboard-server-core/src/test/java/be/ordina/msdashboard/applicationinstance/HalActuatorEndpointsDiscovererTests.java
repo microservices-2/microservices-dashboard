@@ -26,11 +26,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import reactor.core.publisher.Mono;
 
-import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.LinkDiscoverer;
 import org.springframework.hateoas.LinkDiscoverers;
-import org.springframework.hateoas.Links;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -51,9 +49,6 @@ import static org.mockito.Mockito.times;
 public class HalActuatorEndpointsDiscovererTests {
 
 	@Mock
-	private ServiceInstance serviceInstance;
-
-	@Mock
 	private WebClient webClient;
 	@Mock
 	private WebClient.RequestHeadersUriSpec requestHeadersUriSpec;
@@ -70,9 +65,11 @@ public class HalActuatorEndpointsDiscovererTests {
 	@InjectMocks
 	private HalActuatorEndpointsDiscoverer discoverer;
 
+	private ApplicationInstance applicationInstance;
+
 	@Before
 	public void setup() {
-		when(this.serviceInstance.getUri()).thenReturn(URI.create("http://localhost:8080"));
+		this.applicationInstance = ApplicationInstanceMother.instance("a-1", "a");
 		when(this.webClient.get()).thenReturn(this.requestHeadersUriSpec);
 		when(this.requestHeadersUriSpec.uri(any(URI.class))).thenReturn(this.requestHeadersSpec);
 		when(this.requestHeadersSpec.exchange()).thenReturn(Mono.just(this.clientResponse));
@@ -85,7 +82,7 @@ public class HalActuatorEndpointsDiscovererTests {
 		when(this.clientResponse.toEntity(String.class))
 				.thenReturn(Mono.just(ResponseEntity.notFound().build()));
 
-		this.discoverer.findActuatorEndpoints(this.serviceInstance)
+		this.discoverer.findActuatorEndpoints(this.applicationInstance)
 				.subscribe(actuatorEndpoints -> {
 					verify(this.webClient).get();
 					verifyNoMoreInteractions(this.webClient);
@@ -99,7 +96,7 @@ public class HalActuatorEndpointsDiscovererTests {
 		when(this.clientResponse.toEntity(String.class))
 				.thenReturn(Mono.just(ResponseEntity.ok().build()));
 
-		this.discoverer.findActuatorEndpoints(this.serviceInstance)
+		this.discoverer.findActuatorEndpoints(this.applicationInstance)
 				.subscribe(actuatorEndpoints -> {
 					verify(this.webClient).get();
 					verifyNoMoreInteractions(this.webClient);
@@ -113,7 +110,7 @@ public class HalActuatorEndpointsDiscovererTests {
 		when(this.clientResponse.toEntity(String.class))
 				.thenReturn(Mono.just(ResponseEntity.ok("")));
 
-		this.discoverer.findActuatorEndpoints(this.serviceInstance)
+		this.discoverer.findActuatorEndpoints(this.applicationInstance)
 				.subscribe(actuatorEndpoints -> {
 					verify(this.webClient).get();
 					verifyNoMoreInteractions(this.webClient);
@@ -127,7 +124,7 @@ public class HalActuatorEndpointsDiscovererTests {
 		when(this.clientResponse.toEntity(String.class))
 				.thenReturn(Mono.just(ResponseEntity.ok("{ }")));
 
-		this.discoverer.findActuatorEndpoints(this.serviceInstance)
+		this.discoverer.findActuatorEndpoints(this.applicationInstance)
 				.subscribe(actuatorEndpoints -> {
 					verify(this.webClient).get();
 					verifyNoMoreInteractions(this.webClient);
@@ -141,7 +138,7 @@ public class HalActuatorEndpointsDiscovererTests {
 		when(this.clientResponse.toEntity(String.class))
 				.thenReturn(Mono.just(ResponseEntity.ok("{ _links: [] }")));
 
-		this.discoverer.findActuatorEndpoints(this.serviceInstance)
+		this.discoverer.findActuatorEndpoints(this.applicationInstance)
 				.subscribe(actuatorEndpoints -> {
 					verify(this.webClient).get();
 					verifyNoMoreInteractions(this.webClient);
@@ -168,7 +165,7 @@ public class HalActuatorEndpointsDiscovererTests {
 		when(this.linkDiscoverer.findLinkWithRel("info", body))
 				.thenReturn(new Link("http://localhost:8080/actuator/info", "info"));
 
-		this.discoverer.findActuatorEndpoints(this.serviceInstance)
+		this.discoverer.findActuatorEndpoints(this.applicationInstance)
 				.subscribe(actuatorEndpoints -> {
 					assertThat(actuatorEndpoints).hasSize(5);
 
@@ -196,7 +193,7 @@ public class HalActuatorEndpointsDiscovererTests {
 		when(this.clientResponse.toEntity(String.class))
 				.thenReturn(Mono.error(new RuntimeException("OOPSIE")));
 
-		this.discoverer.findActuatorEndpoints(this.serviceInstance)
+		this.discoverer.findActuatorEndpoints(this.applicationInstance)
 				.subscribe(actuatorEndpoints -> {
 					assertThat(actuatorEndpoints).isEmpty();
 

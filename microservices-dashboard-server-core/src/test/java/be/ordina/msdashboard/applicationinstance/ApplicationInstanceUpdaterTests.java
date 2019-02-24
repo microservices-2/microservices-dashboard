@@ -19,23 +19,29 @@ package be.ordina.msdashboard.applicationinstance;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import reactor.core.publisher.Mono;
 
 import be.ordina.msdashboard.applicationinstance.commands.CreateApplicationInstance;
 import be.ordina.msdashboard.applicationinstance.commands.DeleteApplicationInstance;
+import be.ordina.msdashboard.applicationinstance.commands.UpdateActuatorEndpoints;
+import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceCreated;
 import be.ordina.msdashboard.discovery.ServiceDiscoveryEventMother;
 import be.ordina.msdashboard.discovery.events.ServiceInstanceDisappeared;
 import be.ordina.msdashboard.discovery.events.ServiceInstanceDiscovered;
 
 import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.hateoas.Links;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.verify;
+import static org.mockito.BDDMockito.verifyNoMoreInteractions;
+import static org.mockito.BDDMockito.verifyZeroInteractions;
+import static org.mockito.BDDMockito.when;
 
 /**
  * @author Tim Ysewyn
@@ -45,6 +51,9 @@ public class ApplicationInstanceUpdaterTests {
 
 	@Mock
 	private ApplicationInstanceService applicationInstanceService;
+
+	@Mock
+	private ActuatorEndpointsDiscovererService actuatorEndpointsDiscovererService;
 
 	@InjectMocks
 	private ApplicationInstanceUpdater applicationInstanceUpdater;
@@ -59,6 +68,7 @@ public class ApplicationInstanceUpdaterTests {
 		CreateApplicationInstance command = captor.getValue();
 		assertThat(command.getServiceInstance()).isEqualTo(discoveredServiceInstance);
 		verifyNoMoreInteractions(this.applicationInstanceService);
+		verifyZeroInteractions(this.actuatorEndpointsDiscovererService);
 	}
 
 	@Test
@@ -70,6 +80,58 @@ public class ApplicationInstanceUpdaterTests {
 		DeleteApplicationInstance command = captor.getValue();
 		assertThat(command.getId()).isEqualTo("a-1");
 		verifyNoMoreInteractions(this.applicationInstanceService);
+		verifyZeroInteractions(this.actuatorEndpointsDiscovererService);
 	}
+
+	@Test
+	public void shouldNotUpdateActuatorEndpointsWhenNoneWereFound() {
+		when(this.actuatorEndpointsDiscovererService.findActuatorEndpoints(any(ApplicationInstance.class)))
+				.thenReturn(Mono.empty());
+		ApplicationInstanceCreated event =
+				ApplicationInstanceEventMother.applicationInstanceCreated("a-1", "a");
+		this.applicationInstanceUpdater.discoverActuatorEndpoints(event);
+		ArgumentCaptor<ApplicationInstance> captor = ArgumentCaptor.forClass(ApplicationInstance.class);
+		verify(this.actuatorEndpointsDiscovererService).findActuatorEndpoints(captor.capture());
+		ApplicationInstance applicationInstance = captor.getValue();
+		assertThat(applicationInstance.getId()).isEqualTo("a-1");
+		verifyNoMoreInteractions(this.actuatorEndpointsDiscovererService);
+		verifyZeroInteractions(this.applicationInstanceService);
+	}
+
+	@Test
+	public void shouldUpdateActuatorEndpointsAfterDiscovery() {
+		Links links = new Links();
+		when(this.actuatorEndpointsDiscovererService.findActuatorEndpoints(any(ApplicationInstance.class)))
+				.thenReturn(Mono.just(links));
+		ApplicationInstanceCreated event =
+				ApplicationInstanceEventMother.applicationInstanceCreated("a-1", "a");
+		this.applicationInstanceUpdater.discoverActuatorEndpoints(event);
+		ArgumentCaptor<ApplicationInstance> applicationInstanceArgumentCaptor =
+				ArgumentCaptor.forClass(ApplicationInstance.class);
+		verify(this.actuatorEndpointsDiscovererService).findActuatorEndpoints(
+				applicationInstanceArgumentCaptor.capture());
+		ApplicationInstance applicationInstance = applicationInstanceArgumentCaptor.getValue();
+		assertThat(applicationInstance.getId()).isEqualTo("a-1");
+		verifyNoMoreInteractions(this.actuatorEndpointsDiscovererService);
+		ArgumentCaptor<UpdateActuatorEndpoints> commandCaptor = ArgumentCaptor.forClass(UpdateActuatorEndpoints.class);
+		verify(this.applicationInstanceService).updateActuatorEndpoints(commandCaptor.capture());
+		UpdateActuatorEndpoints command = commandCaptor.getValue();
+		assertThat(command.getId()).isEqualTo("a-1");
+		assertThat(command.getActuatorEndpoints()).isEqualTo(links);
+		verifyNoMoreInteractions(this.applicationInstanceService);
+	}
+
+
+
+//	@EventListener(ApplicationInstanceCreated.class)
+//	public void discoverActuatorEndpoints(ApplicationInstanceCreated event) {
+//		ApplicationInstance applicationInstance = event.getApplicationInstance();
+//		this.actuatorEndpointsDiscovererService.findActuatorEndpoints(applicationInstance)
+//				.subscribe(actuatorEndpoints -> {
+//					UpdateActuatorEndpoints command = new UpdateActuatorEndpoints(applicationInstance.getId(),
+//							actuatorEndpoints);
+//					this.applicationInstanceService.updateActuatorEndpoints(command);
+//				});
+//	}
 
 }

@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import be.ordina.msdashboard.applicationinstance.commands.UpdateApplicationInstanceHealth;
-import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceCreated;
+import be.ordina.msdashboard.applicationinstance.events.ActuatorEndpointsUpdated;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrievalFailed;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceHealthDataRetrieved;
 
@@ -57,10 +57,12 @@ public class ApplicationInstanceHealthWatcher {
 		this.publisher = publisher;
 	}
 
-	@EventListener({ ApplicationInstanceCreated.class })
-	public void retrieveHealthData(ApplicationInstanceCreated event) {
-		ApplicationInstance serviceInstance = (ApplicationInstance) event.getSource();
-		retrieveHealthData(serviceInstance);
+	@EventListener({ ActuatorEndpointsUpdated.class })
+	public void retrieveHealthData(ActuatorEndpointsUpdated event) {
+		ApplicationInstance applicationInstance = event.getApplicationInstance();
+		if (applicationInstance.hasActuatorEndpointFor("health")) {
+			retrieveHealthData(applicationInstance);
+		}
 	}
 
 	@Scheduled(fixedRateString = "${applicationinstance.healthwatcher.rate:10000}")

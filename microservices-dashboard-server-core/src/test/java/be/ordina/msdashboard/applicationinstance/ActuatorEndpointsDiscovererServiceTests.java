@@ -25,7 +25,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import reactor.core.publisher.Mono;
 
-import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Links;
 
@@ -41,31 +40,30 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 public class ActuatorEndpointsDiscovererServiceTests {
 
 	@Mock
-	private ServiceInstance serviceInstance;
-
-	@Mock
 	private HalActuatorEndpointsDiscoverer halActuatorEndpointsDiscoverer;
 
 	@Mock
 	private ActuatorEndpointsDiscoverer otherActuatorEndpointsDiscoverer;
 
+	private ApplicationInstance applicationInstance;
 	private ActuatorEndpointsDiscovererService service;
 
 	@Before
 	public void setup() {
+		this.applicationInstance = ApplicationInstanceMother.instance("a-1", "a");
 		this.service = new ActuatorEndpointsDiscovererService(this.halActuatorEndpointsDiscoverer,
 				Collections.singletonList(this.otherActuatorEndpointsDiscoverer));
-		when(this.halActuatorEndpointsDiscoverer.findActuatorEndpoints(this.serviceInstance))
+		when(this.halActuatorEndpointsDiscoverer.findActuatorEndpoints(this.applicationInstance))
 				.thenReturn(Mono.just(new Links()));
-		when(this.otherActuatorEndpointsDiscoverer.findActuatorEndpoints(this.serviceInstance))
+		when(this.otherActuatorEndpointsDiscoverer.findActuatorEndpoints(this.applicationInstance))
 				.thenReturn(Mono.just(new Links()));
 	}
 
 	@Test
 	public void shouldReturnEmptyMapWhenNoEndpointsHaveBeenDiscovered() {
-		this.service.findActuatorEndpoints(this.serviceInstance)
+		this.service.findActuatorEndpoints(this.applicationInstance)
 				.subscribe(actuatorEndpoints -> {
-					verify(this.halActuatorEndpointsDiscoverer).findActuatorEndpoints(this.serviceInstance);
+					verify(this.halActuatorEndpointsDiscoverer).findActuatorEndpoints(this.applicationInstance);
 					verifyNoMoreInteractions(this.halActuatorEndpointsDiscoverer);
 
 					assertThat(actuatorEndpoints).isEmpty();
@@ -77,12 +75,12 @@ public class ActuatorEndpointsDiscovererServiceTests {
 		this.service = new ActuatorEndpointsDiscovererService(this.halActuatorEndpointsDiscoverer,
 				Collections.emptyList());
 
-		when(this.halActuatorEndpointsDiscoverer.findActuatorEndpoints(this.serviceInstance))
+		when(this.halActuatorEndpointsDiscoverer.findActuatorEndpoints(this.applicationInstance))
 				.thenReturn(Mono.just(new Links(new Link("http://localhost:8080/actuator/health", "health"))));
 
-		this.service.findActuatorEndpoints(this.serviceInstance)
+		this.service.findActuatorEndpoints(this.applicationInstance)
 				.subscribe(actuatorEndpoints -> {
-					verify(this.halActuatorEndpointsDiscoverer).findActuatorEndpoints(this.serviceInstance);
+					verify(this.halActuatorEndpointsDiscoverer).findActuatorEndpoints(this.applicationInstance);
 					verifyNoMoreInteractions(this.halActuatorEndpointsDiscoverer);
 
 					assertThat(actuatorEndpoints).isNotEmpty();
@@ -93,12 +91,12 @@ public class ActuatorEndpointsDiscovererServiceTests {
 
 	@Test
 	public void shouldReturnMapOfDiscoveredEndpointsByHalDiscoverer() {
-		when(this.halActuatorEndpointsDiscoverer.findActuatorEndpoints(this.serviceInstance))
+		when(this.halActuatorEndpointsDiscoverer.findActuatorEndpoints(this.applicationInstance))
 				.thenReturn(Mono.just(new Links(new Link("http://localhost:8080/actuator/health", "health"))));
 
-		this.service.findActuatorEndpoints(this.serviceInstance)
+		this.service.findActuatorEndpoints(this.applicationInstance)
 				.subscribe(actuatorEndpoints -> {
-					verify(this.halActuatorEndpointsDiscoverer).findActuatorEndpoints(this.serviceInstance);
+					verify(this.halActuatorEndpointsDiscoverer).findActuatorEndpoints(this.applicationInstance);
 					verifyNoMoreInteractions(this.halActuatorEndpointsDiscoverer);
 
 					assertThat(actuatorEndpoints).isNotEmpty();
@@ -109,12 +107,12 @@ public class ActuatorEndpointsDiscovererServiceTests {
 
 	@Test
 	public void shouldReturnMapOfDiscoveredEndpointsByAnotherDiscovererThanDefault() {
-		when(this.otherActuatorEndpointsDiscoverer.findActuatorEndpoints(this.serviceInstance))
+		when(this.otherActuatorEndpointsDiscoverer.findActuatorEndpoints(this.applicationInstance))
 				.thenReturn(Mono.just(new Links(new Link("http://localhost:8081/actuator/health", "health"))));
 
-		this.service.findActuatorEndpoints(this.serviceInstance)
+		this.service.findActuatorEndpoints(this.applicationInstance)
 				.subscribe(actuatorEndpoints -> {
-					verify(this.halActuatorEndpointsDiscoverer).findActuatorEndpoints(this.serviceInstance);
+					verify(this.halActuatorEndpointsDiscoverer).findActuatorEndpoints(this.applicationInstance);
 					verifyNoMoreInteractions(this.halActuatorEndpointsDiscoverer);
 
 					assertThat(actuatorEndpoints).isNotEmpty();
@@ -125,19 +123,19 @@ public class ActuatorEndpointsDiscovererServiceTests {
 
 	@Test
 	public void shouldReturnMergedMapOfDiscoveredEndpointsWithHalTakingPrecedence() {
-		when(this.otherActuatorEndpointsDiscoverer.findActuatorEndpoints(this.serviceInstance))
+		when(this.otherActuatorEndpointsDiscoverer.findActuatorEndpoints(this.applicationInstance))
 				.thenReturn(Mono.just(new Links(new Link("http://localhost:8081/actuator/health", "health"),
 						new Link("http://localhost:8081/actuator/info", "info"))));
-		when(this.halActuatorEndpointsDiscoverer.findActuatorEndpoints(this.serviceInstance))
+		when(this.halActuatorEndpointsDiscoverer.findActuatorEndpoints(this.applicationInstance))
 				.thenReturn(Mono.just(new Links(new Link("http://localhost:8080/actuator/health", "health"))));
 
-		this.service.findActuatorEndpoints(this.serviceInstance)
+		this.service.findActuatorEndpoints(this.applicationInstance)
 				.subscribe(actuatorEndpoints -> {
 
-					verify(this.otherActuatorEndpointsDiscoverer).findActuatorEndpoints(this.serviceInstance);
+					verify(this.otherActuatorEndpointsDiscoverer).findActuatorEndpoints(this.applicationInstance);
 					verifyNoMoreInteractions(this.otherActuatorEndpointsDiscoverer);
 
-					verify(this.halActuatorEndpointsDiscoverer).findActuatorEndpoints(this.serviceInstance);
+					verify(this.halActuatorEndpointsDiscoverer).findActuatorEndpoints(this.applicationInstance);
 					verifyNoMoreInteractions(this.halActuatorEndpointsDiscoverer);
 
 					assertThat(actuatorEndpoints).isNotEmpty();
@@ -151,19 +149,19 @@ public class ActuatorEndpointsDiscovererServiceTests {
 
 	@Test
 	public void shouldReturnAnEmptyMonoWhenSomethingGoesWrong() {
-		when(this.otherActuatorEndpointsDiscoverer.findActuatorEndpoints(this.serviceInstance))
+		when(this.otherActuatorEndpointsDiscoverer.findActuatorEndpoints(this.applicationInstance))
 				.thenReturn(Mono.just(new Links(new Link("http://localhost:8081/actuator/health", "health"),
 						new Link("http://localhost:8081/actuator/info", "info"))));
-		when(this.halActuatorEndpointsDiscoverer.findActuatorEndpoints(this.serviceInstance))
+		when(this.halActuatorEndpointsDiscoverer.findActuatorEndpoints(this.applicationInstance))
 				.thenReturn(Mono.error(new RuntimeException("OOPSIE")));
 
-		this.service.findActuatorEndpoints(this.serviceInstance)
+		this.service.findActuatorEndpoints(this.applicationInstance)
 				.subscribe(actuatorEndpoints -> {
 
-					verify(this.otherActuatorEndpointsDiscoverer).findActuatorEndpoints(this.serviceInstance);
+					verify(this.otherActuatorEndpointsDiscoverer).findActuatorEndpoints(this.applicationInstance);
 					verifyNoMoreInteractions(this.otherActuatorEndpointsDiscoverer);
 
-					verify(this.halActuatorEndpointsDiscoverer).findActuatorEndpoints(this.serviceInstance);
+					verify(this.halActuatorEndpointsDiscoverer).findActuatorEndpoints(this.applicationInstance);
 					verifyNoMoreInteractions(this.halActuatorEndpointsDiscoverer);
 
 					assertThat(actuatorEndpoints).isEmpty();

@@ -18,22 +18,28 @@ package be.ordina.msdashboard.applicationinstance;
 
 import be.ordina.msdashboard.applicationinstance.commands.CreateApplicationInstance;
 import be.ordina.msdashboard.applicationinstance.commands.DeleteApplicationInstance;
+import be.ordina.msdashboard.applicationinstance.commands.UpdateActuatorEndpoints;
+import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceCreated;
 import be.ordina.msdashboard.discovery.events.ServiceInstanceDisappeared;
 import be.ordina.msdashboard.discovery.events.ServiceInstanceDiscovered;
 
 import org.springframework.context.event.EventListener;
 
 /**
- * Will create or delete {@link ApplicationInstance applications instances} based on events that are happening throughout the system.
+ * Will create, update or delete {@link ApplicationInstance applications instances} based on events
+ * that are happening throughout the system.
  *
  * @author Tim Ysewyn
  */
 class ApplicationInstanceUpdater {
 
 	private final ApplicationInstanceService applicationInstanceService;
+	private final ActuatorEndpointsDiscovererService actuatorEndpointsDiscovererService;
 
-	ApplicationInstanceUpdater(ApplicationInstanceService applicationInstanceService) {
+	ApplicationInstanceUpdater(ApplicationInstanceService applicationInstanceService,
+			ActuatorEndpointsDiscovererService actuatorEndpointsDiscovererService) {
 		this.applicationInstanceService = applicationInstanceService;
+		this.actuatorEndpointsDiscovererService = actuatorEndpointsDiscovererService;
 	}
 
 	@EventListener(ServiceInstanceDiscovered.class)
@@ -46,5 +52,16 @@ class ApplicationInstanceUpdater {
 	public void deleteApplicationInstance(ServiceInstanceDisappeared event) {
 		DeleteApplicationInstance command = new DeleteApplicationInstance(event.getServiceInstanceId());
 		this.applicationInstanceService.deleteApplicationInstance(command);
+	}
+
+	@EventListener(ApplicationInstanceCreated.class)
+	public void discoverActuatorEndpoints(ApplicationInstanceCreated event) {
+		ApplicationInstance applicationInstance = event.getApplicationInstance();
+		this.actuatorEndpointsDiscovererService.findActuatorEndpoints(applicationInstance)
+				.subscribe(actuatorEndpoints -> {
+					UpdateActuatorEndpoints command = new UpdateActuatorEndpoints(applicationInstance.getId(),
+							actuatorEndpoints);
+					this.applicationInstanceService.updateActuatorEndpoints(command);
+				});
 	}
 }

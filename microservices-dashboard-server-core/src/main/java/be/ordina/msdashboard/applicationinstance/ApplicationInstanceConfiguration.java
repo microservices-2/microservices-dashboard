@@ -39,9 +39,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class ApplicationInstanceConfiguration {
 
 	@Bean
-	public ApplicationInstanceService applicationInstanceService(ApplicationInstanceRepository repository,
-			ActuatorEndpointsDiscovererService actuatorEndpointsDiscovererService) {
-		return new ApplicationInstanceService(repository, actuatorEndpointsDiscovererService);
+	public ApplicationInstanceService applicationInstanceService(ApplicationInstanceRepository repository) {
+		return new ApplicationInstanceService(repository);
 	}
 
 	@Bean
@@ -67,8 +66,9 @@ public class ApplicationInstanceConfiguration {
 	}
 
 	@Bean
-	ApplicationInstanceUpdater applicationInstanceUpdater(ApplicationInstanceService service) {
-		return new ApplicationInstanceUpdater(service);
+	ApplicationInstanceUpdater applicationInstanceUpdater(ApplicationInstanceService service,
+			ActuatorEndpointsDiscovererService actuatorEndpointsDiscovererService) {
+		return new ApplicationInstanceUpdater(service, actuatorEndpointsDiscovererService);
 	}
 
 }

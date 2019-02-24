@@ -20,7 +20,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -29,10 +28,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-import reactor.core.publisher.Mono;
 
 import be.ordina.msdashboard.applicationinstance.commands.CreateApplicationInstance;
 import be.ordina.msdashboard.applicationinstance.commands.DeleteApplicationInstance;
+import be.ordina.msdashboard.applicationinstance.commands.UpdateActuatorEndpoints;
 import be.ordina.msdashboard.applicationinstance.commands.UpdateApplicationInstanceHealth;
 import be.ordina.msdashboard.applicationinstance.events.ApplicationInstanceDeleted;
 
@@ -60,20 +59,11 @@ public class ApplicationInstanceServiceTests {
 	@Mock
 	private ApplicationInstanceRepository repository;
 
-	@Mock
-	private ActuatorEndpointsDiscovererService actuatorEndpointsDiscovererService;
-
 	@InjectMocks
 	private ApplicationInstanceService service;
 
 	@Captor
 	private ArgumentCaptor<ApplicationInstance> applicationInstanceArgumentCaptor;
-
-	@Before
-	public void setup() {
-		when(this.actuatorEndpointsDiscovererService.findActuatorEndpoints(this.serviceInstance))
-				.thenReturn(Mono.just(new Links()));
-	}
 
 	@Test
 	public void shouldRetrieveApplicationInstanceFromRepository() {
@@ -108,11 +98,9 @@ public class ApplicationInstanceServiceTests {
 	}
 
 	@Test
-	public void shouldCreateApplicationInstanceWithDiscoveredActuatorEndpointsAndSaveInRepository() {
+	public void shouldCreateApplicationInstanceAndSaveInRepository() {
 		when(this.serviceInstance.getInstanceId()).thenReturn("a-1");
 		when(this.serviceInstance.getUri()).thenReturn(URI.create("http://localhost:8080"));
-		when(this.actuatorEndpointsDiscovererService.findActuatorEndpoints(this.serviceInstance))
-				.thenReturn(Mono.just(new Links(new Link("http://localhost:8080/actuator/health", "health"))));
 		when(this.repository.save(any(ApplicationInstance.class)))
 				.thenAnswer((Answer<ApplicationInstance>) invocation -> invocation.getArgument(0));
 
@@ -125,10 +113,6 @@ public class ApplicationInstanceServiceTests {
 			verify(this.repository).save(this.applicationInstanceArgumentCaptor.capture());
 			ApplicationInstance applicationInstance = this.applicationInstanceArgumentCaptor.getValue();
 			assertThat(applicationInstance).isNotNull();
-			assertThat(applicationInstance.getActuatorEndpoints()).isNotEmpty();
-			assertThat(applicationInstance.getActuatorEndpoints().hasLink("health")).isTrue();
-			assertThat(applicationInstance.getActuatorEndpoints().getLink("health").getHref())
-					.isEqualTo("http://localhost:8080/actuator/health");
 		});
 	}
 
@@ -154,6 +138,24 @@ public class ApplicationInstanceServiceTests {
 		verify(this.repository).save(this.applicationInstanceArgumentCaptor.capture());
 		ApplicationInstance applicationInstance = this.applicationInstanceArgumentCaptor.getValue();
 		assertThat(applicationInstance.getId()).isEqualTo("a-1");
+	}
+
+	@Test
+	public void shouldUpdateTheActuatorEndpointsOfAnApplicationInstance() {
+		when(this.repository.getById("a-1")).thenReturn(ApplicationInstanceMother.instance("a-1", "a"));
+		when(this.repository.save(any(ApplicationInstance.class)))
+				.thenAnswer((Answer<ApplicationInstance>) invocation -> invocation.getArgument(0));
+
+		Links links = new Links(new Link("http://localhost:8080/actuator/health", "health"));
+		UpdateActuatorEndpoints command = new UpdateActuatorEndpoints("a-1", links);
+		this.service.updateActuatorEndpoints(command);
+
+		verify(this.repository).save(this.applicationInstanceArgumentCaptor.capture());
+		ApplicationInstance applicationInstance = this.applicationInstanceArgumentCaptor.getValue();
+		assertThat(applicationInstance.getId()).isEqualTo("a-1");
+		assertThat(applicationInstance.getActuatorEndpoints()).hasSize(1);
+		assertThat(applicationInstance.getActuatorEndpoint("health")).get().isInstanceOfSatisfying(Link.class,
+				link -> assertThat(link.getHref()).isEqualTo("http://localhost:8080/actuator/health"));
 	}
 
 	@Test
