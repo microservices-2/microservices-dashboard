@@ -126,4 +126,17 @@ public class ApplicationInstanceTests {
 		assertThat(applicationInstance.getUncommittedChanges().get(0)).isInstanceOf(ApplicationInstanceDeleted.class);
 	}
 
+	@Test
+	public void sameActuatorEndpointsWillNotBeMarkedAsChanged() {
+		Links newLinks = new Links(new Link("http://localhost:8080/actuator/health", "health"));
+		ApplicationInstance applicationInstance = ApplicationInstanceMother.instance("a-1", "a",
+				URI.create("http://localhost:8080"),
+				new Links(new Link("http://localhost:8080/actuator/health", "health")));
+		applicationInstance.markChangesAsCommitted();
+
+		applicationInstance.updateActuatorEndpoints(newLinks);
+
+		assertThat(applicationInstance.getUncommittedChanges()).isEmpty();
+	}
+
 }

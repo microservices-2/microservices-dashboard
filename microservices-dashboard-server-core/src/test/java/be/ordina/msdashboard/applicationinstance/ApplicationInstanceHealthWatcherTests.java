@@ -95,10 +95,25 @@ public class ApplicationInstanceHealthWatcherTests {
 	}
 
 	@Test
-	public void shouldRetrieveTheHealthDataAfterAnApplicationInstanceHasBeenCreated() {
+	public void shouldNotRetrieveTheHealthDataAfterActuatorEndpointsHaveBeenUpdatedWithoutHealthLink() {
 		ActuatorEndpointsUpdated event =
 				ApplicationInstanceEventMother.actuatorEndpointsUpdated("a-1", "a",
-				new Links(new Link("http://localhost:8080/actuator/health", "health")));
+						new Links(new Link("http://localhost:8080/actuator/info", "info")));
+
+		this.healthWatcher.retrieveHealthData(event);
+
+		verifyZeroInteractions(this.webClient);
+		verifyZeroInteractions(this.requestHeadersUriSpec);
+		verifyZeroInteractions(this.requestHeadersSpec);
+		verifyZeroInteractions(this.responseSpec);
+		verifyZeroInteractions(this.applicationInstanceService);
+	}
+
+	@Test
+	public void shouldRetrieveTheHealthDataAfterActuatorEndpointsHaveBeenUpdatedWithHealthLink() {
+		ActuatorEndpointsUpdated event =
+				ApplicationInstanceEventMother.actuatorEndpointsUpdated("a-1", "a",
+						new Links(new Link("http://localhost:8080/actuator/health", "health")));
 
 		when(this.responseSpec.bodyToMono(ApplicationInstanceHealthWatcher.HealthWrapper.class)).thenReturn(Mono
 				.just(new ApplicationInstanceHealthWatcher.HealthWrapper(Status.UP, null)));
