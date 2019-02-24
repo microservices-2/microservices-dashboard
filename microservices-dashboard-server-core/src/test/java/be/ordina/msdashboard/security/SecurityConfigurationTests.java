@@ -51,6 +51,22 @@ public class SecurityConfigurationTests {
 	}
 
 	@Test
+	public void shouldNotConfigureBeanWithBasicAuth() {
+		this.contextRunner
+			.withPropertyValues(BASIC_PREFIX + ".username=user")
+			.run(context -> {
+				assertThat(context.containsBean("machine-to-machine-web-client")).isTrue();
+				assertThat(context.containsBean("ms-dashboard-m2m-basic-filter")).isFalse();
+			});
+		this.contextRunner
+			.withPropertyValues(BASIC_PREFIX + ".password=password")
+			.run(context -> {
+				assertThat(context.containsBean("machine-to-machine-web-client")).isTrue();
+				assertThat(context.containsBean("ms-dashboard-m2m-basic-filter")).isFalse();
+			});
+	}
+
+	@Test
 	public void shouldConfigureBeanWithBasicAuth() {
 		this.contextRunner
 			.withPropertyValues(BASIC_PREFIX + ".username=user", BASIC_PREFIX + ".password=password")
