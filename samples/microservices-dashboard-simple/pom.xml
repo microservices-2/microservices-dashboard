@@ -10,7 +10,7 @@
 
 	<parent>
 		<groupId>be.ordina</groupId>
-		<artifactId>microservices-dashboard-server-samples</artifactId>
+		<artifactId>microservices-dashboard-samples</artifactId>
 		<version>2.0.0.BUILD-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>

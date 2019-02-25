@@ -5,7 +5,7 @@ Edit the files in the docs/src/main/asciidoc/ directory instead.
 ////
 
 :jdkversion: 1.8
-:project-name: microservices-dashboard-server
+:project-name: microservices-dashboard
 :github-tag: master
 :github-repo: ordina-jworks/{project-name}
 
@@ -13,15 +13,13 @@ Edit the files in the docs/src/main/asciidoc/ directory instead.
 :github-raw-master: https://raw.githubusercontent.com/{github-repo}/master
 :github-code: https://github.com/{github-repo}/tree/{github-tag}
 
-:gitter-url: https://gitter.im/ordina-jworks/microservices-dashboard
-
 image::https://circleci.com/gh/{github-repo}.svg?style=svg["CircleCI", link="https://circleci.com/gh/{github-repo}"]
 image::https://codecov.io/gh/{github-repo}/branch/{github-tag}/graph/badge.svg["codecov", link="https://codecov.io/gh/{github-repo}"]
-image::https://api.bintray.com/packages/{github-repo}/{project-name}/images/download.svg["Download", link="https://bintray.com/{github-repo}/{project-name}/_latestVersion"]
+image::https://api.bintray.com/packages/{github-repo}-server/{project-name}-server//images/download.svg["Download", link="https://bintray.com/{github-repo}-server/{project-name}-server//_latestVersion"]
 image::https://img.shields.io/badge/License-Apache%202-blue.svg["License", link="{github-raw}/LICENSE.txt"]
-image::https://badges.gitter.im/ordina-jworks/microservices-dashboard.svg[Gitter, link="{gitter-url}?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"]
+image::https://badges.gitter.im/{github-repo}.svg[Gitter, link="https://gitter.im/{github-repo}?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"]
 
-== Microservices Dashboard Server
+== Microservices Dashboard
 
 == Overview
 

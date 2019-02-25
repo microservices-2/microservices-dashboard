@@ -3,14 +3,14 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>microservices-dashboard-server-docs</artifactId>
+	<artifactId>microservices-dashboard-docs</artifactId>
 	<packaging>pom</packaging>
-	<name>Microservices Dashboard Server Docs</name>
-	<description>Microservices Dashboard Server Docs</description>
+	<name>Microservices Dashboard Docs</name>
+	<description>Microservices Dashboard Docs</description>
 
 	<parent>
 		<groupId>be.ordina</groupId>
-		<artifactId>microservices-dashboard-server</artifactId>
+		<artifactId>microservices-dashboard</artifactId>
 		<version>2.0.0.BUILD-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
