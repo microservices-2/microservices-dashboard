@@ -9,7 +9,7 @@ Thanks for stopping by to let us know something could be better!
 
 Please run down the following list and make sure you've tried the usual "quick fixes":
 
-  - Search the issues already opened: https://github.com/ordina-jworks/microservices-dashboard-server/issues
+  - Search the issues already opened: https://github.com/ordina-jworks/microservices-dashboard/issues
   - Search Stack Overflow: https://stackoverflow.com/questions/tagged/microservices-dashboard
 
 If you are still having issues, please be sure to include as much information as possible:

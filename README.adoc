@@ -31,7 +31,7 @@ This snapshot can be retrieved by the Microservices Dashboard UI application.
 
 == Reference documentation
 
-To learn everything there is to know about the Microservices Dashboard Server, please consult the http://ordina-jworks.github.io/microservices-dashboard-server/[reference documentation].
+To learn everything there is to know about the Microservices Dashboard Server, please consult the http://ordina-jworks.github.io/microservices-dashboard/[reference documentation].
 
 == Building from source
 

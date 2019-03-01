@@ -1,8 +1,8 @@
 ### Requirements for Contributing a Performance Improvement
 
 * Fill out the template below. Any pull request that does not include enough information to be reviewed in a timely manner may be closed at the maintainers' discretion.
-* The pull request must only affect performance of existing functionality. To contribute other changes, you must use a different template. You can see all templates at https://github.com/ordina-jworks/microservices-dashboard-server/tree/master/.github/PULL_REQUEST_TEMPLATE.
-* After you create the pull request, all status checks must pass before a maintainer reviews your contribution. For more details, please see https://github.com/ordina-jworks/microservices-dashboard-server/blob/master/CONTRIBUTING.md#pull-requests.
+* The pull request must only affect performance of existing functionality. To contribute other changes, you must use a different template. You can see all templates at https://github.com/ordina-jworks/microservices-dashboard/tree/master/.github/PULL_REQUEST_TEMPLATE.
+* After you create the pull request, all status checks must pass before a maintainer reviews your contribution. For more details, please see https://github.com/ordina-jworks/microservices-dashboard/blob/master/CONTRIBUTING.md#pull-requests.
 
 ### Description of the Change
 

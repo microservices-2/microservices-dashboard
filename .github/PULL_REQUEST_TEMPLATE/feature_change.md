@@ -3,7 +3,7 @@
 * Fill out the template below. Any pull request that does not include enough information to be reviewed in a timely manner may be closed at the maintainers' discretion.
 * The pull request must contribute a change that has been endorsed by the maintainer team. See details in the template below.
 * The pull request must update the test suite to exercise the updated functionality.
-* After you create the pull request, all status checks must pass before a maintainer reviews your contribution. For more details, please see https://github.com/ordina-jworks/microservices-dashboard-server/blob/master/CONTRIBUTING.md#pull-requests.
+* After you create the pull request, all status checks must pass before a maintainer reviews your contribution. For more details, please see https://github.com/ordina-jworks/microservices-dashboard/blob/master/CONTRIBUTING.md#pull-requests.
 
 ### Issue or RFC Endorsed by the Maintainers
 
@@ -14,7 +14,7 @@ Link to the issue or RFC that your change relates to. This must be one of the fo
 * An open issue with the `status: ideal-for-contribution` label
 * An open issue with the `type: enhancement` label
 
-To contribute an enhancement that isn't covered by one of the items above, please follow our guide for suggesting an enhancement: https://github.com/ordina-jworks/microservices-dashboard-server/blob/master/CONTRIBUTING.md#suggesting-enhancements
+To contribute an enhancement that isn't covered by one of the items above, please follow our guide for suggesting an enhancement: https://github.com/ordina-jworks/microservices-dashboard/blob/master/CONTRIBUTING.md#suggesting-enhancements
 
 -->
 

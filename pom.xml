@@ -15,7 +15,7 @@
 		<module>samples</module>
 		<module>docs</module>
 	</modules>
-	<url>https://github.com/ordina-jworks/microservices-dashboard-server</url>
+	<url>https://github.com/ordina-jworks/microservices-dashboard</url>
 	<properties>
 		<java.version>1.8</java.version>
 		<resource.delimiter>@</resource.delimiter> <!-- delimiter that doesn't clash with Spring ${} placeholders -->
@@ -93,10 +93,10 @@ limitations under the License.
 	</licenses>
 
 	<scm>
-		<connection>scm:git:https://github.com/ordina-jworks/microservices-dashboard-server.git</connection>
-		<developerConnection>scm:git:git@github.com:ordina-jworks/microservices-dashboard-server.git
+		<connection>scm:git:https://github.com/ordina-jworks/microservices-dashboard.git</connection>
+		<developerConnection>scm:git:git@github.com:ordina-jworks/microservices-dashboard.git
 		</developerConnection>
-		<url>https://github.com/ordina-jworks/microservices-dashboard-server.git/</url>
+		<url>https://github.com/ordina-jworks/microservices-dashboard.git/</url>
 		<tag>HEAD</tag>
 	</scm>
 
@@ -493,7 +493,7 @@ limitations under the License.
 				<repository>
 					<id>bintray</id>
 					<name>Jcenter Repository</name>
-					<url>https://api.bintray.com/maven/ordina-jworks/microservices-dashboard-server/microservices-dashboard-server/</url>
+					<url>https://api.bintray.com/maven/ordina-jworks/microservices-dashboard/microservices-dashboard/</url>
 				</repository>
 			</distributionManagement>
 		</profile>

@@ -1,6 +1,6 @@
-# Contributing to microservices-dashboard-server
+# Contributing to the microservices dashboard
 
-Microservices-dashboard-server is released under the Apache 2.0 license. If you would like to
+The microservices dashboard is released under the Apache 2.0 license. If you would like to
 contribute something, or simply want to work with the code, this document should help you
 to get started.
 
