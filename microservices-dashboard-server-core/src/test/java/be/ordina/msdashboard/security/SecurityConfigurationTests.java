@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class SecurityConfigurationTests {
 
-	private static final String BASIC_PREFIX = "ms-dashboard.security.client.basic";
+	private static final String BASIC_PREFIX = "ms-dashboard.security.basic.client";
 	private static final String REGISTRATION_PREFIX = "spring.security.oauth2.client.registration.ms-dashboard";
 	private static final String PROVIDER_PREFIX = "spring.security.oauth2.client.provider";
 
