@@ -1,0 +1,52 @@
+[[getting-started]]
+== Getting started ==
+
+First you need to setup a Spring Boot project (using http://start.spring.io for example).
+Once you have generated and downloaded your new application, you just need to add the following dependency:
+
+.Maven
+[source,xml,indent=0,subs="verbatim,quotes,attributes",role="primary"]
+----
+<dependency>
+    <groupId>be.ordina</groupId>
+    <artifactId>microservices-dashboard-server-core</artifactId>
+    <version>{microservices-dashboard-version}</version>
+</dependency>
+----
+.Gradle
+[source,groovy,indent=0,subs="attributes",role="secondary"]
+----
+dependencies {
+	compile("be.ordina:microservices-dashboard-server-core:{microservices-dashboard-version}")
+}
+----
+
+In case you want to use a `BUILD-SNAPSHOT` version, add the JFrog OSS Artifactory repository too.
+
+.Maven
+[source,xml,indent=0,subs="verbatim,quotes,attributes",role="primary"]
+----
+<repositories>
+    <repository>
+        <id>oss-snapshots</id>
+        <name>JFrog OSS Snapshots</name>
+        <url>https://oss.jfrog.org/simple/oss-snapshot-local/</url>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
+----
+.Gradle
+[source,groovy,indent=0,subs="attributes",role="secondary"]
+----
+repositories {
+	maven {
+		name 'JFrog OSS Snapshots'
+		url 'https://oss.jfrog.org/simple/oss-snapshot-local'
+		mavenContent {
+			snapshotsOnly()
+		}
+    }
+}
+----

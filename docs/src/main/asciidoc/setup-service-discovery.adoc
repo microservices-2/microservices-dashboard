@@ -1,0 +1,76 @@
+[[setup-service-discovery]]
+== Configuring the service discovery ==
+
+TIP: We advise to disable the registration of the microservices dashboard application with your service discovery system.
+
+[[setup-service-discovery-cloudfoundry]]
+=== Spring Cloud Cloudfoundry ===
+
+To activate Cloudfoundry Service Discovery use the starter with group `org.springframework.cloud` and artifact id `spring-cloud-starter-cloudfoundry`.
+See the https://projects.spring.io/spring-cloud/[Spring Cloud Project page] for details on setting up your build system with the current Spring Cloud Release Train.
+
+[[setup-service-discovery-consul]]
+=== Spring Cloud Consul ===
+
+To activate Consul Service Discovery use the starter with group `org.springframework.cloud` and artifact id `spring-cloud-starter-consul-discovery`.
+See the https://projects.spring.io/spring-cloud/[Spring Cloud Project page] for details on setting up your build system with the current Spring Cloud Release Train.
+
+[[setup-service-discovery-kubernetes]]
+=== Spring Cloud Kubernetes ===
+
+To activate Kubernetes Service Discovery use the starter with group `org.springframework.cloud` and artifact id `spring-cloud-starter-kubernetes`.
+See the https://projects.spring.io/spring-cloud/[Spring Cloud Project page] for details on setting up your build system with the current Spring Cloud Release Train.
+
+==== RBAC ====
+
+If your Kubernetes cluster is running with https://kubernetes.io/docs/reference/access-authn-authz/rbac/[RBAC] enabled, there are a couple of additional things you will have to configure first before the dashboard is able to use the native service discovery.
+
+WARNING: Be sure to execute following commands in the namespace in which you'll deploy the Microservices Dashboard application.
+Don't forget to specify the service account when you're deploying to Kubernetes!
+
+First you'll have to create a new service account:
+[bash,indent=0,subs="attributes"]
+----
+$ kubectl create serviceaccount microservices-dashboard
+----
+
+In order to be able to query the Kubernetes API with this service account you'll have to define a new cluster role which has just enough permission for the discovery of the running applications.
+[source,yaml,indent=0,subs="attributes"]
+----
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: microservices-dashboard-role
+  labels:
+    app: microservices-dashboard
+rules:
+- apiGroups: [""]
+  resources:
+  - endpoints
+  - namespaces
+  - pods
+  - services
+  verbs:
+  - get
+  - watch
+  - list
+----
+
+Next you'll have to tell Kubernetes that the service account which you just created gets those privileges:
+[bash,indent=0,subs="attributes"]
+----
+$ kubectl create clusterrolebinding microservices-dashboard --clusterrole=microservices-dashboard-role --user=microservices-dashboard
+----
+
+[[setup-service-discovery-eureka]]
+=== Spring Cloud Netflix Eureka ===
+
+To activate Netflix Eureka Service Discovery use the starter with group `org.springframework.cloud` and artifact id `spring-cloud-starter-netflix-eureka-client`.
+See the https://projects.spring.io/spring-cloud/[Spring Cloud Project page] for details on setting up your build system with the current Spring Cloud Release Train.
+
+[[setup-service-discovery-zookeeper]]
+=== Spring Cloud Zookeeper ===
+
+To activate Zookeeper Service Discovery use the starter with group `org.springframework.cloud` and artifact id `spring-cloud-starter-zookeeper-discovery`.
+See the https://projects.spring.io/spring-cloud/[Spring Cloud Project page] for details on setting up your build system with the current Spring Cloud Release Train.
+

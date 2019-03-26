@@ -27,7 +27,7 @@ import org.springframework.util.StringUtils;
 @ConfigurationProperties(BasicClientSecurityProperties.PREFIX)
 public final class BasicClientSecurityProperties {
 
-	static final String PREFIX = "ms-dashboard.security.client.basic";
+	static final String PREFIX = "ms-dashboard.security.basic.client";
 
 	private String username;
 	private String password;

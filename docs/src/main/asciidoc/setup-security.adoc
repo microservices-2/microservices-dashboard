@@ -1,0 +1,51 @@
+[[setup-security]]
+== Configuring Security ==
+
+TIP: We advise to setup security of the actuator endpoints either with basic authentication or with access tokens.
+Most of the data that will be retrieved can be used for malicious practices!
+
+[[setup-security-basic-authentication]]
+=== Basic Authentication ===
+
+In case your actuator endpoints have been secured with basic authentication it would suffice to configure the credentials using following properties:
+
+.Properties
+[source,text,indent=0,subs="verbatim,quotes,attributes",role="primary"]
+```
+ms-dashboard.security.basic.client.username=your-username
+ms-dashboard.security.basic.client.password=your-password
+```
+.Yaml
+[source,yml,indent=0,subs="verbatim,quotes,attributes",role="secondary"]
+```
+ms-dashboard.security.basic.client:
+	username=your-username
+	password=your-password
+```
+
+[[setup-security-access-token]]
+=== Access token ===
+
+When you have secured the actuator endpoints using an authentication/authorization server, eg. Keycloak, you'll first need to configure a new OAuth2 or OIDC client.
+Using the client credentials grant flow the server will retrieve an access token which in turn will be used to authenticate against the secured endpoint.
+In order to be able to do this you'll have to configure following properties:
+
+.Properties
+[source,text,indent=0,subs="verbatim,quotes,attributes",role="primary"]
+```
+spring.security.oauth2.client.provider.ms-dashboard-m2m.token-uri=https://your-auth-server/path/to/oauth/token
+
+spring.security.oauth2.client.registration.ms-dashboard-m2m.authorization-grant-type=client_credentials
+spring.security.oauth2.client.registration.ms-dashboard-m2m.client-id=your-client-id
+spring.security.oauth2.client.registration.ms-dashboard-m2m.client-secret=your-client-secret
+```
+.Yaml
+[source,yml,indent=0,subs="verbatim,quotes,attributes",role="secondary"]
+```
+spring.security.oauth2.client:
+	provider.ms-dashboard-m2m.token-uri=https://your-auth-server/path/to/oauth/token
+	registration.ms-dashboard-m2m:
+		authorization-grant-type=client_credentials
+		client-id=your-client-id
+		client-secret=your-client-secret
+```

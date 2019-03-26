@@ -1,0 +1,3 @@
+include::setup-getting-started.adoc[]
+include::setup-service-discovery.adoc[]
+include::setup-security.adoc[]

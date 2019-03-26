@@ -1,0 +1,27 @@
+[[what]]
+== What is the Microservices Dashboard? ==
+
+Microservices Dashboard is a simple application to visualize links between microservices and the encompassing ecosystem.
+This Angular application consumes endpoints exposed by the Microservices Dashboard Server.
+
+=== Driving forces behind the dashboard effort ===
+
+Existing tooling doesn’t expose links between the different components in a microservices architecture::
+- [ ] Eureka shows which microservices are out there
+- [ ] Spring Boot Admin only shows the details of the individual services
+- [ ] Hystrix dashboard shows integration points but not a total view
+- [ ] Zipkin focuses on performance and only shows a temporal view of the connections
+
+Analysts need to know what functionality is out there::
+- [*] They want to see which resources are exposed by what microservices
+- [*] They want to know what services are impacted when a component has to change
+- [*] They like to have an end-to-end trace of where a frontend call goes through
+- [*] They would like to have a view of what’s coming and perhaps give input on that
+
+Developers can benefit from a broader view as well::
+- [*] They like an easy access point for documentation
+- [*] They want to see where which version of their components are deployed
+
+Managers like to have a grip on things::
+- [*] They want to get a sense of compliancy and maturity of the components
+- [*] They want some level of change management
