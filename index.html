@@ -429,6 +429,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 #footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
 .hidden {
 	display: none;
@@ -504,15 +505,45 @@ $(addBlockSwitches);
 </script>
 </head>
 
-<body class="book">
+<body class="book toc2 toc-left">
 <div id="header">
 <h1>Microservices Dashboard Reference Guide</h1>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#what">1. What is the Microservices Dashboard?</a>
+<ul class="sectlevel2">
+<li><a href="#driving-forces-behind-the-dashboard-effort">1.1. Driving forces behind the dashboard effort</a></li>
+</ul>
+</li>
+<li><a href="#getting-started">2. Getting started</a></li>
+<li><a href="#setup-service-discovery">3. Configuring the service discovery</a>
+<ul class="sectlevel2">
+<li><a href="#setup-service-discovery-cloudfoundry">3.1. Spring Cloud Cloudfoundry</a></li>
+<li><a href="#setup-service-discovery-consul">3.2. Spring Cloud Consul</a></li>
+<li><a href="#setup-service-discovery-kubernetes">3.3. Spring Cloud Kubernetes</a>
+<ul class="sectlevel3">
+<li><a href="#rbac">3.3.1. RBAC</a></li>
+</ul>
+</li>
+<li><a href="#setup-service-discovery-eureka">3.4. Spring Cloud Netflix Eureka</a></li>
+<li><a href="#setup-service-discovery-zookeeper">3.5. Spring Cloud Zookeeper</a></li>
+</ul>
+</li>
+<li><a href="#setup-security">4. Configuring Security</a>
+<ul class="sectlevel2">
+<li><a href="#setup-security-basic-authentication">4.1. Basic Authentication</a></li>
+<li><a href="#setup-security-access-token">4.2. Access token</a></li>
+</ul>
+</li>
+</ul>
+</div>
 </div>
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Microservices Dashboard Server Reference Guide</p>
+<p>Microservices Dashboard Reference Guide</p>
 </div>
 <div class="exampleblock">
 <div class="content">
@@ -530,7 +561,8 @@ $(addBlockSwitches);
 <h2 id="what"><a class="anchor" href="#what"></a>1. What is the Microservices Dashboard?</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Microservices Dashboard is a simple application to visualize links between microservices and the encompassing ecosystem. This AngularJS application consumes endpoints exposed by microservices-dashboard-server. It displays four columns: UI, Resources, Microservices and Backends. Each of these columns show nodes and links between them. The information for these links come from Spring Boot Actuator health endpoints, pact consumer-driven-contract-tests and hypermedia indexes, which are aggregated in the microservices-dashboard-server project.</p>
+<p>Microservices Dashboard is a simple application to visualize links between microservices and the encompassing ecosystem.
+This Angular application consumes endpoints exposed by the Microservices Dashboard Server.</p>
 </div>
 <div class="sect2">
 <h3 id="driving-forces-behind-the-dashboard-effort"><a class="anchor" href="#driving-forces-behind-the-dashboard-effort"></a>1.1. Driving forces behind the dashboard effort</h3>
@@ -608,43 +640,33 @@ $(addBlockSwitches);
 <div class="sect1">
 <h2 id="getting-started"><a class="anchor" href="#getting-started"></a>2. Getting started</h2>
 <div class="sectionbody">
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-The absolutely simplest way (although not the default way) to get up and running is by <a href="#starting-from-sample">cloning and running a simple sample</a>. This is especially handy for people not familiar with Java or maven.
-</td>
-</tr>
-</table>
-</div>
-<div class="sect2">
-<h3 id="default-set-up"><a class="anchor" href="#default-set-up"></a>2.1. Default set up</h3>
 <div class="paragraph">
-<p>First you need to setup a simple Spring Boot project (using <a href="http://start.spring.io" class="bare">start.spring.io</a> for example).
-Microservices-dashboard-server requires Java 8 or later.</p>
+<p>First you need to setup a Spring Boot project (using <a href="http://start.spring.io" class="bare">start.spring.io</a> for example).
+Once you have generated and downloaded your new application, you just need to add the following dependency:</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Add the microservices-dashboard-server as a dependency to your new Spring Boot&#8217;s dependencies:</p>
-<div class="listingblock">
-<div class="title">pom.xml</div>
+<div class="listingblock primary">
+<div class="title">Maven</div>
 <div class="content">
 <pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
     &lt;groupId&gt;be.ordina&lt;/groupId&gt;
-    &lt;artifactId&gt;microservices-dashboard-server&lt;/artifactId&gt;
-    &lt;version&gt;{project-version}&lt;/version&gt;
+    &lt;artifactId&gt;microservices-dashboard-server-core&lt;/artifactId&gt;
+    &lt;version&gt;2.0.0.BUILD-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
-</li>
-<li>
-<p>In case you use a <code>SNAPSHOT</code> version, add the JFrog OSS Artifactory repository:</p>
-<div class="listingblock">
-<div class="title">pom.xml</div>
+<div class="listingblock secondary">
+<div class="title">Gradle</div>
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">dependencies {
+    compile("be.ordina:microservices-dashboard-server-core:2.0.0.BUILD-SNAPSHOT")
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In case you want to use a <code>BUILD-SNAPSHOT</code> version, add the JFrog OSS Artifactory repository too.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Maven</div>
 <div class="content">
 <pre class="highlight"><code class="language-xml" data-lang="xml">&lt;repositories&gt;
     &lt;repository&gt;
@@ -658,94 +680,25 @@ Microservices-dashboard-server requires Java 8 or later.</p>
 &lt;/repositories&gt;</code></pre>
 </div>
 </div>
-</li>
-<li>
-<p>Pull in the Microservices Dashboard Server configuration via adding <code>@EnableMicroservicesDashboardServer</code> to your configuration:</p>
-<div class="listingblock">
+<div class="listingblock secondary">
+<div class="title">Gradle</div>
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@SpringBootApplication
-@EnableMicroservicesDashboardServer
-public class MicroservicesDashboardServerApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">repositories {
+    maven {
+        name 'JFrog OSS Snapshots'
+        url 'https://oss.jfrog.org/simple/oss-snapshot-local'
+        mavenContent {
+            snapshotsOnly()
+        }
     }
 }</code></pre>
 </div>
 </div>
-</li>
-</ol>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-There are a number of other ways to set up the Microservices Dashboard. Please refer to the <a href="#alternative-set-up">Alternative set up</a> section for more information.
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="default-usage"><a class="anchor" href="#default-usage"></a>2.2. Default usage</h3>
-<div class="paragraph">
-<p>You can either start the application from within your IDE, or use the command line to build and start the application:</p>
-</div>
-<div class="listingblock">
-<div class="title">Using the embedded maven wrapper</div>
-<div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell">$ mvnw spring-boot:run</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Using your own maven installation</div>
-<div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell">$ mvn spring-boot:run</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If successful, you should see the following output in the log:</p>
-</div>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p>o.s.b.c.e.t.TomcatEmbeddedServletContainer Tomcat started on port(s): 8080 (http)</p>
-</div>
-</blockquote>
-</div>
-<div class="paragraph">
-<p>You should now be able to view the empty dashboard at <code><a href="http://localhost:8080" class="bare">localhost:8080</a></code>.</p>
-</div>
-<div class="paragraph">
-<p>You can now configure integrations with your ecosystem to start aggregating node information.
-More details on how to do this can be found at the <a href="#aggregation-configuration">Node retrieval configuration</a> section.</p>
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="alternative-set-up"><a class="anchor" href="#alternative-set-up"></a>3. Alternative set up</h2>
+<h2 id="setup-service-discovery"><a class="anchor" href="#setup-service-discovery"></a>3. Configuring the service discovery</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="deploying-on-standalone-server"><a class="anchor" href="#deploying-on-standalone-server"></a>3.1. Deploying on a standalone server</h3>
-<div class="paragraph">
-<p>If you want to setup the Microservices Dashboard via war-deployment in a servlet-container, please have a look at the <a href="http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#build-tool-plugins-maven-packaging">reference documentation of Spring Boot</a>.</p>
-</div>
-<div class="paragraph">
-<p>A sample project will be created soon to illustrate this, tracked through this <a href="https://github.com/ordina-jworks/microservices-dashboard-server/issues/25">issue</a>.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="deploying-ui-separately"><a class="anchor" href="#deploying-ui-separately"></a>3.2. Deploying the UI separately from the server</h3>
-<div class="paragraph">
-<p>The microservices-dashboard consists of two components: the UI and the server.
-The UI is located under the <a href="https://github.com/ordina-jworks/microservices-dashboard">microservices-dashboard repository</a>, while the server is located under the <a href="https://github.com/ordina-jworks/microservices-dashboard-server">microservices-dashboard-server repository</a>.
-These two components can either be packaged and deployed together as a single Spring Boot application (as explained in the <a href="#default-set-up">Default set up</a> section), or separately as a NodeJS application and a Spring Boot application.<br>
-In case of the former, the UI is served from the embedded Tomcat or Jetty inside the Spring Boot application.<br>
-In case of the latter, the UI is ran separately on a NodeJS server, while the Spring Boot application simply exposes the JSON API.</p>
-</div>
 <div class="admonitionblock tip">
 <table>
 <tr>
@@ -753,167 +706,35 @@ In case of the latter, the UI is ran separately on a NodeJS server, while the Sp
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Deploying the UI separately from the server can be very useful when you want to extend or modify the UI application. Simply build the UI from source and deploy it. No need to package it within the server application first.
+We advise to disable the registration of the microservices dashboard application with your service discovery system.
 </td>
 </tr>
 </table>
+</div>
+<div class="sect2">
+<h3 id="setup-service-discovery-cloudfoundry"><a class="anchor" href="#setup-service-discovery-cloudfoundry"></a>3.1. Spring Cloud Cloudfoundry</h3>
+<div class="paragraph">
+<p>To activate Cloudfoundry Service Discovery use the starter with group <code>org.springframework.cloud</code> and artifact id <code>spring-cloud-starter-cloudfoundry</code>.
+See the <a href="https://projects.spring.io/spring-cloud/">Spring Cloud Project page</a> for details on setting up your build system with the current Spring Cloud Release Train.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="setup-service-discovery-consul"><a class="anchor" href="#setup-service-discovery-consul"></a>3.2. Spring Cloud Consul</h3>
+<div class="paragraph">
+<p>To activate Consul Service Discovery use the starter with group <code>org.springframework.cloud</code> and artifact id <code>spring-cloud-starter-consul-discovery</code>.
+See the <a href="https://projects.spring.io/spring-cloud/">Spring Cloud Project page</a> for details on setting up your build system with the current Spring Cloud Release Train.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="setup-service-discovery-kubernetes"><a class="anchor" href="#setup-service-discovery-kubernetes"></a>3.3. Spring Cloud Kubernetes</h3>
+<div class="paragraph">
+<p>To activate Kubernetes Service Discovery use the starter with group <code>org.springframework.cloud</code> and artifact id <code>spring-cloud-starter-kubernetes</code>.
+See the <a href="https://projects.spring.io/spring-cloud/">Spring Cloud Project page</a> for details on setting up your build system with the current Spring Cloud Release Train.</p>
 </div>
 <div class="sect3">
-<h4 id="excluding-ui-from-server"><a class="anchor" href="#excluding-ui-from-server"></a>3.2.1. Excluding the UI from the Spring Boot application</h4>
+<h4 id="rbac"><a class="anchor" href="#rbac"></a>3.3.1. RBAC</h4>
 <div class="paragraph">
-<p>When running the UI separately, ideally the Spring Boot server shouldn&#8217;t serve the UI in this case.</p>
-</div>
-<div class="listingblock">
-<div class="title">pom.xml</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
-    &lt;groupId&gt;be.ordina&lt;/groupId&gt;
-    &lt;artifactId&gt;microservices-dashboard-server&lt;/artifactId&gt;
-    &lt;version&gt;{project-version}&lt;/version&gt;
-    &lt;exclusions&gt;
-      &lt;exclusion&gt;
-        &lt;artifactId&gt;microservices-dashboard-ui&lt;/artifactId&gt;
-        &lt;groupId&gt;be.ordina&lt;/groupId&gt;
-       &lt;/exclusion&gt;
-    &lt;/exclusions&gt;
-&lt;/dependency&gt;</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="building-ui-from-source"><a class="anchor" href="#building-ui-from-source"></a>3.2.2. Building and running the UI from source</h4>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>First a basic build should be done:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell">$ npm install</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Then bower dependencies should be installed:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell">$ bower install</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Use gulp to serve the resources using the configuration file:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell">$ gulp serve --standalone</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You can configure the location of the dashboard server by modifying the <code>baseUrl</code> in <code>gulp/conf.js</code></p>
-</div>
-</li>
-</ol>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-If you want to run the UI on an existing server, with potentially another port, execute <code>$ gulp build --standalone</code> and deploy the <code>dist</code> folder on that server.
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-The Microservices Dashboard server needs to be started to get any data in the dashboard.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="starting-from-sample"><a class="anchor" href="#starting-from-sample"></a>3.3. Starting from a sample</h3>
-<div class="paragraph">
-<p>Starting from a sample application is an easy and quick way to get up and running, without having to write any code yourself.
-This can be particulary useful for people not familiar with Java and who simply want to configure and run the application without any custom extensions.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-There are other samples available as well. See the <a href="#samples">Samples</a> section for more information on what they contain.
-</td>
-</tr>
-</table>
-</div>
-<div id="starting-from-sample-set-up" class="olist arabic">
-<ol class="arabic">
-<li>
-<p>The first step is to clone the Git repository:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell">$ git clone https://github.com/ordina-jworks/microservices-dashboard-server</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Once the clone is complete, you&#8217;re ready to get the service up and running:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-shell" data-lang="shell">$ cd microservices-dashboard-server/samples/microservices-dashboard-simple
-$ ./mvnw spring-boot:run</code></pre>
-</div>
-</div>
-</li>
-</ol>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="aggregation-configuration"><a class="anchor" href="#aggregation-configuration"></a>4. Node retrieval configuration</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Nodes are retrieved by node aggregators.
-Each of these aggregators calls certain resources which expose information that can be mapped to nodes.
-These nodes are then shown on the dashboard in one of the four columns.
-You can simply use the default aggregators and configure your ecosystem as we have intended it to be configured, or you can extend or override them.
-You can even write your own aggregators for resources we haven&#8217;t covered yet.
-Configuring the existing aggregators is explained below.
-If you wish to extend or override an aggregator, have a look at <a href="#aggregation-extending">Extending existing aggregators</a>.
-And finally writing your own aggregator is covered in the <a href="#aggregation-writing-your-own">Writing your own aggregator</a> section.</p>
-</div>
-<div class="sect2">
-<h3 id="aggregation-provided"><a class="anchor" href="#aggregation-provided"></a>4.1. Provided aggregators</h3>
-<div class="paragraph">
-<p>Currently four aggregators are provided out-of-the-box:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Health aggregator <em>(requires service discovery)</em></p>
-</li>
-<li>
-<p>Index aggregator <em>(requires service discovery)</em></p>
-</li>
-<li>
-<p>Mappings aggregator <em>(requires service discovery)</em></p>
-</li>
-<li>
-<p>Pact aggregator <em>(requires pact broker)</em></p>
-</li>
-</ul>
+<p>If your Kubernetes cluster is running with <a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/">RBAC</a> enabled, there are a couple of additional things you will have to configure first before the dashboard is able to use the native service discovery.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -922,715 +743,135 @@ And finally writing your own aggregator is covered in the <a href="#aggregation-
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-<div class="paragraph">
-<p>Every aggregator has a set of properties available which can easily be changed in <code>application.yml</code> or <code>application.properties</code> in your Spring Boot application.
-Setting maps and lists in properties is less straightforward.</p>
-</div>
-<div class="paragraph">
-<p>Configuring a map can be done as follows:</p>
-</div>
-<div class="listingblock">
-<div class="title">Using yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">msdashboard.health.requestHeaders:
-  headername1: headervalue1
-  headername2: headervalue2</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Using properties</div>
-<div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">msdashboard.health.requestHeaders.headername1=headervalue1
-msdashboard.health.requestHeaders.headername2=headervalue2</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Configuring a list can be done as follows:</p>
-</div>
-<div class="listingblock">
-<div class="title">Using yaml</div>
-<div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">msdashboard.health.filteredServices:
-  - hystrix
-  - diskSpace</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">Using properties</div>
-<div class="content">
-<pre class="highlight"><code class="language-properties" data-lang="properties">msdashboard.health.filteredServices[0]=hystrix
-msdashboard.health.filteredServices[1]=diskSpace</code></pre>
-</div>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="sect3">
-<h4 id="aggregation-health"><a class="anchor" href="#aggregation-health"></a>4.1.1. Health aggregator</h4>
-<div class="paragraph">
-<p>The health aggregator retrieves and aggregates nodes from health information exposed by <a href="http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready">Spring Boot&#8217;s Actuator</a>.</p>
-</div>
-<div class="sect4">
-<h5 id="prerequisites"><a class="anchor" href="#prerequisites"></a>Prerequisites</h5>
-<div class="paragraph">
-<p>This aggregator uses service discovery to find available services.
-More details on using service discovery is covered in section <a href="#aggregation-service-discovery">Using service discovery</a>.</p>
-</div>
-<div class="paragraph">
-<p>In case Spring Boot is not used in a microservice you would like to retrieve health information of, your service must comply to the health format exposed by Spring Boot under the <code>/health</code> endpoint.</p>
-</div>
-<div class="listingblock">
-<div class="title">Example of a health response</div>
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-  "status": "UP",
-  "foo": "bar",
-  "serviceWhichThisServiceCalls": {
-    "status": "UNKNOWN",
-    "type": "SOAP",
-    "group": "SVCGROUP"
-  },
-  "anotherServiceWhichThisServiceCalls": {
-    "status": "DOWN",
-    "type": "REST",
-    "group": "SVCGROUP",
-    "foo": "bar"
-  }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The only required field is <code>status</code>.
-Any field which isn&#8217;t an array, is added to the details of the current node.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-The Spring Boot <code>/health</code> endpoint is part of its Actuator functionality.
-A detailed description of its purpose and characteristics can be found in the <a href="http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready">reference documentation</a>.
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect4">
-<h5 id="aggregation"><a class="anchor" href="#aggregation"></a>Aggregation</h5>
-<div class="paragraph">
-<p>For each service returned from the service discovery, a top level node is created.
-For each nested entity found in the response of each health response, a node is created and being linked from the top level node.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Health aggregator configuration options</caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Default value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.health.requestHeaders</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Map of request header keys and values used for calling the services' health endpoint.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.health.filteredServices</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">List of names of services which should be ignored during health aggregation.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">hystrix, diskSpace, configServer, discovery</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="aggregation-index"><a class="anchor" href="#aggregation-index"></a>4.1.2. Index aggregator</h4>
-<div class="paragraph">
-<p>The index aggregator retrieves and aggregates nodes from custom index endpoints implementing hypermedia.
-Currently only HAL is supported as mediatype.
-See <a href="http://projects.spring.io/spring-hateoas/">Spring HATEOAS</a> to easily implement said endpoints.</p>
-</div>
-<div class="sect4">
-<h5 id="prerequisites-2"><a class="anchor" href="#prerequisites-2"></a>Prerequisites</h5>
-<div class="paragraph">
-<p>This aggregator uses service discovery to find available services.
-More details on using service discovery is covered in section <a href="#aggregation-service-discovery">Using service discovery</a>.</p>
-</div>
-<div class="paragraph">
-<p>Your service must comply to the HAL format and expose an index under the root (<code>/</code>) endpoint.</p>
-</div>
-<div class="listingblock">
-<div class="title">Example of an index response</div>
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-  "_links": {
-    "svc1:svc1rsc1": {
-        "href": "http://host0015.local:8301/svc1rsc1",
-        "templated": true
-    },
-    "svc1:svc1rsc2": {
-        "href": "http://host0015.local:8301/svc1rsc2",
-        "templated": true
-    }
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="aggregation-2"><a class="anchor" href="#aggregation-2"></a>Aggregation</h5>
-<div class="paragraph">
-<p>For each service returned from the service discovery, a top level node is created.
-For each unfiltered link found in the response of each index response, a node is created and being linked from the top level node.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Index aggregator configuration options</caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Default value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.index.enabled</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Index aggregator is enabled</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.index.requestHeaders</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Map of request header keys and values used for calling the services' mappings endpoint.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.index.filteredServices</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">List of names of services which should be ignored during index aggregation.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">hystrix, diskSpace, configServer, discovery</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="aggregation-mappings"><a class="anchor" href="#aggregation-mappings"></a>4.1.3. Mappings aggregator</h4>
-<div class="paragraph">
-<p>The mappings aggregator retrieves and aggregates nodes from mappings information exposed by <a href="http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready">Spring Boot&#8217;s Actuator</a>.</p>
-</div>
-<div class="sect4">
-<h5 id="prerequisites-3"><a class="anchor" href="#prerequisites-3"></a>Prerequisites</h5>
-<div class="paragraph">
-<p>This aggregator uses service discovery to find available services.
-More details on using service discovery is covered in section <a href="#aggregation-service-discovery">Using service discovery</a>.</p>
-</div>
-<div class="paragraph">
-<p>In case Spring Boot is not used in a microservice you would like to retrieve mappings of, your service must comply to the mappings format exposed by Spring Boot under the <code>/mappings</code> endpoint.</p>
-</div>
-<div class="listingblock">
-<div class="title">Example of a mappings response</div>
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-  "{[/endpoint1],methods=[GET],produces=[application/json]}" : {
-    "bean" : "requestMappingHandlerMapping",
-    "method" : "public java.util.Date be.ordina.controllers.Endpoint1Controller.retrieveDate(java.util.Date)"
-  },
-  "{[/endpoint2],methods=[GET, POST]}" : {
-    "bean" : "requestMappingHandlerMapping",
-    "method" : "public void be.ordina.controllers.Endpoint2Controller.createInformation(be.ordina.model.Information)"
-  }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The only required segment is the endpoint in the key.
-The endpoint should be relative (starting with a slash), between brackets and part of an array wrapped in quotes.
-The smallest accepted mapping key is the following:
-<code>"{[/]}"</code>.
-Consequentially, the smallest accepted mapping response is the following: <code>{"{[/]}" : {}}</code>.</p>
-</div>
-<div class="paragraph">
-<p>Any endpoint with a method signature containing <code>org.springframework</code> will be ignored.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-The Spring Boot <code>/health</code> endpoint is part of its Actuator functionality.
-A detailed description of its purpose and characteristics can be found in the <a href="http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready">reference documentation</a>.
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect4">
-<h5 id="aggregation-3"><a class="anchor" href="#aggregation-3"></a>Aggregation</h5>
-<div class="paragraph">
-<p>For each service returned from the service discovery, a top level node is created.
-For each unfiltered mapping found in the response of each mappings response, a node is created and being linked to the top level node.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. Mappings aggregator configuration options</caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Default value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.mappings.enabled</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mappings aggregator is enabled</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.mappings.requestHeaders</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Map of request header keys and values used for calling the services' mappings endpoint.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.mappings.filteredServices</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">List of names of services which should be ignored during health aggregation.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">hystrix, diskSpace, configServer, discovery</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="aggregation-pact"><a class="anchor" href="#aggregation-pact"></a>4.1.4. Pact aggregator</h4>
-<div class="paragraph">
-<p>The pacts aggregator retrieves and aggregates nodes from information exposed by the <a href="https://github.com/bethesque/pact_broker">Pact broker</a>.
-The broker holds contracts between producers and consumers which describe their interactions.</p>
-</div>
-<div class="sect4">
-<h5 id="prerequisites-4"><a class="anchor" href="#prerequisites-4"></a>Prerequisites</h5>
-<div class="paragraph">
-<p>The Pact broker should expose a JSON resource containing links to the latest pacts.
-Out of this response, we extract all the links to the pacts with the following default jsonPath:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-jsonpath" data-lang="jsonpath">$.pacts[*]._links.self[0].href</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-You can change many of these settings by using the properties.
-See below for the available properties and their default values.
+Be sure to execute following commands in the namespace in which you&#8217;ll deploy the Microservices Dashboard application.
+Don&#8217;t forget to specify the service account when you&#8217;re deploying to Kubernetes!
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>Once the links to the pacts are retrieved, each pact will be called and processed.
-Please refer to the <a href="https://github.com/realestate-com-au/pact">Pact</a> documentation for in-depth details on what Pact contracts should look like.</p>
-</div>
-<div class="paragraph">
-<p>We expect only a couple fields to be present:</p>
+<p>First you&#8217;ll have to create a new service account:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-jsonpath" data-lang="jsonpath">$.interactions[*].request.path
-$.provider.name
-$.consumer.name</code></pre>
+<pre>$ kubectl create serviceaccount microservices-dashboard</pre>
 </div>
 </div>
-</div>
-<div class="sect4">
-<h5 id="aggregation-4"><a class="anchor" href="#aggregation-4"></a>Aggregation</h5>
 <div class="paragraph">
-<p>For each interaction found in each contract returned by the pact broker, nodes and links are being created for its consumer and producer.</p>
+<p>In order to be able to query the Kubernetes API with this service account you&#8217;ll have to define a new cluster role which has just enough permission for the discovery of the running applications.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. Pact aggregator configuration options</caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Default value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.pact.requestHeaders</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Map of request header keys and values used for calling the services' mappings endpoint.</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.pact.filteredServices</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">List of names of services which should be ignored during health aggregation.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">hystrix, diskSpace, configServer, discovery</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">pact-broker.url</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The url to the pact broker.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://localhost:8089" class="bare">localhost:8089</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">pact-broker.latest-url</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The relative url to the list of pacts.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">/pacts/latest</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">pact-broker.self-href-jsonPath</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The jsonPath to retrieve the links to the individual pact contracts.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">$.pacts[*]._links.self[0].href</p></td>
-</tr>
-</tbody>
-</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: microservices-dashboard-role
+  labels:
+    app: microservices-dashboard
+rules:
+- apiGroups: [""]
+  resources:
+  - endpoints
+  - namespaces
+  - pods
+  - services
+  verbs:
+  - get
+  - watch
+  - list</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next you&#8217;ll have to tell Kubernetes that the service account which you just created gets those privileges:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ kubectl create clusterrolebinding microservices-dashboard --clusterrole=microservices-dashboard-role --user=microservices-dashboard</pre>
+</div>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="aggregation-service-discovery"><a class="anchor" href="#aggregation-service-discovery"></a>4.2. Using service discovery</h3>
+<h3 id="setup-service-discovery-eureka"><a class="anchor" href="#setup-service-discovery-eureka"></a>3.4. Spring Cloud Netflix Eureka</h3>
 <div class="paragraph">
-<p>We are using the <code>org.springframework.cloud.client.discovery.DiscoveryClient</code> abstraction, which means that we support any implementation of said interface.
-At the time of writing Eureka, Zookeeper and Consul.io are supported, although the Spring Cloud team might add more at any moment.</p>
+<p>To activate Netflix Eureka Service Discovery use the starter with group <code>org.springframework.cloud</code> and artifact id <code>spring-cloud-starter-netflix-eureka-client</code>.
+See the <a href="https://projects.spring.io/spring-cloud/">Spring Cloud Project page</a> for details on setting up your build system with the current Spring Cloud Release Train.</p>
 </div>
-<div class="sect3">
-<h4 id="enabling-service-discovery"><a class="anchor" href="#enabling-service-discovery"></a>4.2.1. Enabling service discovery</h4>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Add a discovery dependency to your <code>pom.xml</code> file:</p>
+</div>
+<div class="sect2">
+<h3 id="setup-service-discovery-zookeeper"><a class="anchor" href="#setup-service-discovery-zookeeper"></a>3.5. Spring Cloud Zookeeper</h3>
+<div class="paragraph">
+<p>To activate Zookeeper Service Discovery use the starter with group <code>org.springframework.cloud</code> and artifact id <code>spring-cloud-starter-zookeeper-discovery</code>.
+See the <a href="https://projects.spring.io/spring-cloud/">Spring Cloud Project page</a> for details on setting up your build system with the current Spring Cloud Release Train.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="setup-security"><a class="anchor" href="#setup-security"></a>4. Configuring Security</h2>
+<div class="sectionbody">
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+We advise to setup security of the actuator endpoints either with basic authentication or with access tokens.
+Most of the data that will be retrieved can be used for malicious practices!
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="setup-security-basic-authentication"><a class="anchor" href="#setup-security-basic-authentication"></a>4.1. Basic Authentication</h3>
+<div class="paragraph">
+<p>In case your actuator endpoints have been secured with basic authentication it would suffice to configure the credentials using following properties:</p>
+</div>
 <div class="listingblock primary">
-<div class="title">Eureka</div>
+<div class="title">Properties</div>
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependencyManagement&gt;
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-cloud-netflix&lt;/artifactId&gt;
-            &lt;version&gt;1.1.2.RELEASE&lt;/version&gt;
-            &lt;type&gt;pom&lt;/type&gt;
-            &lt;scope&gt;import&lt;/scope&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-&lt;/dependencyManagement&gt;
-&lt;dependencies&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-        &lt;artifactId&gt;spring-cloud-starter-eureka&lt;/artifactId&gt;
-    &lt;/dependency&gt;
-&lt;/dependencies&gt;</code></pre>
+<pre class="highlight"><code>ms-dashboard.security.basic.client.username=your-username
+ms-dashboard.security.basic.client.password=your-password</code></pre>
 </div>
 </div>
 <div class="listingblock secondary">
-<div class="title">Consul</div>
+<div class="title">Yaml</div>
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependencyManagement&gt;
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-cloud-consul-dependencies&lt;/artifactId&gt;
-            &lt;version&gt;1.0.1.RELEASE&lt;/version&gt;
-            &lt;type&gt;pom&lt;/type&gt;
-            &lt;scope&gt;import&lt;/scope&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-&lt;/dependencyManagement&gt;
-&lt;dependencies&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-        &lt;artifactId&gt;spring-cloud-starter-consul-all&lt;/artifactId&gt;
-    &lt;/dependency&gt;
-&lt;/dependencies&gt;</code></pre>
-</div>
-</div>
-<div class="listingblock tertiary">
-<div class="title">Zookeeper</div>
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dependencyManagement&gt;
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-cloud-zookeeper-dependencies&lt;/artifactId&gt;
-            &lt;version&gt;1.0.1.RELEASE&lt;/version&gt;
-            &lt;type&gt;pom&lt;/type&gt;
-            &lt;scope&gt;import&lt;/scope&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-&lt;dependencies&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-        &lt;artifactId&gt;spring-cloud-zookeeper-discovery&lt;/artifactId&gt;
-    &lt;/dependency&gt;
-&lt;/dependencies&gt;</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>In case you haven&#8217;t used the default location for your service registry (see Spring Cloud documentation for defaults), you can specify a custom url to the registry:</p>
-<div class="paragraph">
-<div class="title">Eureka</div>
-<p><a href="http://cloud.spring.io/spring-cloud-static/spring-cloud.html#_registering_with_eureka">Registring with Eureka</a></p>
-</div>
-<div class="paragraph">
-<div class="title">Consul</div>
-<p><a href="http://cloud.spring.io/spring-cloud-consul/spring-cloud-consul.html#_registering_with_consul">Registring with Consul</a></p>
-</div>
-<div class="paragraph">
-<div class="title">Zookeeper</div>
-<p><a href="http://cloud.spring.io/spring-cloud-zookeeper/spring-cloud-zookeeper.html#_registering_with_zookeeper">Registring with Zookeeper</a></p>
-</div>
-</li>
-</ol>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>In case you&#8217;d like to register the dashboard in the service registry as well, simply add the <code>@EnableEurekaClient</code> annotation to the Microservices Dashboard Server application:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@EnableEurekaClient
-@SpringBootApplication
-@EnableMicroservicesDashboardServer
-public class MicroservicesDashboardServerApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
-}</code></pre>
-</div>
-</div>
-</td>
-</tr>
-</table>
+<pre class="highlight"><code>ms-dashboard.security.basic.client:
+    username=your-username
+    password=your-password</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="aggregation-extending"><a class="anchor" href="#aggregation-extending"></a>4.3. Extending existing aggregators</h3>
+<h3 id="setup-security-access-token"><a class="anchor" href="#setup-security-access-token"></a>4.2. Access token</h3>
 <div class="paragraph">
-<p>More information will be added as soon as possible.</p>
+<p>When you have secured the actuator endpoints using an authentication/authorization server, eg. Keycloak, you&#8217;ll first need to configure a new OAuth2 or OIDC client.
+Using the client credentials grant flow the server will retrieve an access token which in turn will be used to authenticate against the secured endpoint.
+In order to be able to do this you&#8217;ll have to configure following properties:</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="aggregation-writing-your-own"><a class="anchor" href="#aggregation-writing-your-own"></a>4.4. Writing your own aggregator</h3>
-<div class="paragraph">
-<p>When writing your own aggregator, it is important to understand how <a href="http://reactivex.io/">ReactiveX</a> works.
-We use observables from <a href="https://github.com/ReactiveX/RxJava">RxJava</a> in order to make optimal use of the system resources the microservices-dashboard-server runs on.</p>
-</div>
-<div class="paragraph">
-<p>The <code>NodeAggregator</code> <a href="https://github.com/ordina-jworks/microservices-dashboard-server/blob/master/microservices-dashboard-server/src/main/java/be/ordina/msdashboard/aggregators/NodeAggregator.java">interface</a> exposes a single method:</p>
-</div>
-<div class="listingblock">
+<div class="listingblock primary">
+<div class="title">Properties</div>
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">Observable&lt;Node&gt; aggregateNodes();</code></pre>
+<pre class="highlight"><code>spring.security.oauth2.client.provider.ms-dashboard-m2m.token-uri=https://your-auth-server/path/to/oauth/token
+
+spring.security.oauth2.client.registration.ms-dashboard-m2m.authorization-grant-type=client_credentials
+spring.security.oauth2.client.registration.ms-dashboard-m2m.client-id=your-client-id
+spring.security.oauth2.client.registration.ms-dashboard-m2m.client-secret=your-client-secret</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>The easiest way to conform to this interface is to implement whichever logic you like, and in the end map the result to an observable as such:</p>
-</div>
-<div class="listingblock">
+<div class="listingblock secondary">
+<div class="title">Yaml</div>
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">return Observable.from(nodes);</code></pre>
+<pre class="highlight"><code>spring.security.oauth2.client:
+    provider.ms-dashboard-m2m.token-uri=https://your-auth-server/path/to/oauth/token
+    registration.ms-dashboard-m2m:
+        authorization-grant-type=client_credentials
+        client-id=your-client-id
+        client-secret=your-client-secret</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>While this may be the easiest way to implement an aggregator, it probably isn&#8217;t the most optimized way.
-Better would be to embrace observables from the start by using for instance <a href="https://github.com/ReactiveX/RxNetty">RxNetty</a> when you&#8217;re calling external resources to fetch node information.
-You can find examples in the existing out-of-the-box aggregators, and you can reuse the useful <code>NettyServiceCaller</code> <a href="https://github.com/ordina-jworks/microservices-dashboard-server/blob/master/microservices-dashboard-server/src/main/java/be/ordina/msdashboard/aggregators/NettyServiceCaller.java">class</a> to work with observables from the source.</p>
-</div>
-<div class="sect3">
-<h4 id="dealing-with-exceptions"><a class="anchor" href="#dealing-with-exceptions"></a>4.4.1. Dealing with exceptions</h4>
-<div class="paragraph">
-<p>When errors occur during the treatment of an observable, its default behaviour is to terminate the emission of more information.
-While this might be desirable when reading a continuous stream of information, in our experience it often doesn&#8217;t really match with our use case.</p>
-</div>
-<div class="paragraph">
-<p>Retrying the observable could seem the right course of action, if it wouldn&#8217;t be for the fact that on retry the observable starts emitting information from the start.
-In other words, in case your observable emitting ten nodes, throws an exception on the fifth node, retrying will re-emit node one until five where it will terminate for the same exception again.</p>
-</div>
-<div class="paragraph">
-<p>The solution to this problem is turning the observable into a hot observable with autoconnection of the first subscriber:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">RxNetty.createHttpRequest(request)
-                .publish()
-                .autoConnect()</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Or similarly:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">Observable.from(discoveryClient.getServices())
-                .subscribeOn(Schedulers.io())
-                .publish()
-                .autoConnect()</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="graph-configuration"><a class="anchor" href="#graph-configuration"></a>5. Graph configuration</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>More information will be added as soon as possible.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="graph-configuration-lanes"><a class="anchor" href="#graph-configuration-lanes"></a>6. Lanes configuration</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Currently we support 4 types of lane, based on the results the aggregators return.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>UI</p>
-</li>
-<li>
-<p>Resources</p>
-</li>
-<li>
-<p>Microservices</p>
-</li>
-<li>
-<p>Backends</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>The last lane constains all the nodes that don&#8217;t belong to the previous 3.
-To change the label in the JSON output, you just need  to rename the corresponding property.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. Lane configuration options</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Property name</th>
-<th class="tableblock halign-left valign-top">Default value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.graph.ui</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">UI</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.graph.resources</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Resources</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.graph.microservices</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Microservices</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">msdashboard.graph.backends</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Backends</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect1">
-<h2 id="samples"><a class="anchor" href="#samples"></a>7. Samples</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>In case you simply want to get started with the Microservices Dashboard, you can use a sample to get up an running quickly.
-The basics - including getting them up and running - are described in the <a href="#starting-from-sample">Starting from a sample</a> section.</p>
-</div>
-<div class="paragraph">
-<p>Currently two working samples are available: simple and simple-mocks.</p>
-</div>
-<div class="sect2">
-<h3 id="samples-simple"><a class="anchor" href="#samples-simple"></a>7.1. Sample 1: microservices-dashboard-simple</h3>
-<div class="paragraph">
-<p>The simple sample is a great way to get up and running quickly without any mocks.
-You can use this as a base for your own version of the microservices-dashboard.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="samples-simple-mocks"><a class="anchor" href="#samples-simple-mocks"></a>7.2. Sample 2: microservices-dashboard-simple-mocks</h3>
-<div class="paragraph">
-<p>This sample builds on top of the simple sample, with mocks enabled.</p>
-</div>
-<div class="paragraph">
-<p>Currently it contains mocks for indexes, healths and pacts.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="extending"><a class="anchor" href="#extending"></a>8. Extending the Microservices Dashboard</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>First have a look at the properties exposed by the server application for easy configuration.
-If properties won&#8217;t suffice, almost every bean of the Microservices Dashboard can be overridden by its conditional nature.
-Simply create a bean of the same type and/or name and add your own logic to it.</p>
-</div>
-<div class="paragraph">
-<p>More information will be added as soon as possible.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="troubleshooting"><a class="anchor" href="#troubleshooting"></a>9. Troubleshooting</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>For remote debugging, run the following command:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ mvnw install
-$ java -jar -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005 target/*.jar</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To enable Spring debug logging, add <code><code>--debug</code></code> to the command.</p>
-</div>
-<div class="paragraph">
-<p>Make sure to use actuator endpoints such as <code><code>/autoconfig</code></code> and <code><code>/beans</code></code> for validating the right beans have been loaded.</p>
 </div>
 </div>
 </div>
